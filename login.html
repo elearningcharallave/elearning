@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Iniciar sesión — FUNCECAIND</title>
+<link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+<div class="auth-wrap">
+  <div class="auth-card">
+    <div class="logo">Funce<span>Caind</span></div>
+    <div class="tagline">Aula virtual · Teleformación</div>
+
+    <div class="tabs">
+      <button id="tab-login" class="active" onclick="tab('login')">Iniciar sesión</button>
+      <button id="tab-reg" onclick="tab('reg')">Soy alumno nuevo</button>
+    </div>
+
+    <!-- LOGIN -->
+    <form id="form-login" onsubmit="return doLogin(event)">
+      <div class="field"><label>Correo</label><input type="email" id="l-email" placeholder="tucorreo@correo.com" autocomplete="email" required></div>
+      <div class="field"><label>Contraseña</label><input type="password" id="l-pass" placeholder="••••••••" autocomplete="current-password" required></div>
+      <div class="msg" id="l-msg"></div>
+      <button class="btn btn-block" id="l-btn" type="submit">Entrar</button>
+      <p class="muted">Administrador, profesor o alumno — todos entran por aquí.</p>
+    </form>
+
+    <!-- REGISTRO ALUMNO -->
+    <form id="form-reg" style="display:none" onsubmit="return doReg(event)">
+      <div class="field"><label>Nombre completo</label><input type="text" id="r-nombre" placeholder="Ej. María González" required></div>
+      <div class="field"><label>Correo</label><input type="email" id="r-email" placeholder="tucorreo@correo.com" required></div>
+      <div class="field"><label>Contraseña (mín. 6)</label><input type="password" id="r-pass" placeholder="••••••••" minlength="6" required></div>
+      <div class="msg" id="r-msg"></div>
+      <button class="btn btn-blue btn-block" id="r-btn" type="submit">Crear mi cuenta de alumno</button>
+      <p class="muted">Las cuentas de profesor las crea el administrador.</p>
+    </form>
+  </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+<script src="assets/firebase-config.js"></script>
+<script src="assets/app.js"></script>
+<script>
+function tab(t){
+  document.getElementById('tab-login').classList.toggle('active', t==='login');
+  document.getElementById('tab-reg').classList.toggle('active', t==='reg');
+  document.getElementById('form-login').style.display = t==='login'?'block':'none';
+  document.getElementById('form-reg').style.display   = t==='reg'?'block':'none';
+}
+function show(id,txt,ok){ var m=document.getElementById(id); m.textContent=txt; m.className='msg '+(ok?'ok':'err'); }
+function traduce(e){
+  var c=(e&&e.code)||''; if(c.indexOf('wrong-password')>=0||c.indexOf('invalid-credential')>=0) return 'Correo o contraseña incorrectos.';
+  if(c.indexOf('user-not-found')>=0) return 'No existe una cuenta con ese correo.';
+  if(c.indexOf('email-already-in-use')>=0) return 'Ese correo ya tiene una cuenta. Inicia sesión.';
+  if(c.indexOf('weak-password')>=0) return 'La contraseña debe tener al menos 6 caracteres.';
+  if(c.indexOf('too-many-requests')>=0) return 'Demasiados intentos. Espera un momento.';
+  return (e&&e.message)||'Ocurrió un error.';
+}
+
+if(!FV.configOk()){
+  show('l-msg','⚠️ Falta configurar Firebase (assets/firebase-config.js). Ver README.',false);
+  document.getElementById('l-btn').disabled=true; document.getElementById('r-btn').disabled=true;
+} else {
+  // Si ya hay sesión, ir directo al panel
+  FV.auth.onAuthStateChanged(function(u){ if(u){ FV.db.collection('usuarios').doc(u.uid).get().then(function(s){ location.href = FV.panelDe(s.exists?s.data().rol:'alumno'); }); } });
+}
+
+async function doLogin(ev){
+  ev.preventDefault();
+  var b=document.getElementById('l-btn'); b.disabled=true; b.textContent='Entrando…';
+  try{
+    var doc = await FV.login(document.getElementById('l-email').value.trim(), document.getElementById('l-pass').value);
+    location.href = FV.panelDe(doc.rol);
+  }catch(e){ show('l-msg',traduce(e),false); b.disabled=false; b.textContent='Entrar'; }
+  return false;
+}
+async function doReg(ev){
+  ev.preventDefault();
+  var b=document.getElementById('r-btn'); b.disabled=true; b.textContent='Creando…';
+  try{
+    var rol = await FV.registrarAlumno(document.getElementById('r-nombre').value.trim(),
+      document.getElementById('r-email').value.trim(), document.getElementById('r-pass').value);
+    location.href = FV.panelDe(rol);
+  }catch(e){ show('r-msg',traduce(e),false); b.disabled=false; b.textContent='Crear mi cuenta de alumno'; }
+  return false;
+}
+</script>
+</body>
+</html>

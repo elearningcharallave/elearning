@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mis clases — FUNCECAIND</title>
+<link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+<div class="topbar">
+  <a href="index.html" class="brand">Funce<span>Caind</span></a>
+  <div class="topbar-right">
+    <span class="role-pill">Profesor</span>
+    <span id="prof-name" style="color:var(--text-mid)"></span>
+    <button class="btn-logout" onclick="FV.logout()">Salir</button>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="page-head">
+    <h1>Mis clases</h1>
+    <p>Crea una clase y entra como moderador para dictarla en vivo. Comparte el enlace de alumno para que se conecten.</p>
+  </div>
+
+  <div class="card">
+    <h2>➕ Crear una clase</h2>
+    <div class="sub">Se genera un código de sala único para la videollamada.</div>
+    <form onsubmit="return crearClase(event)">
+      <div class="field"><label>Título de la clase</label><input type="text" id="c-titulo" placeholder="Ej. Excel — Fórmulas básicas" required></div>
+      <div class="field"><label>Descripción (opcional)</label><textarea id="c-desc" rows="2" placeholder="Tema, objetivos…"></textarea></div>
+      <div class="field"><label>Horario (opcional)</label><input type="text" id="c-horario" placeholder="Ej. Lunes 3:00 pm"></div>
+      <div class="msg" id="c-msg"></div>
+      <button class="btn btn-block" id="c-btn" type="submit">Crear clase</button>
+    </form>
+  </div>
+
+  <div class="card">
+    <h2>📚 Clases creadas</h2>
+    <div class="sub">Entra como profesor para dictar; copia el enlace de alumno para invitar.</div>
+    <div class="list" id="clases"><div class="empty">Cargando…</div></div>
+  </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+<script src="assets/firebase-config.js"></script>
+<script src="assets/app.js"></script>
+<script>
+var ME=null, MIDOC=null;
+function show(id,txt,ok){ var m=document.getElementById(id); m.textContent=txt; m.className='msg '+(ok?'ok':'err'); }
+function urlAula(sala, role, nombre){
+  var u = new URL('aula.html', location.href);
+  u.searchParams.set('room', sala); u.searchParams.set('role', role);
+  if(nombre) u.searchParams.set('name', nombre);
+  return u.href;
+}
+
+FV.requireRole('profesor', function(user, doc){
+  ME=user; MIDOC=doc;
+  document.getElementById('prof-name').textContent = doc.nombre;
+  cargar();
+});
+
+async function cargar(){
+  try{
+    var clases = await FV.clasesDeProfesor(ME.uid);
+    var cont = document.getElementById('clases');
+    if(!clases.length){ cont.innerHTML='<div class="empty">Aún no has creado clases.</div>'; return; }
+    cont.innerHTML = clases.map(function(c){
+      return '<div class="item"><div class="avatar">🎥</div>'+
+        '<div class="info"><div class="name">'+c.titulo+'</div>'+
+        '<div class="meta">'+(c.horario?('🕒 '+c.horario+' · '):'')+'Sala: '+c.sala+'</div></div>'+
+        '<div style="display:flex;gap:8px;flex-wrap:wrap">'+
+          '<button class="btn btn-sm" onclick="dictar(\''+c.sala+'\')">▶ Dictar</button>'+
+          '<button class="btn btn-ghost btn-sm" onclick="copiar(\''+c.sala+'\',this)">🔗 Link alumno</button>'+
+          '<button class="btn-logout btn-sm" onclick="borrar(\''+c.id+'\')">🗑</button>'+
+        '</div></div>';
+    }).join('');
+  }catch(e){ document.getElementById('clases').innerHTML='<div class="empty">Error: '+e.message+'</div>'; }
+}
+
+async function crearClase(ev){
+  ev.preventDefault();
+  var b=document.getElementById('c-btn'); b.disabled=true; b.textContent='Creando…';
+  try{
+    var titulo=document.getElementById('c-titulo').value.trim();
+    await FV.crearClase({
+      titulo: titulo, descripcion: document.getElementById('c-desc').value.trim(),
+      horario: document.getElementById('c-horario').value.trim(),
+      profesorId: ME.uid, profesorNombre: MIDOC.nombre, sala: FV.salaCodigo(titulo)
+    });
+    show('c-msg','✅ Clase creada.',true);
+    document.getElementById('c-titulo').value=''; document.getElementById('c-desc').value=''; document.getElementById('c-horario').value='';
+    cargar();
+  }catch(e){ show('c-msg','❌ '+e.message,false); }
+  b.disabled=false; b.textContent='Crear clase';
+  return false;
+}
+function dictar(sala){ location.href = urlAula(sala,'teacher',MIDOC.nombre); }
+function copiar(sala,btn){
+  var link = urlAula(sala,'student','');
+  navigator.clipboard.writeText(link).then(function(){ var t=btn.textContent; btn.textContent='✓ Copiado'; setTimeout(function(){btn.textContent=t;},1500); })
+    .catch(function(){ prompt('Copia este enlace para los alumnos:', link); });
+}
+async function borrar(id){ if(confirm('¿Eliminar esta clase?')){ await FV.eliminarClase(id); cargar(); } }
+</script>
+</body>
+</html>

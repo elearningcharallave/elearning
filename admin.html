@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Administración — FUNCECAIND</title>
+<link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+<div class="topbar">
+  <a href="index.html" class="brand">Funce<span>Caind</span></a>
+  <div class="topbar-right">
+    <span class="role-pill">Administrador</span>
+    <span id="admin-name" style="color:var(--text-mid)"></span>
+    <button class="btn-logout" onclick="FV.logout()">Salir</button>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="page-head">
+    <h1>Panel de administración</h1>
+    <p>Crea cuentas de profesores, revisa a los usuarios y las clases de la plataforma.</p>
+  </div>
+
+  <div class="grid2">
+    <!-- CREAR PROFESOR -->
+    <div class="card">
+      <h2>➕ Crear cuenta de profesor</h2>
+      <div class="sub">El profesor entrará con este correo y contraseña.</div>
+      <form onsubmit="return crearProf(event)">
+        <div class="field"><label>Nombre completo</label><input type="text" id="p-nombre" placeholder="Ej. Prof. Carlos López" required></div>
+        <div class="field"><label>Correo</label><input type="email" id="p-email" placeholder="profesor@funcecaind.edu.ve" required></div>
+        <div class="field"><label>Contraseña temporal (mín. 6)</label><input type="text" id="p-pass" placeholder="el profesor podrá cambiarla luego" minlength="6" required></div>
+        <div class="msg" id="p-msg"></div>
+        <button class="btn btn-block" id="p-btn" type="submit">Crear profesor</button>
+      </form>
+    </div>
+
+    <!-- RESUMEN -->
+    <div class="card">
+      <h2>📊 Resumen</h2>
+      <div class="sub">Usuarios registrados en la plataforma.</div>
+      <div class="row" style="text-align:center">
+        <div><div style="font-family:'Fraunces',serif;font-size:2rem;color:var(--teal-700)" id="n-prof">—</div><div style="font-size:.8rem;color:var(--text-light)">Profesores</div></div>
+        <div><div style="font-family:'Fraunces',serif;font-size:2rem;color:var(--blue-700)" id="n-alum">—</div><div style="font-size:.8rem;color:var(--text-light)">Alumnos</div></div>
+        <div><div style="font-family:'Fraunces',serif;font-size:2rem;color:var(--text-dark)" id="n-clases">—</div><div style="font-size:.8rem;color:var(--text-light)">Clases</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- USUARIOS -->
+  <div class="card">
+    <h2>👥 Usuarios</h2>
+    <div class="sub">Profesores y alumnos registrados.</div>
+    <div class="list" id="usuarios"><div class="empty">Cargando…</div></div>
+  </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+<script src="assets/firebase-config.js"></script>
+<script src="assets/app.js"></script>
+<script>
+function show(id,txt,ok){ var m=document.getElementById(id); m.textContent=txt; m.className='msg '+(ok?'ok':'err'); }
+function ini(n){ return (n||'?').trim().split(/\s+/).map(function(w){return w[0];}).slice(0,2).join('').toUpperCase(); }
+
+FV.requireRole('admin', function(user, doc){
+  document.getElementById('admin-name').textContent = doc.nombre;
+  cargar();
+});
+
+async function cargar(){
+  try{
+    var users = await FV.listarUsuarios();
+    var clases = await FV.todasLasClases();
+    document.getElementById('n-prof').textContent  = users.filter(function(u){return u.rol==='profesor';}).length;
+    document.getElementById('n-alum').textContent  = users.filter(function(u){return u.rol==='alumno';}).length;
+    document.getElementById('n-clases').textContent = clases.length;
+    var cont = document.getElementById('usuarios');
+    if(!users.length){ cont.innerHTML='<div class="empty">Aún no hay usuarios.</div>'; return; }
+    cont.innerHTML = users.map(function(u){
+      return '<div class="item"><div class="avatar">'+ini(u.nombre)+'</div>'+
+        '<div class="info"><div class="name">'+(u.nombre||'(sin nombre)')+'</div>'+
+        '<div class="meta">'+(u.email||'')+'</div></div>'+
+        '<span class="badge '+u.rol+'">'+u.rol+'</span></div>';
+    }).join('');
+  }catch(e){ document.getElementById('usuarios').innerHTML='<div class="empty">Error: '+e.message+'</div>'; }
+}
+
+async function crearProf(ev){
+  ev.preventDefault();
+  var b=document.getElementById('p-btn'); b.disabled=true; b.textContent='Creando…';
+  try{
+    await FV.crearProfesor(document.getElementById('p-nombre').value.trim(),
+      document.getElementById('p-email').value.trim(), document.getElementById('p-pass').value);
+    show('p-msg','✅ Profesor creado. Ya puede iniciar sesión.',true);
+    document.getElementById('p-nombre').value=''; document.getElementById('p-email').value=''; document.getElementById('p-pass').value='';
+    cargar();
+  }catch(e){
+    var t=(e.code||'').indexOf('email-already-in-use')>=0?'Ese correo ya tiene cuenta.':
+          (e.code||'').indexOf('weak-password')>=0?'La contraseña debe tener mín. 6 caracteres.':e.message;
+    show('p-msg','❌ '+t,false);
+  }
+  b.disabled=false; b.textContent='Crear profesor';
+  return false;
+}
+</script>
+</body>
+</html>

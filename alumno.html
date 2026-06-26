@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mis clases — FUNCECAIND</title>
+<link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+<div class="topbar">
+  <a href="index.html" class="brand">Funce<span>Caind</span></a>
+  <div class="topbar-right">
+    <span class="role-pill">Alumno</span>
+    <span id="al-name" style="color:var(--text-mid)"></span>
+    <button class="btn-logout" onclick="FV.logout()">Salir</button>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="page-head">
+    <h1>Clases disponibles</h1>
+    <p>Entra a una clase en vivo cuando el profesor la inicie. También puedes hacer las pruebas de acceso desde el inicio.</p>
+  </div>
+
+  <div class="card">
+    <h2>🎥 Clases en vivo</h2>
+    <div class="sub">Pulsa "Entrar" para unirte a la videollamada de la clase.</div>
+    <div class="list" id="clases"><div class="empty">Cargando…</div></div>
+  </div>
+
+  <div class="card">
+    <h2>📝 Pruebas y tests</h2>
+    <div class="sub">Evalúa tus competencias digitales y de ofimática.</div>
+    <div class="list">
+      <div class="item"><div class="avatar">🎓</div><div class="info"><div class="name">Prueba de competencias digitales</div><div class="meta">15 preguntas · 10 min</div></div><button class="btn btn-sm" onclick="location.href='pruebas/acceso-alumno.html'">Hacer</button></div>
+      <div class="item"><div class="avatar">📝</div><div class="info"><div class="name">Test de Word básico</div><div class="meta">Ofimática</div></div><button class="btn btn-ghost btn-sm" onclick="location.href='pruebas/test-word.html'">Hacer</button></div>
+      <div class="item"><div class="avatar">📊</div><div class="info"><div class="name">Test de Excel</div><div class="meta">Ofimática</div></div><button class="btn btn-ghost btn-sm" onclick="location.href='pruebas/test-excel.html'">Hacer</button></div>
+    </div>
+  </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+<script src="assets/firebase-config.js"></script>
+<script src="assets/app.js"></script>
+<script>
+var MIDOC=null;
+function urlAula(sala,nombre){ var u=new URL('aula.html',location.href); u.searchParams.set('room',sala); u.searchParams.set('role','student'); if(nombre)u.searchParams.set('name',nombre); return u.href; }
+
+FV.requireRole('alumno', function(user, doc){
+  MIDOC=doc; document.getElementById('al-name').textContent = doc.nombre;
+  cargar();
+});
+
+async function cargar(){
+  try{
+    var clases = await FV.todasLasClases();
+    var cont = document.getElementById('clases');
+    if(!clases.length){ cont.innerHTML='<div class="empty">No hay clases publicadas todavía. Vuelve más tarde.</div>'; return; }
+    cont.innerHTML = clases.map(function(c){
+      return '<div class="item"><div class="avatar">🎥</div>'+
+        '<div class="info"><div class="name">'+c.titulo+'</div>'+
+        '<div class="meta">'+(c.profesorNombre?('👩‍🏫 '+c.profesorNombre+' · '):'')+(c.horario?('🕒 '+c.horario):'')+'</div></div>'+
+        '<button class="btn btn-sm" onclick="entrar(\''+c.sala+'\')">Entrar</button></div>';
+    }).join('');
+  }catch(e){ document.getElementById('clases').innerHTML='<div class="empty">Error: '+e.message+'</div>'; }
+}
+function entrar(sala){ location.href = urlAula(sala, MIDOC.nombre); }
+</script>
+</body>
+</html>

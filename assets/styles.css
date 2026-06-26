@@ -1,0 +1,93 @@
+/* ===== FUNCECAIND — estilos compartidos (paneles / auth / aula) ===== */
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500;600&display=swap');
+
+:root{
+  --teal-50:#e0f5ef; --teal-100:#b3e6d8; --teal-300:#4db8a0; --teal-500:#1d9e75;
+  --teal-700:#0f6e56; --teal-900:#063d30;
+  --blue-50:#e1f0fb; --blue-500:#1a7fc4; --blue-700:#0f5a8e;
+  --text-dark:#062820; --text-mid:#2a5248; --text-light:#648f84;
+  --white:#f8fdfb; --card:#ffffff; --border:#d9efe7;
+  --red:#d93838; --amber:#e0922a;
+  --radius:14px; --shadow:0 8px 30px rgba(15,110,86,.10);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:linear-gradient(135deg,var(--white) 55%,var(--teal-50));color:var(--text-dark);min-height:100vh}
+a{color:var(--teal-700)}
+
+/* Header de panel */
+.topbar{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;
+  padding:14px 28px;background:rgba(248,253,251,.9);backdrop-filter:blur(14px);border-bottom:1px solid var(--teal-100)}
+.brand{font-family:'Fraunces',serif;font-size:1.4rem;font-weight:600;color:var(--teal-700);text-decoration:none}
+.brand span{color:var(--blue-500);font-style:italic}
+.topbar-right{display:flex;align-items:center;gap:14px;font-size:.9rem}
+.role-pill{background:var(--teal-50);border:1px solid var(--teal-300);color:var(--teal-700);
+  border-radius:100px;padding:4px 14px;font-size:.78rem;font-weight:600;text-transform:capitalize}
+.btn-logout{background:transparent;border:1.5px solid var(--border);color:var(--text-mid);
+  border-radius:100px;padding:7px 16px;font:inherit;font-size:.85rem;cursor:pointer}
+.btn-logout:hover{border-color:var(--red);color:var(--red)}
+
+/* Layout */
+.wrap{max-width:1040px;margin:0 auto;padding:32px 24px 64px}
+.page-head{margin-bottom:28px}
+.page-head h1{font-family:'Fraunces',serif;font-size:1.9rem;font-weight:600;color:var(--text-dark)}
+.page-head p{color:var(--text-mid);margin-top:6px;font-weight:300}
+
+/* Cards */
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);
+  padding:24px 26px;box-shadow:var(--shadow);margin-bottom:22px}
+.card h2{font-family:'Fraunces',serif;font-size:1.15rem;color:var(--text-dark);margin-bottom:4px}
+.card .sub{color:var(--text-light);font-size:.85rem;margin-bottom:18px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+@media(max-width:780px){.grid2{grid-template-columns:1fr}}
+
+/* Forms */
+.field{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
+.field label{font-size:.8rem;font-weight:600;color:var(--text-mid)}
+.field input,.field select,.field textarea{border:1.5px solid var(--border);border-radius:10px;
+  padding:11px 13px;font:inherit;font-size:.95rem;background:var(--white);color:var(--text-dark);outline:none;width:100%}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--teal-500);box-shadow:0 0 0 3px rgba(29,158,117,.15)}
+.row{display:flex;gap:12px;flex-wrap:wrap}.row>*{flex:1;min-width:160px}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:var(--teal-500);color:#fff;
+  border:none;border-radius:100px;padding:12px 24px;font:inherit;font-weight:600;font-size:.95rem;cursor:pointer;
+  transition:background .2s,transform .15s;box-shadow:0 4px 18px rgba(29,158,117,.25)}
+.btn:hover:not(:disabled){background:var(--teal-700);transform:translateY(-1px)}
+.btn:disabled{opacity:.6;cursor:not-allowed}
+.btn-ghost{background:transparent;color:var(--teal-700);border:1.5px solid var(--teal-300);box-shadow:none}
+.btn-ghost:hover:not(:disabled){background:var(--teal-50)}
+.btn-blue{background:var(--blue-500);box-shadow:0 4px 18px rgba(26,127,196,.25)}
+.btn-blue:hover:not(:disabled){background:var(--blue-700)}
+.btn-sm{padding:8px 16px;font-size:.85rem}
+.btn-block{width:100%}
+
+/* Tablas / listas */
+.list{display:flex;flex-direction:column;gap:10px}
+.item{display:flex;align-items:center;gap:14px;padding:14px 16px;border:1px solid var(--border);
+  border-radius:12px;background:var(--white)}
+.item .avatar{width:40px;height:40px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;
+  color:#fff;font-weight:600;background:linear-gradient(135deg,var(--teal-300),var(--blue-500))}
+.item .info{flex:1;min-width:0}
+.item .info .name{font-weight:600;font-size:.95rem}
+.item .info .meta{font-size:.8rem;color:var(--text-light)}
+.badge{font-size:.72rem;font-weight:600;padding:3px 10px;border-radius:100px;text-transform:capitalize}
+.badge.admin{background:#fde8e8;color:var(--red)}
+.badge.profesor{background:var(--blue-50);color:var(--blue-700)}
+.badge.alumno{background:var(--teal-50);color:var(--teal-700)}
+
+.empty{text-align:center;color:var(--text-light);padding:28px;font-size:.9rem}
+.msg{border-radius:10px;padding:11px 15px;font-size:.88rem;margin:12px 0;display:none}
+.msg.ok{background:var(--teal-50);color:var(--teal-700);border:1px solid var(--teal-300);display:block}
+.msg.err{background:#fef2f2;color:var(--red);border:1px solid #f3c9c9;display:block}
+
+/* Auth (login) */
+.auth-wrap{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:24px}
+.auth-card{background:var(--card);border:1px solid var(--border);border-radius:20px;box-shadow:var(--shadow);
+  width:100%;max-width:420px;padding:36px 34px}
+.auth-card .logo{font-family:'Fraunces',serif;font-size:1.7rem;font-weight:600;color:var(--teal-700);text-align:center;margin-bottom:4px}
+.auth-card .logo span{color:var(--blue-500);font-style:italic}
+.auth-card .tagline{text-align:center;color:var(--text-light);font-size:.85rem;margin-bottom:24px}
+.tabs{display:flex;gap:6px;background:var(--teal-50);border-radius:100px;padding:4px;margin-bottom:22px}
+.tabs button{flex:1;border:none;background:transparent;padding:9px;border-radius:100px;font:inherit;font-weight:600;
+  font-size:.88rem;color:var(--text-mid);cursor:pointer}
+.tabs button.active{background:#fff;color:var(--teal-700);box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.muted{color:var(--text-light);font-size:.82rem;text-align:center;margin-top:16px}

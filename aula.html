@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aula Virtual — FUNCECAIND</title>
+<link rel="stylesheet" href="assets/styles.css">
+<style>
+  html,body{height:100%}
+  #meet{position:fixed;inset:0;display:none}
+  #fin{display:none;text-align:center;padding:14vh 24px}
+  #fin h2{font-family:'Fraunces',serif;font-size:1.8rem;color:var(--teal-700);margin-bottom:10px}
+  .role-choice{display:flex;gap:8px;margin-bottom:14px}
+  .role-choice label{flex:1;border:1.5px solid var(--border);border-radius:10px;padding:10px;text-align:center;
+    font-size:.9rem;font-weight:600;color:var(--text-mid);cursor:pointer}
+  .role-choice input{display:none}
+  .role-choice input:checked + span{color:var(--teal-700)}
+  .role-choice label:has(input:checked){border-color:var(--teal-500);background:var(--teal-50)}
+</style>
+</head>
+<body>
+
+<!-- PRE-JOIN -->
+<div class="auth-wrap" id="prejoin">
+  <div class="auth-card">
+    <div class="logo">Funce<span>Caind</span></div>
+    <div class="tagline">Aula virtual · Clase en vivo</div>
+    <form onsubmit="return entrar(event)">
+      <div class="field"><label>Tu nombre y apellido</label><input type="text" id="name" placeholder="Ej. María González" required></div>
+      <div class="field"><label>Código de la clase / sala</label><input type="text" id="room" placeholder="Ej. excel-formulas" required></div>
+      <div class="field"><label>Entras como</label>
+        <div class="role-choice">
+          <label><input type="radio" name="role" value="student" checked><span>🎓 Alumno</span></label>
+          <label><input type="radio" name="role" value="teacher"><span>👩‍🏫 Profesor</span></label>
+        </div>
+      </div>
+      <button class="btn btn-block" type="submit">Entrar a la clase</button>
+      <p class="muted">El profesor debe entrar primero para quedar como moderador.</p>
+    </form>
+  </div>
+</div>
+
+<!-- SALA -->
+<div id="meet"></div>
+
+<!-- FIN -->
+<div id="fin">
+  <h2>Clase finalizada</h2>
+  <p style="color:var(--text-mid);margin-bottom:20px">Gracias por participar en FUNCECAIND.</p>
+  <a class="btn" href="index.html">Volver al inicio</a>
+</div>
+
+<script src="https://meet.jit.si/external_api.js"></script>
+<script>
+var P = new URLSearchParams(location.search);
+// Autocompletar desde la URL (enlaces directos profesor/alumno)
+if(P.get('name')) document.getElementById('name').value = P.get('name');
+if(P.get('room')) document.getElementById('room').value = P.get('room');
+if(P.get('role')==='teacher'){ document.querySelector('input[value="teacher"]').checked=true; }
+
+// Si vienen nombre + sala en la URL, entra directo (sin mostrar el pre-join)
+if(P.get('name') && P.get('room')){ arrancar(); }
+
+function entrar(ev){ ev.preventDefault(); arrancar(); return false; }
+
+function nombreSala(raw){
+  var s=(raw||'demo').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z0-9-]/g,'');
+  return s.indexOf('funcecaind-')===0 ? s : 'funcecaind-'+s;
+}
+
+function arrancar(){
+  var display=(document.getElementById('name').value||'Invitado').trim();
+  var sala=nombreSala(document.getElementById('room').value);
+  var role=(document.querySelector('input[name="role"]:checked')||{}).value || P.get('role') || 'student';
+  var isTeacher = role==='teacher';
+
+  if(typeof JitsiMeetExternalAPI==='undefined'){ alert('No se pudo cargar el sistema de videollamada. Revisa tu conexión.'); return; }
+
+  document.getElementById('prejoin').style.display='none';
+  document.getElementById('meet').style.display='block';
+
+  var api = new JitsiMeetExternalAPI('meet.jit.si', {
+    roomName: sala,
+    parentNode: document.getElementById('meet'),
+    lang: 'es',
+    userInfo: { displayName: display },
+    configOverwrite: {
+      prejoinPageEnabled: false,
+      startWithAudioMuted: !isTeacher,
+      startWithVideoMuted: !isTeacher,
+      disableDeepLinking: true,
+      disableThirdPartyRequests: true
+    },
+    interfaceConfigOverwrite: {
+      SHOW_JITSI_WATERMARK: false,
+      SHOW_BRAND_WATERMARK: false,
+      SHOW_POWERED_BY: false,
+      DEFAULT_BACKGROUND: '#063d30',
+      TOOLBAR_BUTTONS: isTeacher
+        ? ['microphone','camera','desktop','chat','raisehand','participants-pane','tileview','select-background','mute-everyone','security','recording','settings','hangup']
+        : ['microphone','camera','chat','raisehand','tileview','settings','hangup']
+    }
+  });
+
+  api.addListener('videoConferenceJoined', function(){
+    if(isTeacher){ api.executeCommand('subject', 'Clase FUNCECAIND'); }
+  });
+  api.addListener('readyToClose', function(){
+    api.dispose();
+    document.getElementById('meet').style.display='none';
+    document.getElementById('fin').style.display='block';
+  });
+}
+</script>
+</body>
+</html>
