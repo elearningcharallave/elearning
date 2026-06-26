@@ -11,3 +11,9 @@ Thumbs.db
 # Editores
 .vscode/
 .idea/
+
+# Secretos (NUNCA subir) — token de Supabase y archivos locales con credenciales
+.supabase-token
+*.local
+.env
+.env.*

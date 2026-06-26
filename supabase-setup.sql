@@ -1,0 +1,108 @@
+-- ============================================================================
+-- FUNCECAIND — Configuración de la base de datos (Supabase / Postgres)
+-- Crea las tablas, el trigger de alta de perfil y las políticas RLS.
+-- Se ejecuta una sola vez (lo corre Claude con el token, o tú en
+-- Dashboard → SQL Editor → New query → pegar → Run).
+-- ============================================================================
+
+-- 1) PERFILES (1 a 1 con auth.users) ----------------------------------------
+create table if not exists public.perfiles (
+  id        uuid primary key references auth.users(id) on delete cascade,
+  nombre    text,
+  email     text,
+  rol       text not null default 'alumno' check (rol in ('admin','profesor','alumno')),
+  creado_en timestamptz not null default now()
+);
+
+-- 2) CLASES ------------------------------------------------------------------
+create table if not exists public.clases (
+  id              uuid primary key default gen_random_uuid(),
+  titulo          text not null,
+  descripcion     text,
+  horario         text,
+  sala            text not null,
+  profesor_id     uuid references auth.users(id) on delete set null,
+  profesor_nombre text,
+  creado_en       timestamptz not null default now()
+);
+
+-- 3) TRIGGER: al registrarse un usuario, crear su perfil --------------------
+--    El correo admin recibe rol 'admin'; el resto, 'alumno'.
+--    👇 CAMBIA el correo por el mismo de ADMIN_EMAIL en supabase-config.js
+create or replace function public.handle_new_user()
+returns trigger
+language plpgsql
+security definer
+set search_path = public
+as $$
+begin
+  insert into public.perfiles (id, nombre, email, rol)
+  values (
+    new.id,
+    coalesce(new.raw_user_meta_data->>'nombre', split_part(new.email, '@', 1)),
+    new.email,
+    case when lower(new.email) = lower('admin@funcecaind.edu.ve')
+         then 'admin' else 'alumno' end
+  )
+  on conflict (id) do nothing;
+  return new;
+end;
+$$;
+
+drop trigger if exists on_auth_user_created on auth.users;
+create trigger on_auth_user_created
+  after insert on auth.users
+  for each row execute function public.handle_new_user();
+
+-- 4) RLS ---------------------------------------------------------------------
+alter table public.perfiles enable row level security;
+alter table public.clases   enable row level security;
+
+-- helper: ¿quien llama es admin?  (security definer evita recursión de RLS)
+create or replace function public.es_admin()
+returns boolean
+language sql
+security definer
+stable
+set search_path = public
+as $$
+  select exists (select 1 from public.perfiles where id = auth.uid() and rol = 'admin');
+$$;
+
+-- perfiles: leer el propio o (admin) todos; solo admin inserta/edita/borra
+drop policy if exists perfiles_select on public.perfiles;
+create policy perfiles_select on public.perfiles
+  for select using (id = auth.uid() or public.es_admin());
+
+drop policy if exists perfiles_insert on public.perfiles;
+create policy perfiles_insert on public.perfiles
+  for insert with check (public.es_admin());
+
+drop policy if exists perfiles_update on public.perfiles;
+create policy perfiles_update on public.perfiles
+  for update using (public.es_admin()) with check (public.es_admin());
+
+drop policy if exists perfiles_delete on public.perfiles;
+create policy perfiles_delete on public.perfiles
+  for delete using (public.es_admin());
+
+-- clases: cualquier autenticado las ve; un profesor crea las suyas;
+--         el dueño o un admin las edita/borra
+drop policy if exists clases_select on public.clases;
+create policy clases_select on public.clases
+  for select using (auth.role() = 'authenticated');
+
+drop policy if exists clases_insert on public.clases;
+create policy clases_insert on public.clases
+  for insert with check (
+    profesor_id = auth.uid()
+    and exists (select 1 from public.perfiles where id = auth.uid() and rol in ('profesor','admin'))
+  );
+
+drop policy if exists clases_update on public.clases;
+create policy clases_update on public.clases
+  for update using (profesor_id = auth.uid() or public.es_admin());
+
+drop policy if exists clases_delete on public.clases;
+create policy clases_delete on public.clases
+  for delete using (profesor_id = auth.uid() or public.es_admin());

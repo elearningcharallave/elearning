@@ -38,10 +38,8 @@
   </div>
 </div>
 
-<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
-<script src="assets/firebase-config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="assets/supabase-config.js"></script>
 <script src="assets/app.js"></script>
 <script>
 function tab(t){
@@ -52,20 +50,20 @@ function tab(t){
 }
 function show(id,txt,ok){ var m=document.getElementById(id); m.textContent=txt; m.className='msg '+(ok?'ok':'err'); }
 function traduce(e){
-  var c=(e&&e.code)||''; if(c.indexOf('wrong-password')>=0||c.indexOf('invalid-credential')>=0) return 'Correo o contraseña incorrectos.';
-  if(c.indexOf('user-not-found')>=0) return 'No existe una cuenta con ese correo.';
-  if(c.indexOf('email-already-in-use')>=0) return 'Ese correo ya tiene una cuenta. Inicia sesión.';
-  if(c.indexOf('weak-password')>=0) return 'La contraseña debe tener al menos 6 caracteres.';
-  if(c.indexOf('too-many-requests')>=0) return 'Demasiados intentos. Espera un momento.';
+  var m=(((e&&e.message)||'')+'').toLowerCase();
+  if(m.indexOf('invalid login')>=0) return 'Correo o contraseña incorrectos.';
+  if(m.indexOf('already registered')>=0) return 'Ese correo ya tiene una cuenta. Inicia sesión.';
+  if(m.indexOf('at least 6')>=0||m.indexOf('password should')>=0) return 'La contraseña debe tener al menos 6 caracteres.';
+  if(m.indexOf('email not confirmed')>=0) return 'Debes confirmar tu correo antes de entrar.';
+  if(m.indexOf('rate limit')>=0||m.indexOf('too many')>=0) return 'Demasiados intentos. Espera un momento.';
   return (e&&e.message)||'Ocurrió un error.';
 }
 
 if(!FV.configOk()){
-  show('l-msg','⚠️ Falta configurar Firebase (assets/firebase-config.js). Ver README.',false);
+  show('l-msg','⚠️ Falta configurar Supabase (assets/supabase-config.js). Ver README.',false);
   document.getElementById('l-btn').disabled=true; document.getElementById('r-btn').disabled=true;
 } else {
-  // Si ya hay sesión, ir directo al panel
-  FV.auth.onAuthStateChanged(function(u){ if(u){ FV.db.collection('usuarios').doc(u.uid).get().then(function(s){ location.href = FV.panelDe(s.exists?s.data().rol:'alumno'); }); } });
+  FV.redirigirSiSesion();  // si ya hay sesión, va directo al panel
 }
 
 async function doLogin(ev){
