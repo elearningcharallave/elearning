@@ -1,0 +1,287 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+.wrap{padding:1.5rem 0;max-width:660px}
+.card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:1.25rem 1.5rem;margin-bottom:1rem}
+h1{font-size:22px;font-weight:500;color:var(--color-text-primary);margin-bottom:4px}
+.sub{font-size:14px;color:var(--color-text-secondary);margin-bottom:1.25rem}
+input[type=text]{width:100%;padding:10px 14px;border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);font-size:15px;color:var(--color-text-primary);background:var(--color-background-primary)}
+input[type=text]:focus{outline:none;border-color:#378ADD;box-shadow:0 0 0 3px rgba(55,138,221,.15)}
+.btn{display:inline-block;padding:10px 24px;border-radius:var(--border-radius-md);font-size:15px;cursor:pointer;border:0.5px solid var(--color-border-secondary);background:transparent;color:var(--color-text-primary)}
+.btn:hover{background:var(--color-background-secondary)}
+.btn-blue{background:#185FA5;color:#fff;border:none}
+.btn-blue:hover{background:#0C447C}
+.btn-blue:disabled{opacity:.45;cursor:not-allowed}
+.pill{display:inline-block;font-size:11px;font-weight:500;padding:3px 10px;border-radius:20px}
+.pill-blue{background:#E6F1FB;color:#0C447C}
+.pill-purple{background:#EEEDFE;color:#3C3489}
+.pill-green{background:#EAF3DE;color:#27500A}
+.pill-red{background:#FCEBEB;color:#791F1F}
+.q-label{font-size:12px;color:var(--color-text-secondary);margin-bottom:8px;font-weight:500;letter-spacing:.4px}
+.q-text{font-size:16px;color:var(--color-text-primary);line-height:1.6;margin-bottom:1.25rem}
+.opt{display:block;width:100%;text-align:left;padding:11px 16px;margin-bottom:8px;border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);font-size:15px;color:var(--color-text-primary);background:var(--color-background-primary);cursor:pointer;transition:all .15s}
+.opt:hover{border-color:var(--color-border-secondary);background:var(--color-background-secondary)}
+.opt.sel{background:#E6F1FB;border-color:#378ADD;color:#0C447C;font-weight:500}
+.opt.correct{background:#EAF3DE;border-color:#3B6D11;color:#27500A}
+.opt.wrong{background:#FCEBEB;border-color:#A32D2D;color:#791F1F}
+.opt:disabled{cursor:default}
+.prog-bar{height:4px;background:var(--color-background-secondary);border-radius:2px;margin-bottom:1.25rem;overflow:hidden}
+.prog-fill{height:100%;background:#378ADD;border-radius:2px;transition:width .4s ease}
+.nav{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:1rem}
+.score-n{font-size:52px;font-weight:500;color:var(--color-text-primary);line-height:1}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:1rem 0}
+.metric{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:12px 8px;text-align:center}
+.metric-val{font-size:22px;font-weight:500}
+.metric-lbl{font-size:12px;color:var(--color-text-secondary);margin-top:2px}
+.feedback{font-size:13px;margin-top:.5rem;min-height:18px}
+.hidden{display:none}
+</style>
+
+<div class="wrap">
+
+<div id="s-name">
+  <h1>Test de Word Básico</h1>
+  <p class="sub">30 preguntas — una por pantalla</p>
+  <div class="card">
+    <div class="q-label">Tu nombre</div>
+    <input type="text" id="inp-name" placeholder="Escribe tu nombre completo..." autocomplete="off">
+    <div style="margin-top:14px">
+      <button class="btn btn-blue" onclick="startTest()">Comenzar test</button>
+    </div>
+  </div>
+</div>
+
+<div id="s-test" class="hidden">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+    <h1>Test de Word Básico</h1>
+    <span id="q-counter" style="font-size:13px;color:var(--color-text-secondary)"></span>
+  </div>
+  <div class="prog-bar"><div class="prog-fill" id="prog"></div></div>
+  <div class="card" id="q-card">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+      <span class="pill" id="q-pill"></span>
+      <span style="font-size:12px;color:var(--color-text-secondary)" id="q-section"></span>
+    </div>
+    <div class="q-label" id="q-num"></div>
+    <div class="q-text" id="q-text"></div>
+    <div id="q-opts"></div>
+    <div class="feedback" id="feedback"></div>
+  </div>
+  <div class="nav">
+    <button class="btn" id="btn-prev" onclick="go(-1)">← Anterior</button>
+    <button class="btn btn-blue" id="btn-next" onclick="go(1)">Siguiente →</button>
+    <button class="btn btn-blue hidden" id="btn-finish" onclick="finish()">Ver resultados →</button>
+  </div>
+</div>
+
+<div id="s-result" class="hidden">
+  <h1>Resultado del test</h1>
+  <p class="sub" id="r-name"></p>
+  <div class="card" style="text-align:center">
+    <div class="score-n" id="r-pct"></div>
+    <div style="font-size:14px;color:var(--color-text-secondary);margin-top:4px">puntaje final</div>
+    <div class="grid3">
+      <div class="metric"><div class="metric-val" id="r-ok" style="color:#27500A"></div><div class="metric-lbl">correctas</div></div>
+      <div class="metric"><div class="metric-val" id="r-err" style="color:#A32D2D"></div><div class="metric-lbl">incorrectas</div></div>
+      <div class="metric"><div class="metric-val">30</div><div class="metric-lbl">total</div></div>
+    </div>
+    <div id="r-nota" style="font-size:15px;font-weight:500;margin-top:4px"></div>
+  </div>
+  <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px">
+    <button class="btn btn-blue" onclick="sendMail()">Enviar resultado al correo →</button>
+    <button class="btn" onclick="restart()">Reintentar</button>
+  </div>
+  <div id="mail-status" style="font-size:13px;color:var(--color-text-secondary);margin-bottom:1.5rem"></div>
+  <div id="review"></div>
+</div>
+
+</div>
+
+<script>
+const QS = [
+  {t:'tf',q:'En Word, el atajo Ctrl+S guarda el documento actual.',a:0},
+  {t:'tf',q:'Ctrl+Z deshace la última acción realizada en Word.',a:0},
+  {t:'tf',q:'Para seleccionar todo el texto del documento se usa Ctrl+A.',a:0},
+  {t:'tf',q:'El formato negrita se aplica con el atajo Ctrl+B.',a:0},
+  {t:'tf',q:'Ctrl+Enter inserta un salto de página en Word.',a:0},
+  {t:'tf',q:'La alineación justificada distribuye el texto de forma pareja en ambos márgenes.',a:0},
+  {t:'tf',q:'En Word no es posible insertar imágenes dentro del documento.',a:1},
+  {t:'tf',q:'Ctrl+C corta el texto seleccionado en Word.',a:1},
+  {t:'tf',q:'El formato cursiva se aplica con el atajo Ctrl+I.',a:0},
+  {t:'tf',q:'La función Buscar y Reemplazar se activa con Ctrl+H en Word.',a:0},
+  {t:'tf',q:'Los márgenes del documento se configuran en la pestaña "Inicio".',a:1},
+  {t:'tf',q:'Ctrl+End lleva el cursor al final del documento.',a:0},
+  {t:'tf',q:'En Word, una tabla puede tener múltiples columnas y filas.',a:0},
+  {t:'tf',q:'El atajo Ctrl+P abre el panel de impresión en Word.',a:0},
+  {t:'tf',q:'Word no permite revisar la ortografía automáticamente mientras se escribe.',a:1},
+  {t:'mc',q:'¿Qué hace el comando Ctrl+V en Word?',ops:['Pega el contenido copiado','Guarda el documento','Cierra Word'],a:0},
+  {t:'mc',q:'¿En qué pestaña se encuentran las opciones de formato de fuente en Word?',ops:['Insertar','Inicio','Vista'],a:1},
+  {t:'mc',q:'¿Cuál es el formato de archivo predeterminado de Word desde 2007?',ops:['.doc','.txt','.docx'],a:2},
+  {t:'mc',q:'¿Qué función realiza el botón "Copiar formato" (escoba) en Word?',ops:['Copia el texto','Aplica el mismo formato de un texto a otro','Elimina el formato del texto'],a:1},
+  {t:'mc',q:'¿Cómo se inserta un número de página en Word?',ops:['Inicio > Párrafo','Insertar > Número de página','Vista > Encabezado'],a:1},
+  {t:'mc',q:'¿Qué tecla borra el carácter a la derecha del cursor?',ops:['Backspace','Delete','Supr tiene el mismo efecto que Backspace'],a:1},
+  {t:'mc',q:'¿En qué pestaña se configura el número de columnas del texto?',ops:['Inicio','Insertar','Diseño de página'],a:2},
+  {t:'mc',q:'¿Cuál atajo abre la revisión ortográfica en Word?',ops:['F5','F7','F9'],a:1},
+  {t:'mc',q:'¿Qué hace Ctrl+Home en Word?',ops:['Va al final del documento','Abre el menú inicio de Windows','Mueve el cursor al inicio del documento'],a:2},
+  {t:'mc',q:'¿En qué pestaña se encuentra la opción para insertar una tabla?',ops:['Inicio','Insertar','Diseño'],a:1},
+  {t:'mc',q:'¿Qué significa la alineación centrada en un párrafo?',ops:['El texto se alinea solo al margen izquierdo','El texto se centra horizontalmente en la página','El texto ocupa todo el ancho de la página'],a:1},
+  {t:'mc',q:'¿Qué opción permite ver el documento tal como se imprimirá?',ops:['Vista esquema','Vista diseño de impresión','Vista borrador'],a:1},
+  {t:'mc',q:'¿Cómo se aplica el subrayado al texto seleccionado?',ops:['Ctrl+U','Ctrl+S','Ctrl+L'],a:0},
+  {t:'mc',q:'¿Qué es el interlineado en Word?',ops:['El tamaño de la fuente','El espacio entre líneas de texto','El ancho de los márgenes'],a:1},
+  {t:'mc',q:'¿Qué función cumple la tecla F12 en Word?',ops:['Imprime el documento','Abre "Guardar como"','Cierra el documento'],a:1},
+];
+
+const LABELS_TF = ['Verdadero','Falso'];
+let cur=0, answers=new Array(30).fill(null), userName='';
+
+function startTest(){
+  userName=document.getElementById('inp-name').value.trim();
+  if(!userName){document.getElementById('inp-name').focus();return;}
+  show('s-test'); renderQ();
+}
+
+function show(id){
+  ['s-name','s-test','s-result'].forEach(s=>{
+    document.getElementById(s).classList.toggle('hidden', s!==id);
+  });
+}
+
+function renderQ(){
+  const q=QS[cur];
+  const total=30;
+  document.getElementById('q-counter').textContent=(cur+1)+' / '+total;
+  document.getElementById('prog').style.width=Math.round((cur+1)/total*100)+'%';
+  const isTF=q.t==='tf';
+  const pill=document.getElementById('q-pill');
+  pill.textContent=isTF?'Verdadero / Falso':'Selección múltiple';
+  pill.className='pill '+(isTF?'pill-blue':'pill-purple');
+  document.getElementById('q-section').textContent=isTF?'Parte 1 — preguntas 1–15':'Parte 2 — preguntas 16–30';
+  document.getElementById('q-num').textContent='Pregunta '+(cur+1);
+  document.getElementById('q-text').textContent=q.q;
+  document.getElementById('feedback').textContent='';
+
+  const opts=isTF?LABELS_TF:q.ops;
+  let html='';
+  opts.forEach((o,i)=>{
+    let cls='opt';
+    if(answers[cur]!==null){
+      if(i===q.a) cls+=' correct';
+      else if(i===answers[cur]) cls+=' wrong';
+      cls+=' '; 
+    } else if(answers[cur]===i) cls+=' sel';
+    const dis=answers[cur]!==null?'disabled':'';
+    html+=`<button class="${cls}" ${dis} onclick="pick(${i})">${o}</button>`;
+  });
+  document.getElementById('q-opts').innerHTML=html;
+
+  document.getElementById('btn-prev').style.visibility=cur===0?'hidden':'visible';
+  const isLast=cur===total-1;
+  document.getElementById('btn-next').classList.toggle('hidden',isLast);
+  document.getElementById('btn-finish').classList.toggle('hidden',!isLast);
+
+  if(answers[cur]!==null) showFeedback(cur);
+}
+
+function pick(i){
+  if(answers[cur]!==null) return;
+  answers[cur]=i;
+  renderQ();
+}
+
+function showFeedback(idx){
+  const q=QS[idx];
+  const isOk=answers[idx]===q.a;
+  const fb=document.getElementById('feedback');
+  fb.textContent=isOk?'Correcto':'Incorrecto — la respuesta correcta está marcada en verde.';
+  fb.style.color=isOk?'#27500A':'#A32D2D';
+}
+
+function go(dir){
+  cur=Math.max(0,Math.min(29,cur+dir));
+  renderQ();
+}
+
+function finish(){
+  const unanswered=answers.filter(a=>a===null).length;
+  if(unanswered>0 && !confirm('Hay '+unanswered+' pregunta(s) sin responder. ¿Ver resultados?')) return;
+  showResult();
+}
+
+function showResult(){
+  let ok=0;
+  QS.forEach((q,i)=>{if(answers[i]===q.a)ok++;});
+  const pct=Math.round(ok/30*100);
+  const nota=pct>=90?'Excelente':pct>=70?'Bueno':pct>=50?'Regular':'Necesita mejorar';
+  const nc=pct>=90?'#27500A':pct>=70?'#0C447C':pct>=50?'#633806':'#791F1F';
+  show('s-result');
+  document.getElementById('r-name').textContent='Estudiante: '+userName;
+  document.getElementById('r-pct').textContent=pct+'%';
+  document.getElementById('r-ok').textContent=ok;
+  document.getElementById('r-err').textContent=30-ok;
+  document.getElementById('r-nota').innerHTML='Calificación: <span style="color:'+nc+'">'+nota+'</span>';
+
+  let rev='<div style="font-size:16px;font-weight:500;color:var(--color-text-primary);margin:1.5rem 0 1rem;padding-bottom:8px;border-bottom:0.5px solid var(--color-border-tertiary)">Revisión de respuestas</div>';
+  QS.forEach((q,i)=>{
+    const ua=answers[i], ca=q.a;
+    const ok2=ua===ca;
+    const opts=q.t==='tf'?LABELS_TF:q.ops;
+    rev+=`<div class="card" style="margin-bottom:8px;border-color:${ok2?'#3B6D11':'#E24B4A'}">
+      <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px">
+        <span class="pill ${ok2?'pill-green':'pill-red'}">${ok2?'Correcta':'Incorrecta'}</span>
+        <span class="pill ${q.t==='tf'?'pill-blue':'pill-purple'}">${q.t==='tf'?'V/F':'Selección'}</span>
+        <span style="font-size:12px;color:var(--color-text-secondary)">Pregunta ${i+1}</span>
+      </div>
+      <div style="font-size:14px;color:var(--color-text-primary);margin-bottom:10px;line-height:1.5">${q.q}</div>
+      ${opts.map((o,j)=>{
+        let cls='opt';
+        if(j===ca) cls+=' correct';
+        else if(j===ua && !ok2) cls+=' wrong';
+        return `<button class="${cls}" disabled style="font-size:14px;padding:8px 14px;margin-bottom:6px">${o}</button>`;
+      }).join('')}
+    </div>`;
+  });
+  document.getElementById('review').innerHTML=rev;
+}
+
+function buildBody(){
+  let ok=0;
+  QS.forEach((q,i)=>{if(answers[i]===q.a)ok++;});
+  const pct=Math.round(ok/30*100);
+  const nota=pct>=90?'Excelente':pct>=70?'Bueno':pct>=50?'Regular':'Necesita mejorar';
+  let body='RESULTADO TEST DE WORD BÁSICO\n================================\n';
+  body+='Estudiante: '+userName+'\n';
+  body+='Puntaje: '+pct+'% ('+ok+'/30 correctas)\n';
+  body+='Calificación: '+nota+'\n';
+  body+='Fecha: '+new Date().toLocaleDateString('es-ES')+'\n\n';
+  body+='DETALLE POR PREGUNTA:\n---------------------\n';
+  QS.forEach((q,i)=>{
+    const ua=answers[i], ca=q.a;
+    const isOk=ua===ca;
+    const opts=q.t==='tf'?LABELS_TF:q.ops;
+    body+='\nP'+(i+1)+' ['+(isOk?'OK':'XX')+'] '+q.q+'\n';
+    body+='   Tu respuesta: '+(ua!==null?opts[ua]:'Sin responder')+'\n';
+    if(!isOk) body+='   Correcta: '+opts[ca]+'\n';
+  });
+  return body;
+}
+
+function sendMail(){
+  const subj=encodeURIComponent('Resultado Test Word Básico - '+userName);
+  const body=encodeURIComponent(buildBody());
+  window.location.href='mailto:jahulin@gmail.com?subject='+subj+'&body='+body;
+  document.getElementById('mail-status').textContent='Se abrió tu cliente de correo. Envía el mensaje a jahulin@gmail.com';
+  document.getElementById('mail-status').style.color='#27500A';
+}
+
+function restart(){
+  answers=new Array(30).fill(null);
+  cur=0;
+  userName='';
+  document.getElementById('inp-name').value='';
+  show('s-name');
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  document.getElementById('inp-name').addEventListener('keydown',e=>{if(e.key==='Enter')startTest();});
+});
+</script>

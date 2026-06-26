@@ -1,0 +1,1112 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Prueba de Acceso — Teleformación</title>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Sora:wght@400;600;700&display=swap');
+
+  :root {
+    --bg: #F0F4F8;
+    --panel: #FFFFFF;
+    --accent: #1A7F64;
+    --accent-light: #E6F5F0;
+    --accent-mid: #2AAB88;
+    --text-dark: #1B2B27;
+    --text-mid: #4A6260;
+    --text-soft: #8FA8A3;
+    --border: #D4E4E0;
+    --correct: #1A7F64;
+    --error: #C0392B;
+    --warning: #E67E22;
+    --radius: 14px;
+    --shadow: 0 4px 24px rgba(26,127,100,0.08);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--text-dark);
+    min-height: 100vh;
+    padding: 0 0 60px;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: var(--accent);
+    color: #fff;
+    padding: 0 0 0;
+    position: relative;
+    overflow: hidden;
+  }
+  .header-inner {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 40px 24px 36px;
+    position: relative;
+    z-index: 1;
+  }
+  .badge {
+    display: inline-block;
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.3);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    padding: 5px 12px;
+    border-radius: 20px;
+    margin-bottom: 18px;
+  }
+  header h1 {
+    font-family: 'Sora', sans-serif;
+    font-size: clamp(26px, 4vw, 36px);
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 12px;
+  }
+  header p {
+    font-size: 15px;
+    opacity: .85;
+    line-height: 1.6;
+    max-width: 540px;
+  }
+  .header-deco {
+    position: absolute;
+    right: -40px; top: -40px;
+    width: 220px; height: 220px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.06);
+  }
+  .header-deco2 {
+    position: absolute;
+    right: 80px; bottom: -60px;
+    width: 140px; height: 140px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.04);
+  }
+
+  /* ── PROGRESS BAR ── */
+  .progress-bar-wrap {
+    background: rgba(255,255,255,0.2);
+    height: 5px;
+  }
+  .progress-bar-fill {
+    height: 5px;
+    background: #fff;
+    width: 0%;
+    transition: width .4s ease;
+  }
+
+  /* ── MAIN ── */
+  main {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 32px 24px 0;
+  }
+
+  /* ── CARD ── */
+  .card {
+    background: var(--panel);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 32px;
+    margin-bottom: 20px;
+    border: 1px solid var(--border);
+  }
+  .card h2 {
+    font-family: 'Sora', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    margin-bottom: 22px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .card h2::before {
+    content: '';
+    display: block;
+    width: 4px; height: 18px;
+    background: var(--accent);
+    border-radius: 3px;
+  }
+
+  /* ── FORM FIELDS ── */
+  .field-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  .field-full { grid-column: 1 / -1; }
+  .field label {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-mid);
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    margin-bottom: 7px;
+  }
+  .field input, .field select {
+    width: 100%;
+    padding: 11px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: 9px;
+    font-size: 15px;
+    font-family: 'Inter', sans-serif;
+    color: var(--text-dark);
+    background: #fff;
+    transition: border-color .2s, box-shadow .2s;
+    outline: none;
+  }
+  .field input:focus, .field select:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(26,127,100,0.12);
+  }
+  .field input.error, .field select.error {
+    border-color: var(--error);
+  }
+  .err-msg {
+    font-size: 12px;
+    color: var(--error);
+    margin-top: 5px;
+    display: none;
+  }
+
+  /* ── INSTRUCCIONES ── */
+  .instrucciones {
+    background: var(--accent-light);
+    border-left: 4px solid var(--accent);
+    border-radius: 0 9px 9px 0;
+    padding: 16px 18px;
+    margin-bottom: 24px;
+  }
+  .instrucciones p {
+    font-size: 13.5px;
+    color: var(--text-mid);
+    line-height: 1.65;
+  }
+  .instrucciones strong { color: var(--accent); }
+
+  /* ── PREGUNTAS ── */
+  .pregunta-item {
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    padding: 22px;
+    margin-bottom: 14px;
+    transition: border-color .2s, box-shadow .2s;
+    background: #fafcfb;
+  }
+  .pregunta-item:hover {
+    border-color: var(--accent-mid);
+    box-shadow: 0 2px 14px rgba(26,127,100,0.07);
+  }
+  .pregunta-item.answered {
+    border-color: var(--accent);
+    background: var(--accent-light);
+  }
+  .pregunta-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    margin-bottom: 16px;
+  }
+  .pregunta-num {
+    min-width: 32px; height: 32px;
+    background: var(--accent);
+    color: #fff;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .pregunta-item.answered .pregunta-num {
+    background: var(--accent-mid);
+  }
+  .pregunta-texto {
+    font-size: 15px;
+    line-height: 1.6;
+    font-weight: 500;
+    color: var(--text-dark);
+    padding-top: 4px;
+  }
+  .opciones {
+    display: flex;
+    gap: 12px;
+    padding-left: 46px;
+    flex-wrap: wrap;
+  }
+  .opcion-label {
+    flex: 1;
+    min-width: 120px;
+  }
+  .opcion-label input[type="radio"] { display: none; }
+  .opcion-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    border: 2px solid var(--border);
+    border-radius: 9px;
+    padding: 11px 20px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-mid);
+    transition: all .18s;
+    user-select: none;
+    background: #fff;
+  }
+  .opcion-btn .dot {
+    width: 16px; height: 16px;
+    border-radius: 50%;
+    border: 2px solid currentColor;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: background .15s;
+  }
+  .opcion-btn:hover {
+    border-color: var(--accent-mid);
+    color: var(--accent);
+    background: var(--accent-light);
+  }
+  .opcion-label input[type="radio"]:checked + .opcion-btn {
+    border-color: var(--accent);
+    background: var(--accent);
+    color: #fff;
+  }
+  .opcion-label input[type="radio"]:checked + .opcion-btn .dot {
+    background: #fff;
+    border-color: #fff;
+  }
+  .opcion-label input[type="radio"]:checked + .opcion-btn .dot::after {
+    content: '';
+    width: 6px; height: 6px;
+    background: var(--accent);
+    border-radius: 50%;
+    display: block;
+  }
+  .pregunta-item.no-respuesta .pregunta-num {
+    background: var(--warning);
+  }
+
+  /* ── CONTADOR ── */
+  .contador-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 24px;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    margin-bottom: 20px;
+    box-shadow: var(--shadow);
+  }
+  .contador-texto {
+    font-size: 13px;
+    color: var(--text-mid);
+    font-weight: 500;
+  }
+  .contador-num {
+    font-family: 'Sora', sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--accent);
+  }
+  .mini-dots {
+    display: flex;
+    gap: 5px;
+    flex-wrap: wrap;
+  }
+  .mini-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: var(--border);
+    transition: background .2s;
+  }
+  .mini-dot.done { background: var(--accent); }
+
+  /* ── BOTÓN ENVIAR ── */
+  .btn-enviar {
+    width: 100%;
+    padding: 16px;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    font-family: 'Sora', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background .2s, transform .1s, box-shadow .2s;
+    box-shadow: 0 4px 16px rgba(26,127,100,0.25);
+    letter-spacing: .02em;
+  }
+  .btn-enviar:hover {
+    background: #15664f;
+    box-shadow: 0 6px 24px rgba(26,127,100,0.35);
+    transform: translateY(-1px);
+  }
+  .btn-enviar:active { transform: translateY(0); }
+  .btn-enviar:disabled {
+    background: var(--text-soft);
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+  }
+
+  /* ── RESULTADO ── */
+  #resultado {
+    display: none;
+    animation: fadeUp .4s ease;
+  }
+  @keyframes fadeUp {
+    from { opacity:0; transform:translateY(20px); }
+    to   { opacity:1; transform:translateY(0); }
+  }
+  .resultado-card {
+    border-radius: var(--radius);
+    padding: 36px 32px;
+    text-align: center;
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow);
+  }
+  .resultado-card.aprobado { background: var(--accent-light); border-color: var(--accent); }
+  .resultado-card.reprobado { background: #fdf3f2; border-color: #e8b4af; }
+  .resultado-icon {
+    font-size: 52px;
+    margin-bottom: 16px;
+  }
+  .resultado-card h2 {
+    font-family: 'Sora', sans-serif;
+    font-size: 26px;
+    font-weight: 700;
+    margin-bottom: 10px;
+  }
+  .resultado-card.aprobado h2 { color: var(--accent); }
+  .resultado-card.reprobado h2 { color: var(--error); }
+  .resultado-puntaje {
+    font-size: 48px;
+    font-family: 'Sora', sans-serif;
+    font-weight: 700;
+    margin: 16px 0;
+  }
+  .resultado-card.aprobado .resultado-puntaje { color: var(--accent); }
+  .resultado-card.reprobado .resultado-puntaje { color: var(--error); }
+  .resultado-sub {
+    font-size: 15px;
+    color: var(--text-mid);
+    line-height: 1.6;
+    margin-bottom: 24px;
+  }
+  .resultado-desglose {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 12px;
+    margin-top: 20px;
+    text-align: center;
+  }
+  .desglose-item {
+    background: rgba(255,255,255,0.7);
+    border-radius: 10px;
+    padding: 14px 10px;
+    border: 1px solid var(--border);
+  }
+  .desglose-num {
+    font-family: 'Sora', sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+  }
+  .desglose-label {
+    font-size: 11px;
+    color: var(--text-soft);
+    text-transform: uppercase;
+    letter-spacing: .05em;
+    margin-top: 3px;
+  }
+  .desglose-item.correct .desglose-num { color: var(--correct); }
+  .desglose-item.wrong .desglose-num { color: var(--error); }
+
+  .btn-reintentar {
+    margin-top: 24px;
+    padding: 13px 32px;
+    background: transparent;
+    border: 2px solid var(--accent);
+    color: var(--accent);
+    border-radius: 10px;
+    font-family: 'Sora', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all .2s;
+  }
+  .btn-reintentar:hover {
+    background: var(--accent);
+    color: #fff;
+  }
+
+  /* ── REVISIÓN ── */
+  .revision-list {
+    margin-top: 24px;
+    text-align: left;
+  }
+  .rev-item {
+    display: flex;
+    gap: 14px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--border);
+    align-items: flex-start;
+    font-size: 14px;
+    line-height: 1.55;
+  }
+  .rev-item:last-child { border-bottom: none; }
+  .rev-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+  .rev-texto { color: var(--text-mid); }
+  .rev-texto strong { color: var(--text-dark); }
+
+  @media (max-width: 520px) {
+    .field-grid { grid-template-columns: 1fr; }
+    .resultado-desglose { grid-template-columns: 1fr; }
+    .opciones { padding-left: 0; }
+    .card { padding: 20px 16px; }
+  }
+
+  /* ── PANTALLA BLOQUEADA ── */
+  #pantallaBloqueo {
+    display: none;
+    text-align: center;
+    padding: 60px 24px;
+    animation: fadeUp .4s ease;
+  }
+  .bloqueo-card {
+    background: var(--panel);
+    border: 2px solid #e8b4af;
+    border-radius: var(--radius);
+    padding: 48px 36px;
+    box-shadow: var(--shadow);
+  }
+  .bloqueo-icon { font-size: 56px; margin-bottom: 20px; }
+  .bloqueo-card h2 {
+    font-family: 'Sora', sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--error);
+    margin-bottom: 12px;
+  }
+  .bloqueo-card p {
+    font-size: 15px;
+    color: var(--text-mid);
+    line-height: 1.65;
+    max-width: 460px;
+    margin: 0 auto;
+  }
+  .bloqueo-meta {
+    margin-top: 20px;
+    background: #fdf3f2;
+    border-radius: 10px;
+    padding: 14px 20px;
+    font-size: 13px;
+    color: var(--text-mid);
+    border: 1px solid #e8b4af;
+  }
+  .bloqueo-meta strong { color: var(--text-dark); }
+
+  /* ── OVERLAY ENVIANDO ── */
+  #overlayEnviando {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(26,43,39,0.55);
+    backdrop-filter: blur(4px);
+    z-index: 999;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 16px;
+  }
+  #overlayEnviando.visible { display: flex; }
+  .spinner {
+    width: 52px; height: 52px;
+    border: 4px solid rgba(255,255,255,0.2);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin .8s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .overlay-txt {
+    font-family: 'Sora', sans-serif;
+    font-size: 16px;
+    color: #fff;
+    font-weight: 600;
+  }
+  .overlay-sub {
+    font-size: 13px;
+    color: rgba(255,255,255,0.7);
+    margin-top: -8px;
+  }
+
+  /* ── ESTADO CORREO ── */
+  .email-status {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 13px 18px;
+    border-radius: 10px;
+    font-size: 13.5px;
+    font-weight: 500;
+    margin-top: 20px;
+  }
+  .email-status.ok {
+    background: var(--accent-light);
+    border: 1px solid var(--accent);
+    color: var(--accent);
+  }
+  .email-status.fail {
+    background: #fdf3f2;
+    border: 1px solid #e8b4af;
+    color: var(--error);
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-deco"></div>
+  <div class="header-deco2"></div>
+  <div class="header-inner">
+    <div class="badge">🖥️ Evaluación Diagnóstica</div>
+    <h1>Prueba de Conocimientos Básicos<br>para Teleformación</h1>
+    <p>Antes de iniciar el curso, evaluamos tus competencias digitales previas. Responde con honestidad: no hay respuestas buenas ni malas, solo queremos conocer tu punto de partida.</p>
+  </div>
+  <div class="progress-bar-wrap">
+    <div class="progress-bar-fill" id="progressBar"></div>
+  </div>
+</header>
+
+<main>
+
+  <!-- OVERLAY ENVIANDO -->
+  <div id="overlayEnviando">
+    <div class="spinner"></div>
+    <div class="overlay-txt">Enviando resultados…</div>
+    <div class="overlay-sub">Enviando a jahulin@gmail.com</div>
+  </div>
+
+  <!-- PANTALLA BLOQUEADA (1 solo intento) -->
+  <div id="pantallaBloqueo">
+    <div class="bloqueo-card">
+      <div class="bloqueo-icon">🔒</div>
+      <h2>Prueba ya realizada</h2>
+      <p>Esta evaluación solo puede completarse <strong>una vez</strong> por dispositivo. Ya existe un registro de tu participación en este navegador.</p>
+      <div class="bloqueo-meta" id="bloqueoMeta"></div>
+    </div>
+  </div>
+
+  <!-- DATOS PERSONALES -->
+  <div class="card" id="seccionDatos">
+    <h2>Datos del Participante</h2>
+    <div class="field-grid">
+      <div class="field field-full">
+        <label for="nombre">Nombre completo</label>
+        <input type="text" id="nombre" placeholder="Ej: Ana María Rodríguez López">
+        <div class="err-msg" id="errNombre">Ingresa tu nombre completo.</div>
+      </div>
+      <div class="field">
+        <label for="fecha">Fecha</label>
+        <input type="date" id="fecha">
+        <div class="err-msg" id="errFecha">Selecciona la fecha.</div>
+      </div>
+      <div class="field">
+        <label for="genero">Género</label>
+        <select id="genero">
+          <option value="">— Selecciona —</option>
+          <option value="femenino">Femenino</option>
+          <option value="masculino">Masculino</option>
+          <option value="no_binario">No binario</option>
+          <option value="prefiero_no">Prefiero no indicarlo</option>
+        </select>
+        <div class="err-msg" id="errGenero">Selecciona una opción.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- INSTRUCCIONES -->
+  <div class="instrucciones">
+    <p><strong>Instrucciones:</strong> Lee cada afirmación y marca si es <strong>Verdadera</strong> o <strong>Falsa</strong>. El cuestionario evalúa competencias básicas en tecnología, internet y entornos virtuales de aprendizaje. Responde de forma individual y sin consultar fuentes externas. Debes contestar todas las preguntas para enviar tu evaluación.</p>
+  </div>
+
+  <!-- CONTADOR -->
+  <div class="contador-wrap">
+    <div>
+      <div class="contador-texto">Preguntas respondidas</div>
+      <div class="contador-num"><span id="contadorNum">0</span> / 10</div>
+    </div>
+    <div class="mini-dots" id="miniDots"></div>
+  </div>
+
+  <!-- CUESTIONARIO -->
+  <div id="seccionPreguntas">
+    <div class="card" style="padding: 24px 28px;">
+      <h2>Cuestionario — Verdadero o Falso</h2>
+
+      <!-- Pregunta 1 -->
+      <div class="pregunta-item" id="p1">
+        <div class="pregunta-header">
+          <div class="pregunta-num">1</div>
+          <div class="pregunta-texto">Un navegador web (como Chrome, Firefox o Edge) es el programa que se usa para acceder y visitar páginas en internet.</div>
+        </div>
+        <div class="opciones">
+          <label class="opcion-label">
+            <input type="radio" name="p1" value="V" onchange="marcarRespuesta(1)">
+            <div class="opcion-btn"><span class="dot"></span> Verdadero</div>
+          </label>
+          <label class="opcion-label">
+            <input type="radio" name="p1" value="F" onchange="marcarRespuesta(1)">
+            <div class="opcion-btn"><span class="dot"></span> Falso</div>
+          </label>
+        </div>
+      </div>
+
+      <!-- Pregunta 2 -->
+      <div class="pregunta-item" id="p2">
+        <div class="pregunta-header">
+          <div class="pregunta-num">2</div>
+          <div class="pregunta-texto">Para participar en un curso de teleformación, es imprescindible tener acceso a una conexión a internet y un dispositivo como computador, tablet o teléfono inteligente.</div>
+        </div>
+        <div class="opciones">
+          <label class="opcion-label">
+            <input type="radio" name="p2" value="V" onchange="marcarRespuesta(2)">
+            <div class="opcion-btn"><span class="dot"></span> Verdadero</div>
+          </label>
+          <label class="opcion-label">
+            <input type="radio" name="p2" value="F" onchange="marcarRespuesta(2)">
+            <div class="opcion-btn"><span class="dot"></span> Falso</div>
+          </label>
+        </div>
+      </div>
+
+      <!-- Pregunta 3 -->
+      <div class="pregunta-item" id="p3">
+        <div class="pregunta-header">
+          <div class="pregunta-num">3</div>
+          <div class="pregunta-texto">Un correo electrónico (e-mail) solo puede enviarse entre personas que trabajan en la misma empresa o institución.</div>
+        </div>
+        <div class="opciones">
+          <label class="opcion-label">
+            <input type="radio" name="p3" value="V" onchange="marcarRespuesta(3)">
+            <div class="opcion-btn"><span class="dot"></span> Verdadero</div>
+          </label>
+          <label class="opcion-label">
+            <input type="radio" name="p3" value="F" onchange="marcarRespuesta(3)">
+            <div class="opcion-btn"><span class="dot"></span> Falso</div>
+          </label>
+        </div>
+      </div>
+
+      <!-- Pregunta 4 -->
+      <div class="pregunta-item" id="p4">
+        <div class="pregunta-header">
+          <div class="pregunta-num">4</div>
+          <div class="pregunta-texto">En una plataforma virtual de aprendizaje (como Moodle), los participantes pueden descargar materiales, entregar tareas y comunicarse con el instructor, todo desde un mismo entorno en línea.</div>
+        </div>
+        <div class="opciones">
+          <label class="opcion-label">
+            <input type="radio" name="p4" value="V" onchange="marcarRespuesta(4)">
+            <div class="opcion-btn"><span class="dot"></span> Verdadero</div>
+          </label>
+          <label class="opcion-label">
+            <input type="radio" name="p4" value="F" onchange="marcarRespuesta(4)">
+            <div class="opcion-btn"><span class="dot"></span> Falso</div>
+          </label>
+        </div>
+      </div>
+
+      <!-- Pregunta 5 -->
+      <div class="pregunta-item" id="p5">
+        <div class="pregunta-header">
+          <div class="pregunta-num">5</div>
+          <div class="pregunta-texto">Una contraseña segura debe tener al menos 8 caracteres y combinar letras, números y símbolos para proteger el acceso a tu cuenta.</div>
+        </div>
+        <div class="opciones">
+          <label class="opcion-label">
+            <input type="radio" name="p5" value="V" onchange="marcarRespuesta(5)">
+            <div class="opcion-btn"><span class="dot"></span> Verdadero</div>
+          </label>
+          <label class="opcion-label">
+            <input type="radio" name="p5" value="F" onchange="marcarRespuesta(5)">
+            <div class="opcion-btn"><span class="dot"></span> Falso</div>
+          </label>
+        </div>
+      </div>
+
+      <!-- Pregunta 6 -->
+      <div class="pregunta-item" id="p6">
+        <div class="pregunta-header">
+          <div class="pregunta-num">6</div>
+          <div class="pregunta-texto">Un archivo PDF solo puede abrirse en computadores con sistema operativo Windows; no es posible verlo en Mac, Android o iPhone.</div>
+        </div>
+        <div class="opciones">
+          <label class="opcion-label">
+            <input type="radio" name="p6" value="V" onchange="marcarRespuesta(6)">
+            <div class="opcion-btn"><span class="dot"></span> Verdadero</div>
+          </label>
+          <label class="opcion-label">
+            <input type="radio" name="p6" value="F" onchange="marcarRespuesta(6)">
+            <div class="opcion-btn"><span class="dot"></span> Falso</div>
+          </label>
+        </div>
+      </div>
+
+      <!-- Pregunta 7 -->
+      <div class="pregunta-item" id="p7">
+        <div class="pregunta-header">
+          <div class="pregunta-num">7</div>
+          <div class="pregunta-texto">En un curso virtual, la participación en foros, chats y videollamadas son actividades válidas de comunicación y aprendizaje, equivalentes a las que se realizan en un aula presencial.</div>
+        </div>
+        <div class="opciones">
+          <label class="opcion-label">
+            <input type="radio" name="p7" value="V" onchange="marcarRespuesta(7)">
+            <div class="opcion-btn"><span class="dot"></span> Verdadero</div>
+          </label>
+          <label class="opcion-label">
+            <input type="radio" name="p7" value="F" onchange="marcarRespuesta(7)">
+            <div class="opcion-btn"><span class="dot"></span> Falso</div>
+          </label>
+        </div>
+      </div>
+
+      <!-- Pregunta 8 -->
+      <div class="pregunta-item" id="p8">
+        <div class="pregunta-header">
+          <div class="pregunta-num">8</div>
+          <div class="pregunta-texto">Guardar o hacer copias de seguridad de los archivos importantes es una práctica innecesaria si el dispositivo nunca ha presentado fallos anteriores.</div>
+        </div>
+        <div class="opciones">
+          <label class="opcion-label">
+            <input type="radio" name="p8" value="V" onchange="marcarRespuesta(8)">
+            <div class="opcion-btn"><span class="dot"></span> Verdadero</div>
+          </label>
+          <label class="opcion-label">
+            <input type="radio" name="p8" value="F" onchange="marcarRespuesta(8)">
+            <div class="opcion-btn"><span class="dot"></span> Falso</div>
+          </label>
+        </div>
+      </div>
+
+      <!-- Pregunta 9 -->
+      <div class="pregunta-item" id="p9">
+        <div class="pregunta-header">
+          <div class="pregunta-num">9</div>
+          <div class="pregunta-texto">La nube (cloud) es un servicio que permite almacenar archivos y acceder a ellos desde internet, sin necesidad de guardarlos únicamente en el disco duro del propio dispositivo.</div>
+        </div>
+        <div class="opciones">
+          <label class="opcion-label">
+            <input type="radio" name="p9" value="V" onchange="marcarRespuesta(9)">
+            <div class="opcion-btn"><span class="dot"></span> Verdadero</div>
+          </label>
+          <label class="opcion-label">
+            <input type="radio" name="p9" value="F" onchange="marcarRespuesta(9)">
+            <div class="opcion-btn"><span class="dot"></span> Falso</div>
+          </label>
+        </div>
+      </div>
+
+      <!-- Pregunta 10 -->
+      <div class="pregunta-item" id="p10">
+        <div class="pregunta-header">
+          <div class="pregunta-num">10</div>
+          <div class="pregunta-texto">La autogestión del tiempo y la disciplina personal son habilidades irrelevantes en la teleformación, ya que el tutor virtual siempre supervisará al estudiante en tiempo real.</div>
+        </div>
+        <div class="opciones">
+          <label class="opcion-label">
+            <input type="radio" name="p10" value="V" onchange="marcarRespuesta(10)">
+            <div class="opcion-btn"><span class="dot"></span> Verdadero</div>
+          </label>
+          <label class="opcion-label">
+            <input type="radio" name="p10" value="F" onchange="marcarRespuesta(10)">
+            <div class="opcion-btn"><span class="dot"></span> Falso</div>
+          </label>
+        </div>
+      </div>
+
+    </div><!-- /.card -->
+
+    <button class="btn-enviar" id="btnEnviar" onclick="enviarPrueba()">
+      Enviar evaluación →
+    </button>
+  </div><!-- /#seccionPreguntas -->
+
+  <!-- RESULTADO -->
+  <div id="resultado"></div>
+
+</main>
+
+<script>
+  // ── EMAILJS CONFIG ──────────────────────────────────────────────
+  // Instrucciones para activar el envío de correo real:
+  // 1. Crea una cuenta gratuita en https://www.emailjs.com
+  // 2. Crea un Service (Gmail) → anota el SERVICE_ID
+  // 3. Crea un Template con las variables indicadas → anota el TEMPLATE_ID
+  // 4. Copia tu Public Key desde Account → API Keys
+  // 5. Reemplaza los valores de abajo con los tuyos
+  const EMAILJS_PUBLIC_KEY  = 'TU_PUBLIC_KEY';   // ← reemplazar
+  const EMAILJS_SERVICE_ID  = 'TU_SERVICE_ID';   // ← reemplazar
+  const EMAILJS_TEMPLATE_ID = 'TU_TEMPLATE_ID';  // ← reemplazar
+  const DESTINATARIO = 'jahulin@gmail.com';
+  // ────────────────────────────────────────────────────────────────
+
+  const STORAGE_KEY = 'teleformacion_prueba_enviada';
+
+  // Respuestas correctas
+  const respuestasCorrectas = {
+    p1: 'V', p2: 'V', p3: 'F', p4: 'V',  p5: 'V',
+    p6: 'F', p7: 'V', p8: 'F', p9: 'V', p10: 'F'
+  };
+
+  const preguntas = {
+    p1:  'Un navegador web (como Chrome, Firefox o Edge) es el programa que se usa para acceder y visitar páginas en internet.',
+    p2:  'Para participar en un curso de teleformación, es imprescindible tener acceso a una conexión a internet y un dispositivo como computador, tablet o teléfono inteligente.',
+    p3:  'Un correo electrónico (e-mail) solo puede enviarse entre personas que trabajan en la misma empresa o institución.',
+    p4:  'En una plataforma virtual de aprendizaje (como Moodle), los participantes pueden descargar materiales, entregar tareas y comunicarse con el instructor, todo desde un mismo entorno en línea.',
+    p5:  'Una contraseña segura debe tener al menos 8 caracteres y combinar letras, números y símbolos para proteger el acceso a tu cuenta.',
+    p6:  'Un archivo PDF solo puede abrirse en computadores con sistema operativo Windows; no es posible verlo en Mac, Android o iPhone.',
+    p7:  'En un curso virtual, la participación en foros, chats y videollamadas son actividades válidas de comunicación y aprendizaje, equivalentes a las que se realizan en un aula presencial.',
+    p8:  'Guardar o hacer copias de seguridad de los archivos importantes es una práctica innecesaria si el dispositivo nunca ha presentado fallos anteriores.',
+    p9:  'La nube (cloud) es un servicio que permite almacenar archivos y acceder a ellos desde internet, sin necesidad de guardarlos únicamente en el disco duro del propio dispositivo.',
+    p10: 'La autogestión del tiempo y la disciplina personal son habilidades irrelevantes en la teleformación, ya que el tutor virtual siempre supervisará al estudiante en tiempo real.'
+  };
+
+  const explicaciones = {
+    p1:  { texto: 'El navegador web es la herramienta principal para acceder a internet y visitar sitios web.', correcta: 'Verdadero' },
+    p2:  { texto: 'La teleformación exige conectividad a internet y un dispositivo con capacidad de procesamiento básico.', correcta: 'Verdadero' },
+    p3:  { texto: 'El correo electrónico puede enviarse a cualquier persona en el mundo que tenga una dirección de e-mail, independientemente de su organización.', correcta: 'Falso' },
+    p4:  { texto: 'Las plataformas LMS como Moodle integran materiales, tareas, foros y comunicación en un único entorno.', correcta: 'Verdadero' },
+    p5:  { texto: 'Las contraseñas robustas combinan letras, números y símbolos, y tienen una longitud mínima recomendada de 8 caracteres.', correcta: 'Verdadero' },
+    p6:  { texto: 'El formato PDF es multiplataforma: se puede abrir en cualquier sistema operativo y dispositivo con un lector compatible.', correcta: 'Falso' },
+    p7:  { texto: 'Los foros, chats y videollamadas son medios de comunicación e interacción pedagógica reconocidos en entornos virtuales.', correcta: 'Verdadero' },
+    p8:  { texto: 'Las copias de seguridad son siempre necesarias: los dispositivos pueden fallar sin previo aviso en cualquier momento.', correcta: 'Falso' },
+    p9:  { texto: 'El almacenamiento en la nube permite acceder a los archivos desde cualquier lugar y dispositivo con conexión a internet.', correcta: 'Verdadero' },
+    p10: { texto: 'La autogestión y la disciplina son competencias clave en la teleformación, donde el estudiante organiza en gran medida su propio tiempo de estudio.', correcta: 'Falso' }
+  };
+
+  let respondidas = new Set();
+
+  // ── CONTROL DE UN SOLO INTENTO ──────────────────────────────────
+  window.addEventListener('DOMContentLoaded', () => {
+    emailjs.init(EMAILJS_PUBLIC_KEY);
+
+    const registro = localStorage.getItem(STORAGE_KEY);
+    if (registro) {
+      // Ya realizó la prueba → mostrar pantalla de bloqueo
+      const datos = JSON.parse(registro);
+      document.getElementById('seccionDatos').style.display      = 'none';
+      document.getElementById('seccionPreguntas').style.display  = 'none';
+      document.querySelector('.instrucciones').style.display      = 'none';
+      document.querySelector('.contador-wrap').style.display      = 'none';
+      document.getElementById('pantallaBloqueo').style.display    = 'block';
+      document.getElementById('bloqueoMeta').innerHTML =
+        `<strong>Participante:</strong> ${datos.nombre}<br>
+         <strong>Fecha de realización:</strong> ${datos.fecha}<br>
+         <strong>Resultado obtenido:</strong> ${datos.puntaje}% (${datos.correctas}/10 correctas)`;
+    }
+
+    initDots();
+    document.getElementById('fecha').valueAsDate = new Date();
+  });
+
+  function initDots() {
+    const c = document.getElementById('miniDots');
+    for (let i = 1; i <= 10; i++) {
+      const d = document.createElement('div');
+      d.className = 'mini-dot';
+      d.id = 'dot' + i;
+      c.appendChild(d);
+    }
+  }
+
+  function marcarRespuesta(num) {
+    respondidas.add(num);
+    document.getElementById('p' + num).classList.add('answered');
+    document.getElementById('p' + num).classList.remove('no-respuesta');
+    document.getElementById('dot' + num).classList.add('done');
+    document.getElementById('contadorNum').textContent = respondidas.size;
+    const pct = Math.round((respondidas.size / 10) * 85 + 5);
+    document.getElementById('progressBar').style.width = pct + '%';
+  }
+
+  async function enviarPrueba() {
+    let valido = true;
+
+    const nombre = document.getElementById('nombre').value.trim();
+    const fecha  = document.getElementById('fecha').value;
+    const genero = document.getElementById('genero').value;
+
+    document.getElementById('errNombre').style.display = nombre ? 'none' : 'block';
+    document.getElementById('nombre').classList.toggle('error', !nombre);
+    document.getElementById('errFecha').style.display = fecha ? 'none' : 'block';
+    document.getElementById('fecha').classList.toggle('error', !fecha);
+    document.getElementById('errGenero').style.display = genero ? 'none' : 'block';
+    document.getElementById('genero').classList.toggle('error', !genero);
+
+    if (!nombre || !fecha || !genero) valido = false;
+
+    let sinResponder = [];
+    for (let i = 1; i <= 10; i++) {
+      const sel = document.querySelector(`input[name="p${i}"]:checked`);
+      if (!sel) {
+        sinResponder.push(i);
+        document.getElementById('p' + i).classList.add('no-respuesta');
+      }
+    }
+    if (sinResponder.length > 0) valido = false;
+
+    if (!valido) {
+      const target = sinResponder.length > 0
+        ? document.getElementById('p' + sinResponder[0])
+        : document.getElementById('nombre');
+      target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return;
+    }
+
+    // Calcular resultados
+    let correctas = 0;
+    let detalles = [];
+    for (let i = 1; i <= 10; i++) {
+      const key = 'p' + i;
+      const sel = document.querySelector(`input[name="${key}"]:checked`).value;
+      const ok  = sel === respuestasCorrectas[key];
+      if (ok) correctas++;
+      detalles.push({ num: i, sel, ok });
+    }
+
+    const pct = Math.round((correctas / 10) * 100);
+    const aprobado = correctas >= 7;
+    const fechaFormateada = new Date(fecha + 'T12:00:00').toLocaleDateString('es-ES', { day: '2-digit', month: 'long', year: 'numeric' });
+    const generoLabel = { femenino: 'Femenino', masculino: 'Masculino', no_binario: 'No binario', prefiero_no: 'Prefiero no indicarlo' }[genero] || genero;
+    const horaEnvio = new Date().toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+
+    // Guardar en localStorage (bloquear reintento)
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({
+      nombre, fecha: fechaFormateada, puntaje: pct, correctas
+    }));
+
+    // Construir resumen de respuestas para el correo
+    const resumenRespuestas = detalles.map(d => {
+      const ok = d.ok ? '✓' : '✗';
+      const respuesta = d.sel === 'V' ? 'Verdadero' : 'Falso';
+      const correctaLabel = respuestasCorrectas['p' + d.num] === 'V' ? 'Verdadero' : 'Falso';
+      return `[${ok}] P${d.num}: ${respuesta} (correcta: ${correctaLabel})`;
+    }).join('\n');
+
+    // Mostrar overlay de envío
+    document.getElementById('overlayEnviando').classList.add('visible');
+
+    // Enviar correo vía EmailJS
+    let emailOk = false;
+    try {
+      await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+        to_email:        DESTINATARIO,
+        to_name:         'Administrador',
+        participante:    nombre,
+        genero:          generoLabel,
+        fecha_prueba:    fechaFormateada,
+        hora_envio:      horaEnvio,
+        puntaje:         pct + '%',
+        correctas:       correctas,
+        incorrectas:     10 - correctas,
+        resultado:       aprobado ? 'APTO PARA EL CURSO' : 'NO APTO — REFUERZO RECOMENDADO',
+        resumen:         resumenRespuestas,
+        reply_to:        DESTINATARIO
+      });
+      emailOk = true;
+    } catch (err) {
+      console.warn('EmailJS error:', err);
+      emailOk = false;
+    }
+
+    // Ocultar overlay y mostrar resultado
+    document.getElementById('overlayEnviando').classList.remove('visible');
+    document.getElementById('seccionDatos').style.display     = 'none';
+    document.getElementById('seccionPreguntas').style.display = 'none';
+    document.querySelector('.instrucciones').style.display     = 'none';
+    document.querySelector('.contador-wrap').style.display     = 'none';
+    document.getElementById('progressBar').style.width         = '100%';
+
+    const emailBadge = emailOk
+      ? `<div class="email-status ok">✅ Resultados enviados correctamente a ${DESTINATARIO}</div>`
+      : `<div class="email-status fail">⚠️ No se pudo enviar el correo automáticamente. Configura EmailJS para activar el envío (ver instrucciones en el código).</div>`;
+
+    const revItems = detalles.map(d => {
+      const e = explicaciones['p' + d.num];
+      const icon = d.ok ? '✅' : '❌';
+      const label = d.sel === 'V' ? 'Verdadero' : 'Falso';
+      return `
+        <div class="rev-item">
+          <div class="rev-icon">${icon}</div>
+          <div class="rev-texto">
+            <strong>Pregunta ${d.num}:</strong> Respondiste <strong>${label}</strong>. La respuesta correcta es <strong>${e.correcta}</strong>.<br>
+            <span style="color: var(--text-soft); font-size:13px">${e.texto}</span>
+          </div>
+        </div>`;
+    }).join('');
+
+    const resultadoHTML = `
+      <div class="resultado-card ${aprobado ? 'aprobado' : 'reprobado'}">
+        <div class="resultado-icon">${aprobado ? '🎓' : '📚'}</div>
+        <h2>${aprobado ? '¡Conocimientos suficientes!' : 'Preparación previa recomendada'}</h2>
+        <div style="font-size:13px; color: var(--text-soft); margin-bottom:8px;">
+          Participante: <strong style="color:var(--text-dark)">${nombre}</strong>
+          &nbsp;·&nbsp; ${generoLabel}
+          &nbsp;·&nbsp; ${fechaFormateada}
+        </div>
+        <div class="resultado-puntaje">${pct}%</div>
+        <p class="resultado-sub">
+          ${aprobado
+            ? 'Has demostrado las competencias digitales básicas necesarias para participar en un curso de teleformación. ¡Puedes continuar con tu inscripción!'
+            : 'Tu nivel de conocimientos previos sugiere reforzar algunas competencias digitales básicas antes de iniciar el curso. Revisa los conceptos marcados.'}
+        </p>
+        <div class="resultado-desglose">
+          <div class="desglose-item correct">
+            <div class="desglose-num">${correctas}</div>
+            <div class="desglose-label">Correctas</div>
+          </div>
+          <div class="desglose-item wrong">
+            <div class="desglose-num">${10 - correctas}</div>
+            <div class="desglose-label">Incorrectas</div>
+          </div>
+          <div class="desglose-item">
+            <div class="desglose-num" style="color:var(--text-dark)">${pct}%</div>
+            <div class="desglose-label">Puntuación</div>
+          </div>
+        </div>
+        ${emailBadge}
+        <div class="revision-list">
+          <h3 style="font-family:'Sora',sans-serif; font-size:14px; text-transform:uppercase; letter-spacing:.07em; color:var(--text-mid); margin-bottom:12px;">Revisión detallada</h3>
+          ${revItems}
+        </div>
+        <div style="margin-top:20px; padding:14px 18px; background:#f5f5f5; border-radius:10px; font-size:12.5px; color:var(--text-soft); border:1px solid var(--border);">
+          🔒 <strong style="color:var(--text-mid)">Intento registrado.</strong> Esta prueba solo puede realizarse una vez por dispositivo. Tu resultado ha quedado guardado.
+        </div>
+      </div>`;
+
+    const div = document.getElementById('resultado');
+    div.innerHTML = resultadoHTML;
+    div.style.display = 'block';
+    div.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+</script>
+</body>
+</html>
