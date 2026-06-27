@@ -195,3 +195,27 @@ create policy materiales_insert on public.materiales
 drop policy if exists materiales_delete on public.materiales;
 create policy materiales_delete on public.materiales
   for delete using (profesor_id = auth.uid() or public.es_admin());
+
+-- 8) FORO (clase_id NULL = foro general; o foro por clase) -------------------
+create table if not exists public.foro_mensajes (
+  id           uuid primary key default gen_random_uuid(),
+  clase_id     uuid references public.clases(id) on delete cascade,  -- null = general
+  autor_id     uuid references auth.users(id) on delete set null,
+  autor_nombre text,
+  autor_rol    text,
+  mensaje      text not null,
+  creado_en    timestamptz not null default now()
+);
+alter table public.foro_mensajes enable row level security;
+
+drop policy if exists foro_select on public.foro_mensajes;
+create policy foro_select on public.foro_mensajes
+  for select using (auth.role() = 'authenticated');
+
+drop policy if exists foro_insert on public.foro_mensajes;
+create policy foro_insert on public.foro_mensajes
+  for insert with check (autor_id = auth.uid());
+
+drop policy if exists foro_delete on public.foro_mensajes;
+create policy foro_delete on public.foro_mensajes
+  for delete using (autor_id = auth.uid() or public.es_admin());

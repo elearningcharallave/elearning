@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Foro — FUNCECAIND</title>
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+<link rel="stylesheet" href="assets/styles.css">
+<style>
+  .msg-item{display:flex;gap:12px;padding:14px 0;border-bottom:1px solid var(--border)}
+  .msg-item:last-child{border-bottom:none}
+  .msg-body{flex:1;min-width:0}
+  .msg-head{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:4px}
+  .msg-text{color:var(--text-dark);font-size:.95rem;line-height:1.5;white-space:pre-wrap;word-wrap:break-word;overflow-wrap:break-word}
+  .msg-del{background:none;border:none;color:var(--text-light);cursor:pointer;font-size:.9rem;margin-left:auto}
+  .msg-del:hover{color:var(--red)}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <a href="index.html" class="brand">Funce<span>Caind</span></a>
+  <div class="topbar-right">
+    <a class="btn-logout" id="back" href="#">← Mi panel</a>
+    <button class="btn-logout" onclick="FV.logout()">Salir</button>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="page-head">
+    <h1>💬 Foro</h1>
+    <p>Conversa con la comunidad. Elige el foro general o el de una clase.</p>
+  </div>
+
+  <div class="card">
+    <div class="field" style="margin-bottom:0">
+      <label>Foro</label>
+      <select id="foro-sel" onchange="cambiar()"></select>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2 id="foro-titulo">🌐 Foro general</h2>
+    <div class="sub" id="foro-sub">Mensajes de toda la comunidad.</div>
+    <div id="msgs"><div class="empty">Cargando…</div></div>
+    <div style="margin-top:16px;border-top:1px solid var(--border);padding-top:16px">
+      <div class="field"><label>Escribe un mensaje</label><textarea id="nuevo" rows="3" placeholder="Tu mensaje…"></textarea></div>
+      <div class="msg" id="pub-msg"></div>
+      <button class="btn" id="pub-btn" onclick="publicar()">Publicar</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="assets/supabase-config.js"></script>
+<script src="assets/app.js"></script>
+<script>
+var ME=null, MIDOC=null, ACTUAL='';
+function esc(s){ return (s==null?'':''+s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function ini(n){ return (n||'?').trim().split(/\s+/).map(function(w){return w[0];}).slice(0,2).join('').toUpperCase(); }
+
+FV.requireRole(['admin','profesor','alumno'], function(user, doc){
+  ME=user; MIDOC=doc;
+  document.getElementById('back').href = FV.panelDe(doc.rol);
+  init();
+});
+
+async function init(){
+  var sel=document.getElementById('foro-sel');
+  sel.innerHTML='<option value="">🌐 Foro general</option>';
+  try{
+    var clases=await FV.todasLasClases();
+    clases.forEach(function(c){ var o=document.createElement('option'); o.value=c.id; o.textContent='📚 '+c.titulo; sel.appendChild(o); });
+  }catch(e){}
+  cargar();
+}
+function cambiar(){
+  var sel=document.getElementById('foro-sel');
+  ACTUAL=sel.value;
+  document.getElementById('foro-titulo').textContent=sel.options[sel.selectedIndex].text;
+  document.getElementById('foro-sub').textContent=ACTUAL?'Mensajes de esta clase.':'Mensajes de toda la comunidad.';
+  cargar();
+}
+async function cargar(){
+  var cont=document.getElementById('msgs');
+  cont.innerHTML='<div class="empty">Cargando…</div>';
+  try{
+    var msgs=await FV.foroMensajes(ACTUAL||null);
+    if(!msgs.length){ cont.innerHTML='<div class="empty">Sé el primero en escribir.</div>'; return; }
+    cont.innerHTML=msgs.map(function(m){
+      var borrar=(m.autor_id===ME.uid)||MIDOC.rol==='admin';
+      var fecha=m.creado_en?new Date(m.creado_en).toLocaleString('es-VE',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}):'';
+      return '<div class="msg-item"><div class="avatar">'+ini(m.autor_nombre)+'</div>'+
+        '<div class="msg-body"><div class="msg-head">'+
+          '<b style="font-size:.9rem">'+esc(m.autor_nombre||'?')+'</b>'+
+          '<span class="badge '+(m.autor_rol||'alumno')+'">'+(m.autor_rol||'alumno')+'</span>'+
+          '<span style="font-size:.75rem;color:var(--text-light)">'+fecha+'</span>'+
+          (borrar?'<button class="msg-del" onclick="borrar(\''+m.id+'\')">🗑</button>':'')+
+        '</div><div class="msg-text">'+esc(m.mensaje)+'</div></div></div>';
+    }).join('');
+    cont.scrollTop=cont.scrollHeight;
+  }catch(e){ cont.innerHTML='<div class="empty">Error: '+e.message+'</div>'; }
+}
+async function publicar(){
+  var t=document.getElementById('nuevo').value.trim();
+  if(!t) return;
+  var b=document.getElementById('pub-btn'); b.disabled=true; b.textContent='Publicando…';
+  try{
+    await FV.publicarForo(ACTUAL||null, t);
+    document.getElementById('nuevo').value='';
+    document.getElementById('pub-msg').className='msg';
+    await cargar();
+  }catch(e){ var m=document.getElementById('pub-msg'); m.className='msg err'; m.textContent='❌ '+e.message; }
+  b.disabled=false; b.textContent='Publicar';
+}
+async function borrar(id){ if(confirm('¿Eliminar este mensaje?')){ try{ await FV.eliminarForoMsg(id); await cargar(); }catch(e){ alert(e.message); } } }
+</script>
+</body>
+</html>

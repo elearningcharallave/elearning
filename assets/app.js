@@ -199,6 +199,37 @@
     if (r.error) throw r.error;
   }
 
+  // --- Foro (claseId null = foro general; o foro de una clase) ---
+  async function foroMensajes(claseId) {
+    var q = sb.from("foro_mensajes").select("*").order("creado_en", { ascending: true });
+    q = claseId ? q.eq("clase_id", claseId) : q.is("clase_id", null);
+    var r = await q; if (r.error) throw r.error; return r.data;
+  }
+  async function publicarForo(claseId, mensaje) {
+    var ses = await sesion(); if (!ses) throw new Error("Sin sesión");
+    var r = await sb.from("foro_mensajes").insert({
+      clase_id: claseId || null, autor_id: ses.user.uid,
+      autor_nombre: (ses.perfil && ses.perfil.nombre) || ses.user.email,
+      autor_rol: (ses.perfil && ses.perfil.rol) || "alumno", mensaje: mensaje
+    }).select("id").single();
+    if (r.error) throw r.error; return r.data.id;
+  }
+  async function eliminarForoMsg(id) { var r = await sb.from("foro_mensajes").delete().eq("id", id); if (r.error) throw r.error; }
+
+  // --- Admin: eliminar un usuario completo (auth + datos) vía Edge Function ---
+  async function eliminarUsuario(userId) {
+    var s = await sb.auth.getSession();
+    var tok = s.data && s.data.session && s.data.session.access_token;
+    var r = await fetch(window.SUPABASE_URL + "/functions/v1/delete-user", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "apikey": window.SUPABASE_ANON_KEY, "Authorization": "Bearer " + tok },
+      body: JSON.stringify({ userId: userId })
+    });
+    var j = await r.json().catch(function () { return {}; });
+    if (!r.ok || j.error) throw new Error(j.error || "No se pudo eliminar el usuario");
+    return true;
+  }
+
   function mostrarFaltaConfig() {
     document.addEventListener("DOMContentLoaded", function () {
       var d = document.createElement("div");
@@ -219,6 +250,7 @@
     resetPassword: resetPassword, actualizarPassword: actualizarPassword,
     registrarEntrada: registrarEntrada, latido: latido, registrarSalida: registrarSalida, asistenciaDeSala: asistenciaDeSala,
     subirMaterial: subirMaterial, materialesDeClase: materialesDeClase, eliminarMaterial: eliminarMaterial,
+    foroMensajes: foroMensajes, publicarForo: publicarForo, eliminarForoMsg: eliminarForoMsg, eliminarUsuario: eliminarUsuario,
     get sb() { return sb; }
   };
 })();
