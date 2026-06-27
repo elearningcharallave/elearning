@@ -54,7 +54,8 @@ window.TestEngine = (function () {
       ".te-fb.ok{background:#eaf6ef;color:var(--teal-700)}" +
       ".te-fb.no{background:#fdecec;color:var(--red)}" +
       ".te-nav{display:flex;gap:10px;align-items:center;margin-top:16px}" +
-      ".te-score{font-family:'Fraunces',serif;font-size:3.4rem;line-height:1;color:var(--acento,#1a7fc4)}";
+      ".te-score{font-family:'Fraunces',serif;font-size:3.4rem;line-height:1;color:var(--acento,#1a7fc4)}" +
+      "@media(max-width:560px){.te-stats{grid-template-columns:repeat(2,1fr)}.te-wrap{padding:20px 14px 50px}}";
     document.head.appendChild(s);
   }
 

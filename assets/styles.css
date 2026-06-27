@@ -91,3 +91,22 @@ a{color:var(--teal-700)}
   font-size:.88rem;color:var(--text-mid);cursor:pointer}
 .tabs button.active{background:#fff;color:var(--teal-700);box-shadow:0 2px 8px rgba(0,0,0,.06)}
 .muted{color:var(--text-light);font-size:.82rem;text-align:center;margin-top:16px}
+
+/* ===== Responsive móvil (la mayoría de alumnos en VE entra por celular) ===== */
+@media(max-width:600px){
+  .topbar{padding:11px 15px;gap:8px}
+  .brand{font-size:1.2rem}
+  .topbar-right{gap:9px;font-size:.8rem;flex-wrap:wrap;justify-content:flex-end}
+  .wrap{padding:22px 14px 48px}
+  .page-head h1{font-size:1.5rem}
+  .card{padding:18px 16px}
+  .item{flex-wrap:wrap;gap:10px}
+  .item .info{flex:1 1 60%;min-width:0}
+  .item .info .name{font-size:.9rem}
+  .grid2{gap:16px}
+  .auth-card{padding:28px 22px}
+  .stat-num{font-size:1.7rem}
+}
+@media(max-width:380px){
+  .role-pill{display:none}
+}

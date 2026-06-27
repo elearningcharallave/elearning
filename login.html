@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Iniciar sesión — FUNCECAIND</title>
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
 <link rel="stylesheet" href="assets/styles.css">
 </head>
 <body>
@@ -23,6 +24,7 @@
       <div class="field"><label>Contraseña</label><input type="password" id="l-pass" placeholder="••••••••" autocomplete="current-password" required></div>
       <div class="msg" id="l-msg"></div>
       <button class="btn btn-block" id="l-btn" type="submit">Entrar</button>
+      <p class="muted"><a href="#" onclick="return olvide()">¿Olvidaste tu contraseña?</a></p>
       <p class="muted">Administrador, profesor o alumno — todos entran por aquí.</p>
     </form>
 
@@ -66,6 +68,13 @@ if(!FV.configOk()){
   FV.redirigirSiSesion();  // si ya hay sesión, va directo al panel
 }
 
+async function olvide(){
+  var email=(document.getElementById('l-email').value||'').trim();
+  if(!email){ show('l-msg','Escribe tu correo arriba y vuelve a pulsar el enlace.',false); return false; }
+  try{ await FV.resetPassword(email); show('l-msg','✅ Te enviamos un correo para restablecer tu contraseña. Revisa tu bandeja (y spam).',true); }
+  catch(e){ show('l-msg','❌ '+traduce(e),false); }
+  return false;
+}
 async function doLogin(ev){
   ev.preventDefault();
   var b=document.getElementById('l-btn'); b.disabled=true; b.textContent='Entrando…';

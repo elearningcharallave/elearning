@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Aula Virtual — FUNCECAIND</title>
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
 <link rel="stylesheet" href="assets/styles.css">
 <style>
   html,body{height:100%}
@@ -89,7 +90,8 @@ function arrancar(){
       startWithAudioMuted: !isTeacher,
       startWithVideoMuted: !isTeacher,
       disableDeepLinking: true,
-      disableThirdPartyRequests: true
+      disableThirdPartyRequests: true,
+      whiteboard: { enabled: true }
     },
     interfaceConfigOverwrite: {
       SHOW_JITSI_WATERMARK: false,
@@ -97,7 +99,7 @@ function arrancar(){
       SHOW_POWERED_BY: false,
       DEFAULT_BACKGROUND: '#063d30',
       TOOLBAR_BUTTONS: isTeacher
-        ? ['microphone','camera','desktop','chat','raisehand','participants-pane','tileview','select-background','mute-everyone','security','recording','settings','hangup']
+        ? ['microphone','camera','desktop','chat','raisehand','participants-pane','tileview','whiteboard','select-background','mute-everyone','security','recording','settings','hangup']
         : ['microphone','camera','chat','raisehand','tileview','settings','hangup']
     }
   });

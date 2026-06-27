@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Restablecer contraseña — FUNCECAIND</title>
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+<link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+<div class="auth-wrap">
+  <div class="auth-card">
+    <div class="logo">Funce<span>Caind</span></div>
+    <div class="tagline">Restablecer contraseña</div>
+    <form id="form" onsubmit="return doReset(event)">
+      <div class="field"><label>Nueva contraseña (mín. 6)</label><input type="password" id="np" placeholder="••••••••" minlength="6" required></div>
+      <div class="field"><label>Repite la contraseña</label><input type="password" id="np2" placeholder="••••••••" minlength="6" required></div>
+      <div class="msg" id="m"></div>
+      <button class="btn btn-block" id="b" type="submit">Guardar nueva contraseña</button>
+    </form>
+    <p class="muted" style="margin-top:18px"><a href="login.html">← Volver a iniciar sesión</a></p>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="assets/supabase-config.js"></script>
+<script src="assets/app.js"></script>
+<script>
+function show(txt,ok){ var m=document.getElementById('m'); m.textContent=txt; m.className='msg '+(ok?'ok':'err'); }
+
+if(!FV.configOk()){
+  show('⚠️ Falta configurar Supabase.',false);
+  document.getElementById('b').disabled=true;
+} else {
+  // El enlace del correo trae una sesión de recuperación; si no hay, el enlace venció.
+  FV.sb.auth.getSession().then(function(res){
+    if(!(res.data && res.data.session)){
+      show('Este enlace no es válido o ya expiró. Pide uno nuevo desde "¿Olvidaste tu contraseña?".',false);
+      document.getElementById('b').disabled=true;
+    }
+  });
+}
+
+async function doReset(ev){
+  ev.preventDefault();
+  var p1=document.getElementById('np').value, p2=document.getElementById('np2').value;
+  if(p1!==p2){ show('Las contraseñas no coinciden.',false); return false; }
+  var b=document.getElementById('b'); b.disabled=true; b.textContent='Guardando…';
+  try{
+    await FV.actualizarPassword(p1);
+    show('✅ Contraseña actualizada. Redirigiendo…',true);
+    setTimeout(function(){ FV.logout(); }, 1400); // cierra la sesión de recuperación y va a login
+  }catch(e){ show('❌ '+(e.message||e),false); b.disabled=false; b.textContent='Guardar nueva contraseña'; }
+  return false;
+}
+</script>
+</body>
+</html>

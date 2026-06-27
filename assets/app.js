@@ -149,6 +149,16 @@
     if (r.error) throw r.error; return r.data;
   }
 
+  async function resetPassword(email) {
+    var redirectTo = new URL("reset.html", location.href).href;
+    var r = await sb.auth.resetPasswordForEmail(email, { redirectTo: redirectTo });
+    if (r.error) throw r.error;
+  }
+  async function actualizarPassword(nueva) {
+    var r = await sb.auth.updateUser({ password: nueva });
+    if (r.error) throw r.error;
+  }
+
   function mostrarFaltaConfig() {
     document.addEventListener("DOMContentLoaded", function () {
       var d = document.createElement("div");
@@ -166,6 +176,7 @@
     listarUsuarios: listarUsuarios, crearClase: crearClase, salaCodigo: salaCodigo,
     clasesDeProfesor: clasesDeProfesor, todasLasClases: todasLasClases, eliminarClase: eliminarClase,
     sesion: sesion, guardarResultado: guardarResultado, todosResultados: todosResultados, misResultados: misResultados,
+    resetPassword: resetPassword, actualizarPassword: actualizarPassword,
     get sb() { return sb; }
   };
 })();
