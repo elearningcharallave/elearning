@@ -72,7 +72,21 @@ function nombreSala(raw){
   return s.indexOf('funcecaind-')===0 ? s : 'funcecaind-'+s;
 }
 
-function arrancar(){
+// Pide a la Edge Function un token JaaS firmado (profesor=moderador según su rol en Supabase).
+async function pedirTokenJaaS(sala, display){
+  if(!(window.FV && FV.configOk() && window.SUPABASE_URL)) return null;
+  try{
+    var headers={ 'Content-Type':'application/json', 'apikey': window.SUPABASE_ANON_KEY };
+    var sess=await FV.sb.auth.getSession();
+    var tok=sess && sess.data && sess.data.session && sess.data.session.access_token;
+    if(tok) headers['Authorization']='Bearer '+tok;
+    var r=await fetch(window.SUPABASE_URL+'/functions/v1/jaas-token', { method:'POST', headers:headers, body:JSON.stringify({ room:sala, name:display }) });
+    var j=await r.json();
+    return j.jwt||null;
+  }catch(e){ console.warn('JaaS token:', e); return null; }
+}
+
+async function arrancar(){
   var display=(document.getElementById('name').value||'Invitado').trim();
   var sala=nombreSala(document.getElementById('room').value);
   var role=(document.querySelector('input[name="role"]:checked')||{}).value || P.get('role') || 'student';
@@ -83,8 +97,18 @@ function arrancar(){
   document.getElementById('prejoin').style.display='none';
   document.getElementById('meet').style.display='block';
 
-  var api = new JitsiMeetExternalAPI('meet.jit.si', {
-    roomName: sala,
+  // JaaS (8x8) si está configurado: roomName = AppID/sala + token firmado (profesor = moderador).
+  // Si no hay AppID, cae a meet.jit.si (con el corte de ~5 min).
+  var domain='meet.jit.si', roomName=sala, jwt=null;
+  if(window.JAAS_APP_ID && window.JAAS_APP_ID.indexOf('vpaas')===0){
+    domain='8x8.vc';
+    roomName=window.JAAS_APP_ID+'/'+sala;
+    jwt=await pedirTokenJaaS(sala, display);
+  }
+
+  var api = new JitsiMeetExternalAPI(domain, {
+    roomName: roomName,
+    jwt: jwt || undefined,
     parentNode: document.getElementById('meet'),
     lang: 'es',
     userInfo: { displayName: display },

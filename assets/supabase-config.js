@@ -10,3 +10,7 @@ window.SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXB
 /* Correo del ADMINISTRADOR principal. Debe ser el MISMO que pongas en
    supabase-setup.sql (función handle_new_user). Ese correo recibe el rol admin. */
 window.ADMIN_EMAIL = "elearningcharallave@yahoo.com";
+
+/* JaaS (8x8) — AppID PÚBLICO para las clases en vivo (dominio 8x8.vc).
+   El token firmado lo emite la Edge Function 'jaas-token' (la llave es secreta). */
+window.JAAS_APP_ID = "vpaas-magic-cookie-faa3c929c7cf4bfab029740468ec50c9";
