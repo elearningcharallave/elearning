@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Evaluación — FUNCECAIND</title>
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+<link rel="stylesheet" href="assets/styles.css">
+<style>
+  .q{border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:12px;background:#fff}
+  .q-en{font-weight:500;color:var(--text-dark);margin-bottom:12px;line-height:1.5}
+  .opt{display:block;width:100%;text-align:left;padding:11px 15px;margin-bottom:8px;border:1.5px solid var(--border);border-radius:10px;background:#fff;font:inherit;font-size:.93rem;color:var(--text-dark);cursor:pointer}
+  .opt:hover{border-color:var(--teal-300);background:var(--teal-50)}
+  .opt.sel{border-color:var(--teal-500);background:var(--teal-50);font-weight:600;color:var(--teal-700)}
+  .opt.ok{border-color:var(--teal-500);background:#eaf6ef;color:var(--teal-700)}
+  .opt.no{border-color:var(--red);background:#fdecec;color:var(--red)}
+  #timer{position:sticky;top:62px;z-index:5;float:right;background:var(--teal-700);color:#fff;font-weight:600;padding:6px 14px;border-radius:100px;font-size:.9rem}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <a href="index.html" class="brand">Funce<span>Caind</span></a>
+  <div class="topbar-right"><a class="btn-logout" id="back" href="alumno.html">← Volver</a><button class="btn-logout" onclick="FV.logout()">Salir</button></div>
+</div>
+<div class="wrap"><div id="app"><div class="empty">Cargando…</div></div></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="assets/supabase-config.js"></script>
+<script src="assets/app.js"></script>
+<script>
+var ME=null,MIDOC=null,EID=new URLSearchParams(location.search).get('id');
+var ESTADO=null; // {intento_id, preguntas, nota_minima}
+var RESP={}, TLEFT=0, TIMER=null, EVAL=null;
+function E(id){return document.getElementById(id);}
+function esc(s){return FV.esc(s);}
+
+FV.requireRole(['alumno','profesor','admin'], function(u,d){
+  ME=u; MIDOC=d; E('back').href=FV.panelDe(d.rol);
+  if(!EID){ E('app').innerHTML='<div class="empty">Evaluación no especificada.</div>'; return; }
+  cargarInfo();
+});
+
+async function cargarInfo(){
+  try{
+    var r=await FV.sb.from('evaluaciones').select('*').eq('id',EID).maybeSingle();
+    EVAL=r.data;
+    if(!EVAL){ E('app').innerHTML='<div class="empty">Evaluación no disponible (¿estás matriculado?).</div>'; return; }
+    E('app').innerHTML='<div class="card" style="max-width:520px;margin:4vh auto;text-align:center">'+
+      '<div style="font-size:2.4rem">📝</div>'+
+      '<h1 style="font-family:Fraunces,serif;font-size:1.5rem;margin:6px 0 4px">'+esc(EVAL.titulo)+'</h1>'+
+      (EVAL.descripcion?'<p style="color:var(--text-mid);margin-bottom:10px">'+esc(EVAL.descripcion)+'</p>':'')+
+      '<div class="sub">Nota mínima para aprobar: <b>'+EVAL.nota_minima+'%</b>'+
+        (EVAL.duracion_min>0?(' · Tiempo: <b>'+EVAL.duracion_min+' min</b>'):'')+
+        (EVAL.intentos_max>0?(' · Intentos: <b>'+EVAL.intentos_max+'</b>'):' · Intentos ilimitados')+'</div>'+
+      '<button class="btn btn-block" onclick="comenzar()">Comenzar evaluación →</button></div>';
+  }catch(e){ E('app').innerHTML='<div class="empty">Error: '+e.message+'</div>'; }
+}
+
+async function comenzar(){
+  try{
+    ESTADO=await FV.iniciarEvaluacion(EID);
+    RESP={};
+    renderQuiz();
+    if(ESTADO.duracion_min>0){ TLEFT=ESTADO.duracion_min*60; tick(); TIMER=setInterval(tick,1000); }
+  }catch(e){ alert(e.message); }
+}
+function tick(){
+  if(TLEFT<=0){ clearInterval(TIMER); enviar(true); return; }
+  var m=Math.floor(TLEFT/60),s=TLEFT%60; var t=E('timer'); if(t) t.textContent='⏱ '+m+':'+(s<10?'0':'')+s;
+  TLEFT--;
+}
+function renderQuiz(){
+  var html='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">'+
+    '<h1 style="font-family:Fraunces,serif;font-size:1.4rem">'+esc(ESTADO.titulo)+'</h1>'+
+    (ESTADO.duracion_min>0?'<span id="timer">⏱ --:--</span>':'')+'</div>';
+  ESTADO.preguntas.forEach(function(q,i){
+    html+='<div class="q"><div class="q-en">'+(i+1)+'. '+esc(q.enunciado)+'</div>'+
+      q.opciones.map(function(o,j){ return '<button class="opt" id="o-'+q.id+'-'+j+'" onclick="elegir(\''+q.id+'\','+j+')">'+(q.tipo==='mc'?('<b>'+'ABCDE'[j]+'.</b> '):'')+esc(o)+'</button>'; }).join('')+
+      '</div>';
+  });
+  html+='<div class="msg" id="ev-msg"></div><button class="btn btn-block" id="ev-btn" onclick="enviar(false)">Enviar evaluación</button>';
+  E('app').innerHTML='<div style="max-width:680px;margin:0 auto">'+html+'</div>';
+}
+function elegir(qid,j){
+  RESP[qid]=j;
+  ESTADO.preguntas.forEach(function(q){ if(q.id===qid){ q.opciones.forEach(function(_,k){ var el=E('o-'+qid+'-'+k); if(el) el.classList.toggle('sel',k===j); }); } });
+}
+async function enviar(auto){
+  if(!auto){ var faltan=ESTADO.preguntas.filter(function(q){return RESP[q.id]===undefined;}).length; if(faltan>0 && !confirm('Te faltan '+faltan+' pregunta(s). ¿Enviar igual?')) return; }
+  if(TIMER) clearInterval(TIMER);
+  var b=E('ev-btn'); if(b){ b.disabled=true; b.textContent='Enviando…'; }
+  try{
+    var res=await FV.enviarEvaluacion(ESTADO.intento_id, RESP);
+    resultado(res);
+  }catch(e){ var m=E('ev-msg'); if(m){m.className='msg err';m.textContent='❌ '+e.message;} if(b){b.disabled=false;b.textContent='Enviar evaluación';} }
+}
+function resultado(res){
+  var color=res.aprobado?'var(--teal-700)':'var(--red)';
+  var html='<div class="card" style="text-align:center;max-width:680px;margin:0 auto">'+
+    '<div style="font-family:Fraunces,serif;font-size:3rem;line-height:1;color:'+color+'">'+res.porcentaje+'%</div>'+
+    '<div style="font-weight:600;color:'+color+';margin:6px 0 2px;font-size:1.1rem">'+(res.aprobado?'¡Aprobado! ✅':'No aprobado')+'</div>'+
+    '<div class="sub">'+res.puntaje+' de '+res.total+' puntos</div>';
+  html+='<h3 style="font-family:Fraunces,serif;margin:18px 0 10px;text-align:left">Revisión</h3>';
+  res.revision.forEach(function(r,i){
+    var ops=r.opciones.map(function(o,j){ var c='opt'; if(j===r.correcta)c+=' ok'; else if(j===r.tu&&!r.ok)c+=' no'; return '<button class="'+c+'" disabled style="font-size:.85rem;padding:7px 12px;margin-bottom:5px">'+esc(o)+'</button>'; }).join('');
+    html+='<div class="q" style="text-align:left;border-color:'+(r.ok?'var(--teal-300)':'#f3c9c9')+'"><div class="q-en">'+(r.ok?'✓':'✗')+' '+(i+1)+'. '+esc(r.enunciado)+'</div>'+ops+'</div>';
+  });
+  html+='<a class="btn" href="'+E('back').href+'" style="margin-top:8px">Volver</a></div>';
+  E('app').innerHTML=html;
+}
+</script>
+</body>
+</html>

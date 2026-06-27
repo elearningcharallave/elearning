@@ -276,6 +276,30 @@
     if (r.error) { console.error(r.error); return null; } return true;
   }
 
+  // ===== LMS Fase 2: evaluaciones / preguntas / intentos / gradebook =====
+  async function crearEvaluacion(d) {
+    var ses = await sesion();
+    var r = await sb.from("evaluaciones").insert({
+      curso_id: d.curso_id, titulo: d.titulo, descripcion: d.descripcion || null,
+      nota_minima: d.nota_minima || 60, duracion_min: d.duracion_min || 0, intentos_max: d.intentos_max || 0,
+      aleatorizar: d.aleatorizar !== false, profesor_id: ses ? ses.user.uid : null
+    }).select("id").single();
+    if (r.error) throw r.error; return r.data.id;
+  }
+  async function evaluacionesDeCurso(cursoId) { var r = await sb.from("evaluaciones").select("*").eq("curso_id", cursoId).order("creado_en", { ascending: true }); if (r.error) throw r.error; return r.data; }
+  async function eliminarEvaluacion(id) { var r = await sb.from("evaluaciones").delete().eq("id", id); if (r.error) throw r.error; }
+  async function preguntasDeEval(evalId) { var r = await sb.from("preguntas").select("*").eq("evaluacion_id", evalId).order("orden", { ascending: true }); if (r.error) throw r.error; return r.data; }
+  async function crearPregunta(evalId, d) { var r = await sb.from("preguntas").insert({ evaluacion_id: evalId, enunciado: d.enunciado, tipo: d.tipo || "vf", opciones: d.opciones || null, correcta: d.correcta || 0, puntos: d.puntos || 1, orden: d.orden || 0 }).select("id").single(); if (r.error) throw r.error; return r.data.id; }
+  async function eliminarPregunta(id) { var r = await sb.from("preguntas").delete().eq("id", id); if (r.error) throw r.error; }
+  async function intentosDeEval(evalId) { var r = await sb.from("intentos").select("*").eq("evaluacion_id", evalId).not("enviado_en", "is", null).order("enviado_en", { ascending: false }); if (r.error) throw r.error; return r.data; }
+  async function llamarEval(payload) {
+    var s = await sb.auth.getSession(); var tok = s.data && s.data.session && s.data.session.access_token;
+    var r = await fetch(window.SUPABASE_URL + "/functions/v1/evaluacion", { method: "POST", headers: { "Content-Type": "application/json", "apikey": window.SUPABASE_ANON_KEY, "Authorization": "Bearer " + tok }, body: JSON.stringify(payload) });
+    var j = await r.json().catch(function () { return {}; }); if (!r.ok || j.error) throw new Error(j.error || "Error en la evaluación"); return j;
+  }
+  async function iniciarEvaluacion(evalId) { return llamarEval({ action: "start", evaluacion_id: evalId }); }
+  async function enviarEvaluacion(intentoId, respuestas) { return llamarEval({ action: "submit", intento_id: intentoId, respuestas: respuestas }); }
+
   function mostrarFaltaConfig() {
     document.addEventListener("DOMContentLoaded", function () {
       var d = document.createElement("div");
@@ -302,6 +326,9 @@
     modulosDeCurso: modulosDeCurso, crearModulo: crearModulo, eliminarModulo: eliminarModulo,
     leccionesDeModulo: leccionesDeModulo, crearLeccion: crearLeccion, eliminarLeccion: eliminarLeccion,
     matricular: matricular, desmatricular: desmatricular, matriculasDeCurso: matriculasDeCurso, registrarEvento: registrarEvento,
+    crearEvaluacion: crearEvaluacion, evaluacionesDeCurso: evaluacionesDeCurso, eliminarEvaluacion: eliminarEvaluacion,
+    preguntasDeEval: preguntasDeEval, crearPregunta: crearPregunta, eliminarPregunta: eliminarPregunta,
+    intentosDeEval: intentosDeEval, iniciarEvaluacion: iniciarEvaluacion, enviarEvaluacion: enviarEvaluacion,
     get sb() { return sb; }
   };
 })();

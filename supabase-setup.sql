@@ -347,3 +347,68 @@ create policy le_select on public.learning_events for select using (actor_id=aut
 drop policy if exists perfiles_select on public.perfiles;
 create policy perfiles_select on public.perfiles
   for select using (id = auth.uid() or public.es_staff());
+
+-- ============================================================================
+-- 11) LMS Fase 2: evaluaciones + preguntas + intentos (calificacion server-side)
+-- ============================================================================
+create table if not exists public.evaluaciones (
+  id uuid primary key default gen_random_uuid(),
+  curso_id uuid references public.cursos(id) on delete cascade,
+  titulo text not null,
+  descripcion text,
+  nota_minima int not null default 60,    -- % para aprobar
+  duracion_min int not null default 0,     -- 0 = sin limite
+  intentos_max int not null default 0,      -- 0 = ilimitado
+  aleatorizar boolean not null default true,
+  profesor_id uuid references auth.users(id) on delete set null,
+  creado_en timestamptz not null default now()
+);
+create table if not exists public.preguntas (
+  id uuid primary key default gen_random_uuid(),
+  evaluacion_id uuid references public.evaluaciones(id) on delete cascade,
+  enunciado text not null,
+  tipo text not null default 'vf' check (tipo in ('vf','mc')),
+  opciones jsonb,                  -- mc: ["a","b",...]; vf: null
+  correcta int not null default 0, -- indice correcto: NUNCA se expone a los alumnos
+  puntos int not null default 1,
+  orden int not null default 0
+);
+create table if not exists public.intentos (
+  id uuid primary key default gen_random_uuid(),
+  evaluacion_id uuid references public.evaluaciones(id) on delete cascade,
+  alumno_id uuid references auth.users(id) on delete cascade,
+  alumno_nombre text,
+  iniciado_en timestamptz not null default now(),
+  enviado_en timestamptz,
+  puntaje int, total int, porcentaje int, aprobado boolean,
+  respuestas jsonb
+);
+create index if not exists intentos_eval_alumno on public.intentos (evaluacion_id, alumno_id);
+
+alter table public.evaluaciones enable row level security;
+alter table public.preguntas    enable row level security;
+alter table public.intentos     enable row level security;
+
+-- evaluaciones: leer matriculado/profesor/admin; CUD profesor del curso o admin
+drop policy if exists eval_select on public.evaluaciones;
+create policy eval_select on public.evaluaciones for select using (public.es_staff() or public.matriculado(curso_id) or public.es_profesor_curso(curso_id));
+drop policy if exists eval_insert on public.evaluaciones;
+create policy eval_insert on public.evaluaciones for insert with check (public.es_admin() or public.es_profesor_curso(curso_id));
+drop policy if exists eval_update on public.evaluaciones;
+create policy eval_update on public.evaluaciones for update using (public.es_admin() or public.es_profesor_curso(curso_id));
+drop policy if exists eval_delete on public.evaluaciones;
+create policy eval_delete on public.evaluaciones for delete using (public.es_admin() or public.es_profesor_curso(curso_id));
+
+-- preguntas: SOLO staff lee/escribe directo. Los alumnos las reciben SIN respuestas via Edge Function.
+drop policy if exists preg_select on public.preguntas;
+create policy preg_select on public.preguntas for select using (public.es_staff());
+drop policy if exists preg_insert on public.preguntas;
+create policy preg_insert on public.preguntas for insert with check (public.es_staff());
+drop policy if exists preg_update on public.preguntas;
+create policy preg_update on public.preguntas for update using (public.es_staff());
+drop policy if exists preg_delete on public.preguntas;
+create policy preg_delete on public.preguntas for delete using (public.es_staff());
+
+-- intentos: leer propio o staff; NUNCA insert/update desde cliente (solo Edge Function)
+drop policy if exists intentos_select on public.intentos;
+create policy intentos_select on public.intentos for select using (alumno_id=auth.uid() or public.es_staff());

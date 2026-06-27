@@ -83,6 +83,46 @@
     </div>
     <div class="list" id="mat-list"></div>
   </div>
+
+  <div class="card" id="evals" style="display:none">
+    <h2>📝 Evaluaciones · <span id="ev-titulo"></span></h2>
+    <div class="sub">Las respuestas correctas se guardan seguras: la nota la calcula el servidor (el alumno no las puede ver).</div>
+    <form onsubmit="return crearEval(event)" style="border-bottom:1px solid var(--border);padding-bottom:14px;margin-bottom:14px">
+      <div class="row">
+        <div class="field" style="flex:2"><label>Título</label><input id="ev-tit" placeholder="Ej. Quiz módulo 1" required></div>
+        <div class="field"><label>Nota mín. %</label><input id="ev-nm" type="number" value="60" min="1" max="100"></div>
+        <div class="field"><label>Minutos (0=libre)</label><input id="ev-dur" type="number" value="0" min="0"></div>
+        <div class="field"><label>Intentos (0=∞)</label><input id="ev-int" type="number" value="0" min="0"></div>
+      </div>
+      <button class="btn btn-sm" type="submit">Crear evaluación</button>
+    </form>
+    <div id="evals-list"></div>
+  </div>
+
+  <div class="card" id="preg-panel" style="display:none">
+    <h2>❓ Preguntas · <span id="preg-titulo"></span></h2>
+    <form onsubmit="return crearPreg(event)">
+      <div class="field"><label>Enunciado</label><textarea id="pq-en" rows="2" required></textarea></div>
+      <div class="row">
+        <div class="field"><label>Tipo</label><select id="pq-tipo" onchange="pregTipo()"><option value="vf">Verdadero / Falso</option><option value="mc">Selección múltiple</option></select></div>
+        <div class="field"><label>Puntos</label><input id="pq-pts" type="number" value="1" min="1"></div>
+      </div>
+      <div id="pq-vf"><div class="field"><label>Respuesta correcta</label><select id="pq-vf-cor"><option value="0">Verdadero</option><option value="1">Falso</option></select></div></div>
+      <div id="pq-mc" style="display:none">
+        <div class="row"><div class="field"><label>Opción A</label><input id="pq-a"></div><div class="field"><label>Opción B</label><input id="pq-b"></div><div class="field"><label>Opción C</label><input id="pq-c"></div></div>
+        <div class="field"><label>Correcta</label><select id="pq-mc-cor"><option value="0">A</option><option value="1">B</option><option value="2">C</option></select></div>
+      </div>
+      <div class="msg" id="pq-msg"></div>
+      <button class="btn btn-sm" type="submit">Agregar pregunta</button>
+    </form>
+    <div id="preg-list" style="margin-top:14px"></div>
+  </div>
+
+  <div class="card" id="notas-panel" style="display:none">
+    <h2>📊 Notas · <span id="notas-titulo"></span></h2>
+    <div class="sub">Resultados de los alumnos en esta evaluación.</div>
+    <div class="list" id="notas-list"></div>
+  </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -124,6 +164,7 @@ async function cargarCursos(){
         '<div style="display:flex;gap:6px;flex-wrap:wrap">'+
           '<button class="btn btn-sm" onclick="abrirContenido(\''+c.id+'\')">📂 Contenido</button>'+
           '<button class="btn btn-ghost btn-sm" onclick="abrirMatriculas(\''+c.id+'\')">👥 Matrículas</button>'+
+          '<button class="btn btn-ghost btn-sm" onclick="abrirEvaluaciones(\''+c.id+'\')">📝 Evaluaciones</button>'+
           '<button class="btn btn-ghost btn-sm" onclick="togglePublicar(\''+c.id+'\','+(!c.publicado)+')">'+(c.publicado?'👁 Despublicar':'🚀 Publicar')+'</button>'+
           '<button class="btn-logout btn-sm" onclick="borrarCurso(\''+c.id+'\')">🗑</button>'+
         '</div></div>';
@@ -137,7 +178,7 @@ async function borrarCurso(id){ if(confirm('¿Eliminar el curso y todo su conten
 // ---- CONTENIDO ----
 async function abrirContenido(id){
   ACTUAL=id; var c=cursoPorId(id);
-  E('b-titulo').textContent=c?c.titulo:''; E('builder').style.display='block'; E('matriculas').style.display='none';
+  E('b-titulo').textContent=c?c.titulo:''; E('builder').style.display='block'; ocultarPaneles('builder');
   E('builder').scrollIntoView({behavior:'smooth',block:'nearest'});
   cmsg('l-msg',''); hintTipo();
   await renderModulos();
@@ -190,7 +231,7 @@ async function borrarLeccion(id){ if(confirm('¿Eliminar esta lección?')){ try{
 // ---- MATRICULAS ----
 async function abrirMatriculas(id){
   ACTUAL=id; var c=cursoPorId(id);
-  E('mat-titulo').textContent=c?c.titulo:''; E('matriculas').style.display='block'; E('builder').style.display='none';
+  E('mat-titulo').textContent=c?c.titulo:''; E('matriculas').style.display='block'; ocultarPaneles('matriculas');
   E('matriculas').scrollIntoView({behavior:'smooth',block:'nearest'});
   try{ if(!ALUMNOS.length){ var us=await FV.listarUsuarios(); ALUMNOS=us.filter(function(u){return u.rol==='alumno';}); } }catch(e){}
   var sel=E('mat-alumno'); sel.innerHTML=ALUMNOS.map(function(a){return '<option value="'+a.id+'">'+FV.esc(a.nombre||a.email)+'</option>';}).join('');
@@ -214,6 +255,82 @@ async function matricular(){
   catch(e){ alert(e.message.indexOf('duplicate')>=0?'Ese alumno ya está matriculado.':e.message); }
 }
 async function quitar(id){ if(confirm('¿Quitar la matrícula?')){ try{ await FV.desmatricular(id); renderMatriculas(); }catch(e){ alert(e.message); } } }
+
+function ocultarPaneles(keep){ ['builder','matriculas','evals','preg-panel','notas-panel'].forEach(function(x){ if(x!==keep){ var e=E(x); if(e) e.style.display='none'; } }); }
+
+// ---- EVALUACIONES ----
+var EV_ACTUAL=null;
+async function abrirEvaluaciones(id){
+  ACTUAL=id; var c=cursoPorId(id);
+  E('ev-titulo').textContent=c?c.titulo:''; E('evals').style.display='block'; ocultarPaneles('evals');
+  E('evals').scrollIntoView({behavior:'smooth',block:'nearest'}); renderEvals();
+}
+async function crearEval(ev){
+  ev.preventDefault();
+  try{ await FV.crearEvaluacion({curso_id:ACTUAL, titulo:E('ev-tit').value.trim(), nota_minima:+E('ev-nm').value||60, duracion_min:+E('ev-dur').value||0, intentos_max:+E('ev-int').value||0}); E('ev-tit').value=''; renderEvals(); }
+  catch(e){ alert(e.message); }
+  return false;
+}
+async function renderEvals(){
+  var cont=E('evals-list');
+  try{
+    var evs=await FV.evaluacionesDeCurso(ACTUAL);
+    if(!evs.length){ cont.innerHTML='<div class="empty">Sin evaluaciones aún.</div>'; return; }
+    cont.innerHTML=evs.map(function(e){
+      return '<div class="item"><div class="avatar">📝</div><div class="info"><div class="name">'+FV.esc(e.titulo)+'</div>'+
+        '<div class="meta">aprobar con '+e.nota_minima+'%'+(e.duracion_min?(' · '+e.duracion_min+' min'):'')+(e.intentos_max?(' · '+e.intentos_max+' intentos'):'')+'</div></div>'+
+        '<div style="display:flex;gap:6px;flex-wrap:wrap">'+
+        '<button class="btn btn-sm" onclick="abrirPreguntas(\''+e.id+'\',\''+encodeURIComponent(e.titulo)+'\')">❓ Preguntas</button>'+
+        '<button class="btn btn-ghost btn-sm" onclick="abrirNotas(\''+e.id+'\',\''+encodeURIComponent(e.titulo)+'\')">📊 Notas</button>'+
+        '<button class="btn-logout btn-sm" onclick="borrarEval(\''+e.id+'\')">🗑</button></div></div>';
+    }).join('');
+  }catch(e){ cont.innerHTML='<div class="empty">Error: '+e.message+'</div>'; }
+}
+async function borrarEval(id){ if(confirm('¿Eliminar la evaluación, sus preguntas e intentos?')){ try{ await FV.eliminarEvaluacion(id); E('preg-panel').style.display='none'; E('notas-panel').style.display='none'; renderEvals(); }catch(e){ alert(e.message); } } }
+
+function pregTipo(){ var t=E('pq-tipo').value; E('pq-vf').style.display=t==='vf'?'block':'none'; E('pq-mc').style.display=t==='mc'?'block':'none'; }
+async function abrirPreguntas(id,tit){
+  EV_ACTUAL=id; E('preg-titulo').textContent=decodeURIComponent(tit); E('preg-panel').style.display='block'; E('notas-panel').style.display='none'; pregTipo();
+  E('preg-panel').scrollIntoView({behavior:'smooth',block:'nearest'}); renderPreguntas();
+}
+async function crearPreg(ev){
+  ev.preventDefault();
+  var tipo=E('pq-tipo').value, d={enunciado:E('pq-en').value.trim(), tipo:tipo, puntos:+E('pq-pts').value||1};
+  if(tipo==='vf'){ d.correcta=+E('pq-vf-cor').value; }
+  else { d.opciones=[E('pq-a').value.trim(),E('pq-b').value.trim(),E('pq-c').value.trim()].filter(function(x){return x;}); d.correcta=+E('pq-mc-cor').value; if(d.opciones.length<2){ E('pq-msg').className='msg err'; E('pq-msg').textContent='Pon al menos 2 opciones.'; return false; } }
+  try{ await FV.crearPregunta(EV_ACTUAL,d); E('pq-en').value=''; E('pq-a').value='';E('pq-b').value='';E('pq-c').value=''; E('pq-msg').className='msg'; renderPreguntas(); }
+  catch(e){ E('pq-msg').className='msg err'; E('pq-msg').textContent='❌ '+e.message; }
+  return false;
+}
+async function renderPreguntas(){
+  var cont=E('preg-list');
+  try{
+    var ps=await FV.preguntasDeEval(EV_ACTUAL);
+    if(!ps.length){ cont.innerHTML='<div class="empty">Sin preguntas aún.</div>'; return; }
+    cont.innerHTML=ps.map(function(p,i){
+      var ops=p.tipo==='vf'?['Verdadero','Falso']:(p.opciones||[]);
+      return '<div class="lec"><span style="flex:1">'+(i+1)+'. '+FV.esc(p.enunciado)+' <span class="tag">'+p.tipo+'</span> <span style="color:var(--teal-700)">✓ '+FV.esc(ops[p.correcta]||'')+'</span></span>'+
+        '<button class="msg-del" style="background:none;border:none;cursor:pointer;color:var(--text-light)" onclick="borrarPreg(\''+p.id+'\')">🗑</button></div>';
+    }).join('');
+  }catch(e){ cont.innerHTML='<div class="empty">Error: '+e.message+'</div>'; }
+}
+async function borrarPreg(id){ if(confirm('¿Eliminar esta pregunta?')){ try{ await FV.eliminarPregunta(id); renderPreguntas(); }catch(e){ alert(e.message); } } }
+
+async function abrirNotas(id,tit){
+  E('notas-titulo').textContent=decodeURIComponent(tit); E('notas-panel').style.display='block'; E('preg-panel').style.display='none';
+  E('notas-panel').scrollIntoView({behavior:'smooth',block:'nearest'});
+  var cont=E('notas-list'); cont.innerHTML='<div class="empty">Cargando…</div>';
+  try{
+    var its=await FV.intentosDeEval(id);
+    if(!its.length){ cont.innerHTML='<div class="empty">Nadie ha presentado esta evaluación.</div>'; return; }
+    cont.innerHTML=its.map(function(t){
+      var color=t.aprobado?'var(--teal-700)':'var(--red)';
+      var f=t.enviado_en?new Date(t.enviado_en).toLocaleDateString('es-VE'):'';
+      return '<div class="item"><div class="avatar">🎓</div><div class="info"><div class="name">'+FV.esc(t.alumno_nombre||'?')+'</div><div class="meta">'+t.puntaje+'/'+t.total+' · '+f+'</div></div>'+
+        '<span class="badge" style="background:transparent;border:1px solid '+color+';color:'+color+'">'+t.porcentaje+'%</span></div>';
+    }).join('');
+  }catch(e){ cont.innerHTML='<div class="empty">Error: '+e.message+'</div>'; }
+}
 </script>
 </body>
 </html>
