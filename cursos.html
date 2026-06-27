@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cursos — FUNCECAIND</title>
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+<link rel="stylesheet" href="assets/styles.css">
+<style>
+  .mod{border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:12px;background:var(--white)}
+  .mod-h{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+  .mod-h b{flex:1;font-family:'Fraunces',serif}
+  .lec{display:flex;align-items:center;gap:8px;padding:8px 10px;border:1px solid var(--border);border-radius:8px;margin-bottom:6px;font-size:.9rem;background:var(--teal-50)}
+  .lec .ico{font-size:1rem}
+  .tag{font-size:.68rem;font-weight:600;padding:2px 8px;border-radius:100px;background:#fff;border:1px solid var(--border);color:var(--text-mid)}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <a href="index.html" class="brand">Funce<span>Caind</span></a>
+  <div class="topbar-right">
+    <span class="role-pill" id="rol-pill"></span>
+    <a class="btn-logout" id="back" href="#">← Mi panel</a>
+    <button class="btn-logout" onclick="FV.logout()">Salir</button>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="page-head"><h1>📚 Cursos</h1><p>Crea cursos, arma sus módulos y lecciones, y matricula a los alumnos.</p></div>
+
+  <div class="card">
+    <h2>➕ Crear un curso</h2>
+    <form onsubmit="return crearCurso(event)">
+      <div class="field"><label>Título del curso</label><input id="c-titulo" placeholder="Ej. Ofimática básica" required></div>
+      <div class="field"><label>Descripción (opcional)</label><textarea id="c-desc" rows="2" placeholder="De qué trata el curso…"></textarea></div>
+      <div class="msg" id="c-msg"></div>
+      <button class="btn" id="c-btn" type="submit">Crear curso</button>
+    </form>
+  </div>
+
+  <div class="card">
+    <h2>📋 Cursos</h2>
+    <div class="sub">Pulsa "Contenido" para armar módulos y lecciones, o "Matrículas" para inscribir alumnos.</div>
+    <div class="list" id="cursos-list"><div class="empty">Cargando…</div></div>
+  </div>
+
+  <div class="card" id="builder" style="display:none">
+    <h2>📂 Contenido · <span id="b-titulo"></span></h2>
+    <div class="sub">Agrega módulos y, dentro de cada uno, sus lecciones.</div>
+    <div class="row" style="align-items:flex-end;margin-bottom:14px">
+      <div class="field" style="flex:3"><label>Nuevo módulo</label><input id="m-titulo" placeholder="Ej. Módulo 1 — Word"></div>
+      <button class="btn btn-sm" onclick="agregarModulo()">Agregar módulo</button>
+    </div>
+    <div id="modulos"><div class="empty">Sin módulos aún.</div></div>
+
+    <div style="border-top:1px solid var(--border);margin-top:14px;padding-top:14px">
+      <h2 style="font-size:1rem">➕ Agregar lección</h2>
+      <div class="row" style="align-items:flex-end">
+        <div class="field"><label>Módulo</label><select id="l-modulo"></select></div>
+        <div class="field" style="flex:2"><label>Título</label><input id="l-titulo" placeholder="Ej. Crear un documento"></div>
+        <div class="field"><label>Tipo</label>
+          <select id="l-tipo" onchange="hintTipo()">
+            <option value="texto">📄 Texto / lectura</option>
+            <option value="video">🎬 Video (enlace)</option>
+            <option value="clase_vivo">🎥 Clase en vivo</option>
+            <option value="archivo">📎 Archivo (enlace)</option>
+            <option value="evaluacion">📝 Evaluación</option>
+          </select>
+        </div>
+      </div>
+      <div class="field"><label id="l-clabel">Contenido</label><textarea id="l-contenido" rows="2"></textarea></div>
+      <div class="msg" id="l-msg"></div>
+      <button class="btn btn-sm" onclick="agregarLeccion()">Agregar lección</button>
+    </div>
+  </div>
+
+  <div class="card" id="matriculas" style="display:none">
+    <h2>👥 Matrículas · <span id="mat-titulo"></span></h2>
+    <div class="sub">Solo los alumnos matriculados verán el contenido de este curso.</div>
+    <div class="row" style="align-items:flex-end;margin-bottom:12px">
+      <div class="field" style="flex:2"><label>Matricular alumno</label><select id="mat-alumno"></select></div>
+      <button class="btn btn-sm" onclick="matricular()">Matricular</button>
+    </div>
+    <div class="list" id="mat-list"></div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="assets/supabase-config.js"></script>
+<script src="assets/app.js"></script>
+<script>
+var ME=null, MIDOC=null, CURSOS=[], ALUMNOS=[], ACTUAL=null;
+function E(id){return document.getElementById(id);}
+function cmsg(id,t,ok){var m=E(id);m.textContent=t;m.className='msg '+(t?(ok?'ok':'err'):'');}
+
+FV.requireRole(['profesor','admin'], function(user, doc){
+  ME=user; MIDOC=doc;
+  E('rol-pill').textContent=doc.rol;
+  E('back').href=FV.panelDe(doc.rol);
+  cargarCursos();
+});
+
+async function crearCurso(ev){
+  ev.preventDefault();
+  var b=E('c-btn'); b.disabled=true; b.textContent='Creando…';
+  try{
+    await FV.crearCurso({titulo:E('c-titulo').value.trim(), descripcion:E('c-desc').value.trim()});
+    E('c-titulo').value=''; E('c-desc').value=''; cmsg('c-msg','✅ Curso creado.',true);
+    cargarCursos();
+  }catch(e){ cmsg('c-msg','❌ '+e.message,false); }
+  b.disabled=false; b.textContent='Crear curso';
+  return false;
+}
+
+async function cargarCursos(){
+  var cont=E('cursos-list');
+  try{
+    CURSOS = MIDOC.rol==='admin' ? await FV.todosCursos() : await FV.cursosDeProfesor(ME.uid);
+    if(!CURSOS.length){ cont.innerHTML='<div class="empty">Aún no has creado cursos.</div>'; return; }
+    cont.innerHTML=CURSOS.map(function(c){
+      return '<div class="item"><div class="avatar">📚</div>'+
+        '<div class="info"><div class="name">'+FV.esc(c.titulo)+'</div>'+
+        '<div class="meta">'+(c.profesor_nombre?('👩‍🏫 '+FV.esc(c.profesor_nombre)+' · '):'')+(c.publicado?'🟢 publicado':'⚪ borrador')+'</div></div>'+
+        '<div style="display:flex;gap:6px;flex-wrap:wrap">'+
+          '<button class="btn btn-sm" onclick="abrirContenido(\''+c.id+'\')">📂 Contenido</button>'+
+          '<button class="btn btn-ghost btn-sm" onclick="abrirMatriculas(\''+c.id+'\')">👥 Matrículas</button>'+
+          '<button class="btn btn-ghost btn-sm" onclick="togglePublicar(\''+c.id+'\','+(!c.publicado)+')">'+(c.publicado?'👁 Despublicar':'🚀 Publicar')+'</button>'+
+          '<button class="btn-logout btn-sm" onclick="borrarCurso(\''+c.id+'\')">🗑</button>'+
+        '</div></div>';
+    }).join('');
+  }catch(e){ cont.innerHTML='<div class="empty">Error: '+e.message+'</div>'; }
+}
+function cursoPorId(id){ return CURSOS.find(function(c){return c.id===id;}); }
+async function togglePublicar(id,val){ try{ await FV.actualizarCurso(id,{publicado:val}); cargarCursos(); }catch(e){ alert(e.message); } }
+async function borrarCurso(id){ if(confirm('¿Eliminar el curso y todo su contenido y matrículas?')){ try{ await FV.eliminarCurso(id); if(ACTUAL===id){E('builder').style.display='none';E('matriculas').style.display='none';} cargarCursos(); }catch(e){ alert(e.message); } } }
+
+// ---- CONTENIDO ----
+async function abrirContenido(id){
+  ACTUAL=id; var c=cursoPorId(id);
+  E('b-titulo').textContent=c?c.titulo:''; E('builder').style.display='block'; E('matriculas').style.display='none';
+  E('builder').scrollIntoView({behavior:'smooth',block:'nearest'});
+  cmsg('l-msg',''); hintTipo();
+  await renderModulos();
+}
+async function renderModulos(){
+  var cont=E('modulos'), sel=E('l-modulo');
+  try{
+    var mods=await FV.modulosDeCurso(ACTUAL);
+    sel.innerHTML='';
+    if(!mods.length){ cont.innerHTML='<div class="empty">Sin módulos aún. Agrega el primero arriba.</div>'; return; }
+    var html='';
+    for(var i=0;i<mods.length;i++){
+      var m=mods[i];
+      sel.innerHTML += '<option value="'+m.id+'">'+FV.esc(m.titulo)+'</option>';
+      var lecs=await FV.leccionesDeModulo(m.id);
+      var lhtml = lecs.length ? lecs.map(function(l){
+        var ico={texto:'📄',video:'🎬',clase_vivo:'🎥',archivo:'📎',evaluacion:'📝'}[l.tipo]||'📄';
+        return '<div class="lec"><span class="ico">'+ico+'</span><span style="flex:1">'+FV.esc(l.titulo)+'</span>'+
+          '<span class="tag">'+l.tipo+'</span>'+
+          '<button class="msg-del" style="background:none;border:none;cursor:pointer;color:var(--text-light)" onclick="borrarLeccion(\''+l.id+'\')">🗑</button></div>';
+      }).join('') : '<div style="font-size:.82rem;color:var(--text-light);padding:4px 0">Sin lecciones.</div>';
+      html+='<div class="mod"><div class="mod-h"><b>'+FV.esc(m.titulo)+'</b>'+
+        '<button class="btn-logout btn-sm" onclick="borrarModulo(\''+m.id+'\')">🗑 módulo</button></div>'+lhtml+'</div>';
+    }
+    cont.innerHTML=html;
+  }catch(e){ cont.innerHTML='<div class="empty">Error: '+e.message+'</div>'; }
+}
+async function agregarModulo(){
+  var t=E('m-titulo').value.trim(); if(!t) return;
+  try{ await FV.crearModulo(ACTUAL,t,Date.now()%100000); E('m-titulo').value=''; renderModulos(); }catch(e){ alert(e.message); }
+}
+async function borrarModulo(id){ if(confirm('¿Eliminar el módulo y sus lecciones?')){ try{ await FV.eliminarModulo(id); renderModulos(); }catch(e){ alert(e.message); } } }
+function hintTipo(){
+  var t=E('l-tipo').value, lbl=E('l-clabel'), ta=E('l-contenido');
+  var hints={texto:'Contenido (el texto de la lección)',video:'Enlace del video (YouTube, etc.)',clase_vivo:'Código de sala (déjalo vacío para generar uno)',archivo:'Enlace del archivo (PDF, etc.)',evaluacion:'Clave de la prueba: word, excel o competencias'};
+  lbl.textContent=hints[t]||'Contenido'; ta.placeholder=hints[t]||'';
+}
+async function agregarLeccion(){
+  var mod=E('l-modulo').value, tit=E('l-titulo').value.trim(), tipo=E('l-tipo').value, cont=E('l-contenido').value.trim();
+  if(!mod){ cmsg('l-msg','Primero crea un módulo.',false); return; }
+  if(!tit){ cmsg('l-msg','Escribe un título.',false); return; }
+  if(tipo==='clase_vivo' && !cont){ cont=FV.salaCodigo(tit); }
+  try{
+    await FV.crearLeccion(mod,{titulo:tit,tipo:tipo,contenido:cont});
+    E('l-titulo').value=''; E('l-contenido').value=''; cmsg('l-msg','✅ Lección agregada.',true); renderModulos();
+  }catch(e){ cmsg('l-msg','❌ '+e.message,false); }
+}
+async function borrarLeccion(id){ if(confirm('¿Eliminar esta lección?')){ try{ await FV.eliminarLeccion(id); renderModulos(); }catch(e){ alert(e.message); } } }
+
+// ---- MATRICULAS ----
+async function abrirMatriculas(id){
+  ACTUAL=id; var c=cursoPorId(id);
+  E('mat-titulo').textContent=c?c.titulo:''; E('matriculas').style.display='block'; E('builder').style.display='none';
+  E('matriculas').scrollIntoView({behavior:'smooth',block:'nearest'});
+  try{ if(!ALUMNOS.length){ var us=await FV.listarUsuarios(); ALUMNOS=us.filter(function(u){return u.rol==='alumno';}); } }catch(e){}
+  var sel=E('mat-alumno'); sel.innerHTML=ALUMNOS.map(function(a){return '<option value="'+a.id+'">'+FV.esc(a.nombre||a.email)+'</option>';}).join('');
+  renderMatriculas();
+}
+async function renderMatriculas(){
+  var cont=E('mat-list');
+  try{
+    var ms=await FV.matriculasDeCurso(ACTUAL);
+    if(!ms.length){ cont.innerHTML='<div class="empty">Sin alumnos matriculados.</div>'; return; }
+    cont.innerHTML=ms.map(function(m){
+      return '<div class="item"><div class="avatar">🎓</div><div class="info"><div class="name">'+FV.esc(m.alumno_nombre||'?')+'</div></div>'+
+        '<button class="btn-logout btn-sm" onclick="quitar(\''+m.id+'\')">Quitar</button></div>';
+    }).join('');
+  }catch(e){ cont.innerHTML='<div class="empty">Error: '+e.message+'</div>'; }
+}
+async function matricular(){
+  var sel=E('mat-alumno'); var aid=sel.value; if(!aid) return;
+  var nombre=sel.options[sel.selectedIndex].text;
+  try{ await FV.matricular(ACTUAL,aid,nombre); renderMatriculas(); }
+  catch(e){ alert(e.message.indexOf('duplicate')>=0?'Ese alumno ya está matriculado.':e.message); }
+}
+async function quitar(id){ if(confirm('¿Quitar la matrícula?')){ try{ await FV.desmatricular(id); renderMatriculas(); }catch(e){ alert(e.message); } } }
+</script>
+</body>
+</html>

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Curso — FUNCECAIND</title>
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+<link rel="stylesheet" href="assets/styles.css">
+<style>
+  .mod-tit{font-family:'Fraunces',serif;font-size:1rem;color:var(--teal-700);margin:14px 0 6px}
+  .lec-row{display:flex;align-items:center;gap:10px;width:100%;text-align:left;padding:11px 14px;border:1px solid var(--border);border-radius:10px;margin-bottom:7px;background:#fff;font:inherit;font-size:.92rem;color:var(--text-dark);cursor:pointer}
+  .lec-row:hover{border-color:var(--teal-300);background:var(--teal-50)}
+  .lec-row.activa{border-color:var(--teal-500);background:var(--teal-50);font-weight:600}
+  .lec-row .ico{font-size:1.1rem}
+  .visto{color:var(--teal-500);font-size:.8rem;margin-left:auto}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <a href="index.html" class="brand">Funce<span>Caind</span></a>
+  <div class="topbar-right">
+    <a class="btn-logout" id="back" href="alumno.html">← Mis cursos</a>
+    <button class="btn-logout" onclick="FV.logout()">Salir</button>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="page-head"><h1 id="curso-titulo">Curso</h1><p id="curso-desc"></p></div>
+  <div class="grid2">
+    <div class="card">
+      <h2>Contenido</h2>
+      <div id="indice"><div class="empty">Cargando…</div></div>
+    </div>
+    <div class="card" id="visor">
+      <div class="empty">Elige una lección de la izquierda para verla.</div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="assets/supabase-config.js"></script>
+<script src="assets/app.js"></script>
+<script>
+var ME=null, MIDOC=null, CID=new URLSearchParams(location.search).get('id'), VISTAS={};
+function E(id){return document.getElementById(id);}
+
+FV.requireRole(['alumno','profesor','admin'], function(user, doc){
+  ME=user; MIDOC=doc;
+  E('back').href = doc.rol==='alumno' ? 'alumno.html' : 'cursos.html';
+  if(!CID){ E('indice').innerHTML='<div class="empty">Curso no especificado.</div>'; return; }
+  cargar();
+});
+
+async function cargar(){
+  try{
+    var cr = await FV.sb.from('cursos').select('*').eq('id',CID).maybeSingle();
+    var curso = cr.data;
+    E('curso-titulo').textContent = curso ? curso.titulo : 'Curso';
+    E('curso-desc').textContent = curso ? (curso.descripcion||'') : '';
+    var mods = await FV.modulosDeCurso(CID);
+    var cont = E('indice');
+    if(!mods.length){ cont.innerHTML='<div class="empty">Este curso aún no tiene contenido, o no estás matriculado.</div>'; return; }
+    var html='';
+    for(var i=0;i<mods.length;i++){
+      var m=mods[i];
+      var lecs=await FV.leccionesDeModulo(m.id);
+      html+='<div class="mod-tit">'+FV.esc(m.titulo)+'</div>';
+      if(!lecs.length){ html+='<div style="font-size:.82rem;color:var(--text-light);padding:2px 0 8px">Sin lecciones.</div>'; }
+      html+=lecs.map(function(l){
+        var ico={texto:'📄',video:'🎬',clase_vivo:'🎥',archivo:'📎',evaluacion:'📝'}[l.tipo]||'📄';
+        window['_L_'+l.id]=l;
+        return '<button class="lec-row" id="row-'+l.id+'" onclick="abrir(\''+l.id+'\')"><span class="ico">'+ico+'</span><span>'+FV.esc(l.titulo)+'</span><span class="visto" id="v-'+l.id+'"></span></button>';
+      }).join('');
+    }
+    cont.innerHTML=html;
+  }catch(e){ E('indice').innerHTML='<div class="empty">Error: '+e.message+'</div>'; }
+}
+
+function ytId(u){ var m=(u||'').match(/(?:youtu\.be\/|[?&]v=|embed\/)([\w-]{11})/); return m?m[1]:null; }
+
+function abrir(id){
+  var l=window['_L_'+id]; if(!l) return;
+  document.querySelectorAll('.lec-row').forEach(function(r){r.classList.remove('activa');});
+  var row=E('row-'+id); if(row) row.classList.add('activa');
+  if(!VISTAS[id]){ VISTAS[id]=true; E('v-'+id).textContent='✓ visto'; FV.registrarEvento({verb:'viewed',object_type:'leccion',object_id:id,context:{curso_id:CID}}); }
+  var body='';
+  if(l.tipo==='texto'){ body='<div style="white-space:pre-wrap;line-height:1.7;color:var(--text-mid)">'+FV.esc(l.contenido||'(sin contenido)')+'</div>'; }
+  else if(l.tipo==='video'){ var y=ytId(l.contenido); body = y ? '<iframe width="100%" height="320" src="https://www.youtube.com/embed/'+y+'" frameborder="0" allow="accelerometer; encrypted-media; picture-in-picture" allowfullscreen style="border-radius:12px"></iframe>' : '<a class="btn" href="'+FV.esc(l.contenido||'#')+'" target="_blank" rel="noopener">🎬 Ver video →</a>'; }
+  else if(l.tipo==='clase_vivo'){ var u=new URL('aula.html',location.href); u.searchParams.set('room',l.contenido||''); u.searchParams.set('role','student'); u.searchParams.set('name',MIDOC.nombre); body='<p style="color:var(--text-mid);margin-bottom:12px">Clase en vivo por videollamada.</p><a class="btn" href="'+u.href+'">🎥 Entrar a la clase</a>'; }
+  else if(l.tipo==='archivo'){ body='<a class="btn" href="'+FV.esc(l.contenido||'#')+'" target="_blank" rel="noopener">📎 Descargar archivo</a>'; }
+  else if(l.tipo==='evaluacion'){ var clave=(l.contenido||'').trim().toLowerCase(); var pg = clave==='excel'?'pruebas/test-excel.html':clave==='competencias'?'pruebas/acceso-alumno.html':'pruebas/test-word.html'; body='<p style="color:var(--text-mid);margin-bottom:12px">Pon a prueba lo aprendido. Tu nota se guarda en tu perfil.</p><a class="btn" href="'+pg+'">📝 Hacer la prueba</a>'; }
+  E('visor').innerHTML='<div style="display:flex;align-items:center;gap:8px;margin-bottom:12px"><span style="font-size:1.4rem">'+({texto:'📄',video:'🎬',clase_vivo:'🎥',archivo:'📎',evaluacion:'📝'}[l.tipo]||'📄')+'</span><h2 style="margin:0">'+FV.esc(l.titulo)+'</h2></div>'+body;
+}
+</script>
+</body>
+</html>

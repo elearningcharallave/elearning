@@ -342,3 +342,8 @@ create policy le_insert on public.learning_events for insert with check (
   actor_id=auth.uid() and verb in ('viewed','attended','launched'));
 drop policy if exists le_select on public.learning_events;
 create policy le_select on public.learning_events for select using (actor_id=auth.uid() or public.es_staff());
+
+-- 10) Profesores tambien pueden LISTAR perfiles (para matricular alumnos) ----
+drop policy if exists perfiles_select on public.perfiles;
+create policy perfiles_select on public.perfiles
+  for select using (id = auth.uid() or public.es_staff());

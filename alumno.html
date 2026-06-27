@@ -25,6 +25,12 @@
   </div>
 
   <div class="card">
+    <h2>📚 Mis cursos</h2>
+    <div class="sub">Cursos en los que estás matriculado.</div>
+    <div class="list" id="mis-cursos"><div class="empty">Cargando…</div></div>
+  </div>
+
+  <div class="card">
     <h2>🎥 Clases en vivo</h2>
     <div class="sub">Pulsa "Entrar" para unirte a la videollamada de la clase.</div>
     <div class="list" id="clases"><div class="empty">Cargando…</div></div>
@@ -62,7 +68,7 @@ function urlAula(sala,nombre){ var u=new URL('aula.html',location.href); u.searc
 
 FV.requireRole('alumno', function(user, doc){
   MIDOC=doc; document.getElementById('al-name').textContent = doc.nombre;
-  cargar(); cargarMis();
+  cargar(); cargarMis(); cargarCursosAl();
 });
 
 async function cargar(){
@@ -97,6 +103,18 @@ async function verMatA(claseId){
   }catch(e){ l.innerHTML='<div class="empty">Error: '+e.message+'</div>'; }
 }
 
+async function cargarCursosAl(){
+  var c=document.getElementById('mis-cursos');
+  try{
+    var cursos=await FV.cursosMatriculado();
+    if(!cursos.length){ c.innerHTML='<div class="empty">Aún no estás matriculado en ningún curso. El profesor te inscribirá.</div>'; return; }
+    c.innerHTML=cursos.map(function(x){
+      return '<div class="item"><div class="avatar">📚</div><div class="info"><div class="name">'+FV.esc(x.titulo)+'</div>'+
+        '<div class="meta">'+(x.profesor_nombre?('👩‍🏫 '+FV.esc(x.profesor_nombre)):'')+'</div></div>'+
+        '<button class="btn btn-sm" onclick="location.href=\'curso.html?id='+x.id+'\'">Abrir</button></div>';
+    }).join('');
+  }catch(e){ c.innerHTML='<div class="empty">Error: '+e.message+'</div>'; }
+}
 async function cargarMis(){
   var c=document.getElementById('mis-res');
   try{
