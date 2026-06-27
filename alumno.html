@@ -72,8 +72,8 @@ async function cargar(){
     if(!clases.length){ cont.innerHTML='<div class="empty">No hay clases publicadas todavía. Vuelve más tarde.</div>'; return; }
     cont.innerHTML = clases.map(function(c){
       return '<div class="item"><div class="avatar">🎥</div>'+
-        '<div class="info"><div class="name">'+c.titulo+'</div>'+
-        '<div class="meta">'+(c.profesorNombre?('👩‍🏫 '+c.profesorNombre+' · '):'')+(c.horario?('🕒 '+c.horario):'')+'</div></div>'+
+        '<div class="info"><div class="name">'+FV.esc(c.titulo)+'</div>'+
+        '<div class="meta">'+(c.profesorNombre?('👩‍🏫 '+FV.esc(c.profesorNombre)+' · '):'')+(c.horario?('🕒 '+FV.esc(c.horario)):'')+'</div></div>'+
         '<button class="btn btn-ghost btn-sm" onclick="verMatA(\''+c.id+'\')">📎</button>'+
         '<button class="btn btn-sm" onclick="entrar(\''+c.sala+'\')">Entrar</button></div>';
     }).join('');
@@ -90,7 +90,7 @@ async function verMatA(claseId){
     if(!m.length){ l.innerHTML='<div class="empty">Esta clase aún no tiene materiales.</div>'; return; }
     l.innerHTML=m.map(function(x){
       return '<div class="item"><div class="avatar">📄</div>'+
-        '<div class="info"><div class="name">'+(x.titulo||'archivo')+'</div>'+
+        '<div class="info"><div class="name">'+FV.esc(x.titulo||'archivo')+'</div>'+
         '<div class="meta">'+new Date(x.creado_en).toLocaleDateString('es-VE')+'</div></div>'+
         '<a class="btn btn-sm" href="'+x.url+'" target="_blank" rel="noopener">Descargar</a></div>';
     }).join('');
@@ -106,7 +106,7 @@ async function cargarMis(){
       var color=r.porcentaje>=70?'var(--teal-700)':r.porcentaje>=50?'var(--amber)':'var(--red)';
       var fecha=r.creado_en?new Date(r.creado_en).toLocaleDateString('es-VE'):'';
       return '<div class="item"><div class="avatar">'+(r.prueba==='excel'?'📊':'📝')+'</div>'+
-        '<div class="info"><div class="name">Test de '+r.prueba+'</div><div class="meta">'+r.puntaje+'/'+r.total+' correctas · '+fecha+'</div></div>'+
+        '<div class="info"><div class="name">Test de '+FV.esc(r.prueba)+'</div><div class="meta">'+r.puntaje+'/'+r.total+' correctas · '+fecha+'</div></div>'+
         '<span class="badge" style="background:transparent;color:'+color+';border:1px solid '+color+'">'+r.porcentaje+'%</span></div>';
     }).join('');
   }catch(e){ c.innerHTML='<div class="empty">Error: '+e.message+'</div>'; }

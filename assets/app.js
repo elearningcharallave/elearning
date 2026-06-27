@@ -19,6 +19,12 @@
   function panelDe(rol) {
     return rol === "admin" ? "admin.html" : rol === "profesor" ? "profesor.html" : "alumno.html";
   }
+  // Escapa texto para insertarlo con innerHTML sin riesgo de XSS.
+  function esc(s) {
+    return (s == null ? "" : "" + s)
+      .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+  }
   function wrapUser(u) { return u ? { uid: u.id, id: u.id, email: u.email } : null; }
   function claseMap(r) {
     return !r ? r : {
@@ -242,7 +248,7 @@
   }
 
   window.FV = {
-    configOk: configOk, panelDe: panelDe, requireRole: requireRole, redirigirSiSesion: redirigirSiSesion,
+    configOk: configOk, panelDe: panelDe, esc: esc, requireRole: requireRole, redirigirSiSesion: redirigirSiSesion,
     login: login, registrarAlumno: registrarAlumno, crearProfesor: crearProfesor, logout: logout,
     listarUsuarios: listarUsuarios, crearClase: crearClase, salaCodigo: salaCodigo,
     clasesDeProfesor: clasesDeProfesor, todasLasClases: todasLasClases, eliminarClase: eliminarClase,

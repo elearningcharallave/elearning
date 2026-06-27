@@ -107,8 +107,8 @@ async function cargar(){
     cont.innerHTML = users.map(function(u){
       var del = (u.rol!=='admin') ? '<button title="Eliminar usuario" style="background:none;border:none;color:var(--text-light);cursor:pointer;font-size:1rem;margin-left:6px" onclick="borrarUsuario(\''+u.id+'\')">🗑</button>' : '';
       return '<div class="item"><div class="avatar">'+ini(u.nombre)+'</div>'+
-        '<div class="info"><div class="name">'+(u.nombre||'(sin nombre)')+'</div>'+
-        '<div class="meta">'+(u.email||'')+'</div></div>'+
+        '<div class="info"><div class="name">'+FV.esc(u.nombre||'(sin nombre)')+'</div>'+
+        '<div class="meta">'+FV.esc(u.email||'')+'</div></div>'+
         '<span class="badge '+u.rol+'">'+u.rol+'</span>'+del+'</div>';
     }).join('');
     await cargarResultados();
@@ -124,7 +124,7 @@ async function cargarResultados(){
       var color=r.porcentaje>=70?'var(--teal-700)':r.porcentaje>=50?'var(--amber)':'var(--red)';
       var fecha=r.creado_en?new Date(r.creado_en).toLocaleDateString('es-VE'):'';
       return '<div class="item"><div class="avatar">'+(r.prueba==='excel'?'📊':'📝')+'</div>'+
-        '<div class="info"><div class="name">'+(r.alumno_nombre||'?')+' · Test de '+r.prueba+'</div>'+
+        '<div class="info"><div class="name">'+FV.esc(r.alumno_nombre||'?')+' · Test de '+FV.esc(r.prueba)+'</div>'+
         '<div class="meta">'+r.puntaje+'/'+r.total+' correctas · '+fecha+'</div></div>'+
         '<span class="badge" style="background:transparent;color:'+color+';border:1px solid '+color+'">'+r.porcentaje+'%</span></div>';
     }).join('');
