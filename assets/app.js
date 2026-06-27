@@ -330,6 +330,10 @@
   async function calificarEntrega(id, nota, comentario) { var r = await sb.from("entregas").update({ nota: nota, comentario: comentario || null, calificado_en: new Date().toISOString() }).eq("id", id); if (r.error) throw r.error; }
   async function similitudTarea(tareaId) { var r = await sb.rpc("similitud_entregas", { t: tareaId }); if (r.error) throw r.error; return r.data; }
 
+  // ===== LMS Fase 5: analitica =====
+  async function resumenCurso(cid) { var r = await sb.rpc("resumen_curso", { cid: cid }); if (r.error) throw r.error; return r.data && r.data[0]; }
+  async function progresoCurso(cid) { var r = await sb.rpc("progreso_curso", { cid: cid }); if (r.error) throw r.error; return r.data; }
+
   function mostrarFaltaConfig() {
     document.addEventListener("DOMContentLoaded", function () {
       var d = document.createElement("div");
@@ -362,6 +366,7 @@
     estadoCertificado: estadoCertificado, emitirCertificado: emitirCertificado, misCertificados: misCertificados, verificarCertificado: verificarCertificado,
     crearTarea: crearTarea, tareasDeCurso: tareasDeCurso, tareaPorId: tareaPorId, eliminarTarea: eliminarTarea,
     miEntrega: miEntrega, entregarTarea: entregarTarea, entregasDeTarea: entregasDeTarea, calificarEntrega: calificarEntrega, similitudTarea: similitudTarea,
+    resumenCurso: resumenCurso, progresoCurso: progresoCurso,
     get sb() { return sb; }
   };
 })();

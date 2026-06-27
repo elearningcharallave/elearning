@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Analítica — FUNCECAIND</title>
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+<link rel="stylesheet" href="assets/styles.css">
+<style>
+  .kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:16px}
+  @media(max-width:680px){.kpis{grid-template-columns:repeat(2,1fr)}}
+  .kpi{background:#fff;border:1px solid var(--border);border-radius:12px;padding:16px 8px;text-align:center}
+  .kpi b{display:block;font-family:'Fraunces',serif;font-size:1.8rem;color:var(--teal-700)}
+  .kpi span{font-size:.74rem;color:var(--text-light)}
+  .riesgo{background:#fdecec;color:var(--red);font-size:.7rem;font-weight:600;padding:2px 8px;border-radius:100px}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <a href="index.html" class="brand">Funce<span>Caind</span></a>
+  <div class="topbar-right"><a class="btn-logout" id="back" href="#">← Mi panel</a><button class="btn-logout" onclick="FV.logout()">Salir</button></div>
+</div>
+
+<div class="wrap">
+  <div class="page-head"><h1>📊 Analítica</h1><p>Progreso de los alumnos por curso y alumnos en riesgo.</p></div>
+  <div class="card">
+    <div class="field" style="margin-bottom:0"><label>Curso</label><select id="sel" onchange="cargar()"></select></div>
+  </div>
+  <div id="resumen"></div>
+  <div class="card"><h2>👥 Alumnos</h2><div class="list" id="alumnos"><div class="empty">Elige un curso.</div></div></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="assets/supabase-config.js"></script>
+<script src="assets/app.js"></script>
+<script>
+var ME=null,MIDOC=null,CURSOS=[],RES=null;
+function E(id){return document.getElementById(id);}
+function dias(ts){ if(!ts) return Infinity; return (Date.now()-new Date(ts).getTime())/86400000; }
+
+FV.requireRole(['profesor','admin'], function(u,d){
+  ME=u; MIDOC=d; E('back').href=FV.panelDe(d.rol);
+  init();
+});
+async function init(){
+  try{
+    CURSOS = MIDOC.rol==='admin' ? await FV.todosCursos() : await FV.cursosDeProfesor(ME.uid);
+    var sel=E('sel');
+    if(!CURSOS.length){ sel.innerHTML='<option>— sin cursos —</option>'; return; }
+    sel.innerHTML=CURSOS.map(function(c){return '<option value="'+c.id+'">'+FV.esc(c.titulo)+'</option>';}).join('');
+    cargar();
+  }catch(e){ E('alumnos').innerHTML='<div class="empty">Error: '+e.message+'</div>'; }
+}
+async function cargar(){
+  var cid=E('sel').value; if(!cid) return;
+  E('alumnos').innerHTML='<div class="empty">Cargando…</div>';
+  try{
+    RES=await FV.resumenCurso(cid);
+    E('resumen').innerHTML='<div class="kpis">'+
+      kpi(RES?RES.matriculados:0,'Matriculados')+
+      kpi(RES?RES.total_lecciones:0,'Lecciones')+
+      kpi(RES?RES.total_evaluaciones:0,'Evaluaciones')+
+      kpi(RES?RES.total_tareas:0,'Tareas')+
+      kpi(RES?RES.completados:0,'Certificados')+'</div>';
+    var prog=await FV.progresoCurso(cid);
+    if(!prog.length){ E('alumnos').innerHTML='<div class="empty">Sin alumnos matriculados.</div>'; return; }
+    var totL=RES?RES.total_lecciones:0, totE=RES?RES.total_evaluaciones:0;
+    E('alumnos').innerHTML=prog.map(function(a){
+      var riesgo = (totE>0 && a.evals_aprobadas<totE) || dias(a.ultima_actividad)>14 || (totL>0 && a.lecciones_vistas===0);
+      var ult = a.ultima_actividad ? new Date(a.ultima_actividad).toLocaleDateString('es-VE') : 'sin actividad';
+      return '<div class="item"><div class="avatar">🎓</div><div class="info"><div class="name">'+FV.esc(a.alumno_nombre||'?')+(riesgo?' <span class="riesgo">en riesgo</span>':'')+'</div>'+
+        '<div class="meta">📖 '+a.lecciones_vistas+'/'+totL+' lecciones · 📝 '+a.evals_aprobadas+'/'+totE+' aprobadas · 🕒 '+ult+'</div></div></div>';
+    }).join('');
+  }catch(e){ E('alumnos').innerHTML='<div class="empty">Error: '+e.message+'</div>'; }
+}
+function kpi(n,l){ return '<div class="kpi"><b>'+n+'</b><span>'+l+'</span></div>'; }
+</script>
+</body>
+</html>

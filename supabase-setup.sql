@@ -514,3 +514,32 @@ language sql security definer stable set search_path=public as $$
   group by e1.id, e1.alumno_nombre;
 $$;
 grant execute on function public.similitud_entregas(uuid) to authenticated;
+
+-- ============================================================================
+-- 14) LMS Fase 5: analitica (VIEWs/RPC derivadas; solo profesor del curso o admin)
+-- ============================================================================
+create or replace function public.resumen_curso(cid uuid)
+returns table(matriculados int, total_lecciones int, total_evaluaciones int, total_tareas int, completados int)
+language sql security definer stable set search_path=public as $$
+  select
+    (select count(*) from public.matriculas where curso_id=cid)::int,
+    (select count(*) from public.lecciones l join public.modulos m on m.id=l.modulo_id where m.curso_id=cid)::int,
+    (select count(*) from public.evaluaciones where curso_id=cid)::int,
+    (select count(*) from public.tareas where curso_id=cid)::int,
+    (select count(*) from public.certificados where curso_id=cid)::int
+  where public.es_profesor_curso(cid) or public.es_admin();
+$$;
+grant execute on function public.resumen_curso(uuid) to authenticated;
+
+create or replace function public.progreso_curso(cid uuid)
+returns table(alumno_id uuid, alumno_nombre text, lecciones_vistas int, evals_aprobadas int, ultima_actividad timestamptz)
+language sql security definer stable set search_path=public as $$
+  select m.alumno_id, m.alumno_nombre,
+    (select count(distinct le.object_id)::int from public.learning_events le where le.actor_id=m.alumno_id and le.verb='viewed' and le.object_type='leccion' and (le.context->>'curso_id')=cid::text),
+    (select count(distinct i.evaluacion_id)::int from public.intentos i join public.evaluaciones e on e.id=i.evaluacion_id where i.alumno_id=m.alumno_id and i.aprobado and e.curso_id=cid),
+    (select max(le.occurred_at) from public.learning_events le where le.actor_id=m.alumno_id and (le.context->>'curso_id')=cid::text)
+  from public.matriculas m
+  where m.curso_id=cid and (public.es_profesor_curso(cid) or public.es_admin())
+  order by m.alumno_nombre;
+$$;
+grant execute on function public.progreso_curso(uuid) to authenticated;
