@@ -219,3 +219,126 @@ create policy foro_insert on public.foro_mensajes
 drop policy if exists foro_delete on public.foro_mensajes;
 create policy foro_delete on public.foro_mensajes
   for delete using (autor_id = auth.uid() or public.es_admin());
+
+-- ============================================================================
+-- 9) LMS Fase 1: cursos -> modulos -> lecciones + matriculas + learning_events
+-- ============================================================================
+create table if not exists public.cursos (
+  id uuid primary key default gen_random_uuid(),
+  titulo text not null,
+  descripcion text,
+  profesor_id uuid references auth.users(id) on delete set null,
+  profesor_nombre text,
+  publicado boolean not null default false,
+  creado_en timestamptz not null default now()
+);
+create table if not exists public.modulos (
+  id uuid primary key default gen_random_uuid(),
+  curso_id uuid references public.cursos(id) on delete cascade,
+  titulo text not null,
+  orden int not null default 0,
+  creado_en timestamptz not null default now()
+);
+create table if not exists public.lecciones (
+  id uuid primary key default gen_random_uuid(),
+  modulo_id uuid references public.modulos(id) on delete cascade,
+  titulo text not null,
+  tipo text not null default 'texto' check (tipo in ('texto','video','clase_vivo','archivo','evaluacion')),
+  contenido text,                 -- texto: cuerpo; video/archivo: URL; clase_vivo: sala; evaluacion: clave
+  orden int not null default 0,
+  creado_en timestamptz not null default now()
+);
+create table if not exists public.matriculas (
+  id uuid primary key default gen_random_uuid(),
+  curso_id uuid references public.cursos(id) on delete cascade,
+  alumno_id uuid references auth.users(id) on delete cascade,
+  alumno_nombre text,
+  creado_en timestamptz not null default now(),
+  unique (curso_id, alumno_id)
+);
+create table if not exists public.learning_events (
+  id bigint generated always as identity primary key,
+  actor_id uuid not null references auth.users(id) on delete cascade,
+  actor_nombre text,
+  verb text not null,             -- viewed | attended | launched | completed | passed | failed | submitted
+  object_type text not null,      -- leccion | evaluacion | tarea | clase_vivo | curso
+  object_id uuid,
+  score_scaled numeric(4,3) check (score_scaled between 0 and 1),
+  success boolean, completion boolean, duration_s int,
+  context jsonb not null default '{}',
+  occurred_at timestamptz not null default now()
+);
+create index if not exists le_actor_obj on public.learning_events (actor_id, object_type, object_id);
+
+alter table public.cursos          enable row level security;
+alter table public.modulos         enable row level security;
+alter table public.lecciones       enable row level security;
+alter table public.matriculas      enable row level security;
+alter table public.learning_events enable row level security;
+
+-- helpers RLS
+create or replace function public.matriculado(curso uuid)
+returns boolean language sql security definer stable set search_path=public as $$
+  select exists(select 1 from public.matriculas where curso_id=curso and alumno_id=auth.uid());
+$$;
+create or replace function public.curso_de_leccion(lec uuid)
+returns uuid language sql security definer stable set search_path=public as $$
+  select c.id from public.lecciones l
+    join public.modulos m on m.id=l.modulo_id
+    join public.cursos  c on c.id=m.curso_id
+  where l.id=lec;
+$$;
+create or replace function public.es_profesor_curso(curso uuid)
+returns boolean language sql security definer stable set search_path=public as $$
+  select exists(select 1 from public.cursos where id=curso and profesor_id=auth.uid());
+$$;
+
+-- CURSOS: leer autenticado (catalogo); CUD profesor dueño o admin
+drop policy if exists cursos_select on public.cursos;
+create policy cursos_select on public.cursos for select using (auth.role()='authenticated');
+drop policy if exists cursos_insert on public.cursos;
+create policy cursos_insert on public.cursos for insert with check ((profesor_id=auth.uid() and public.es_staff()) or public.es_admin());
+drop policy if exists cursos_update on public.cursos;
+create policy cursos_update on public.cursos for update using (profesor_id=auth.uid() or public.es_admin());
+drop policy if exists cursos_delete on public.cursos;
+create policy cursos_delete on public.cursos for delete using (profesor_id=auth.uid() or public.es_admin());
+
+-- MODULOS: leer autenticado; CUD profesor del curso o admin
+drop policy if exists modulos_select on public.modulos;
+create policy modulos_select on public.modulos for select using (auth.role()='authenticated');
+drop policy if exists modulos_insert on public.modulos;
+create policy modulos_insert on public.modulos for insert with check (public.es_admin() or public.es_profesor_curso(curso_id));
+drop policy if exists modulos_update on public.modulos;
+create policy modulos_update on public.modulos for update using (public.es_admin() or public.es_profesor_curso(curso_id));
+drop policy if exists modulos_delete on public.modulos;
+create policy modulos_delete on public.modulos for delete using (public.es_admin() or public.es_profesor_curso(curso_id));
+
+-- LECCIONES: leer = matriculado o profesor del curso o admin; CUD profesor del curso o admin
+drop policy if exists lecciones_select on public.lecciones;
+create policy lecciones_select on public.lecciones for select using (
+  public.es_staff() or public.matriculado(public.curso_de_leccion(id)) or public.es_profesor_curso(public.curso_de_leccion(id)));
+drop policy if exists lecciones_insert on public.lecciones;
+create policy lecciones_insert on public.lecciones for insert with check (
+  public.es_admin() or public.es_profesor_curso((select curso_id from public.modulos where id=modulo_id)));
+drop policy if exists lecciones_update on public.lecciones;
+create policy lecciones_update on public.lecciones for update using (
+  public.es_admin() or public.es_profesor_curso(public.curso_de_leccion(id)));
+drop policy if exists lecciones_delete on public.lecciones;
+create policy lecciones_delete on public.lecciones for delete using (
+  public.es_admin() or public.es_profesor_curso(public.curso_de_leccion(id)));
+
+-- MATRICULAS: leer propia o staff; insertar/borrar admin o profesor del curso
+drop policy if exists matriculas_select on public.matriculas;
+create policy matriculas_select on public.matriculas for select using (alumno_id=auth.uid() or public.es_staff());
+drop policy if exists matriculas_insert on public.matriculas;
+create policy matriculas_insert on public.matriculas for insert with check (public.es_admin() or public.es_profesor_curso(curso_id));
+drop policy if exists matriculas_delete on public.matriculas;
+create policy matriculas_delete on public.matriculas for delete using (public.es_admin() or public.es_profesor_curso(curso_id));
+
+-- LEARNING_EVENTS: insertar lo propio SOLO con verbos no-calificadores; leer propio o staff
+-- (passed/failed/completed/score se escriben server-side por Edge Function en Fase 2)
+drop policy if exists le_insert on public.learning_events;
+create policy le_insert on public.learning_events for insert with check (
+  actor_id=auth.uid() and verb in ('viewed','attended','launched'));
+drop policy if exists le_select on public.learning_events;
+create policy le_select on public.learning_events for select using (actor_id=auth.uid() or public.es_staff());

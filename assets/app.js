@@ -236,6 +236,46 @@
     return true;
   }
 
+  // ===== LMS Fase 1: cursos / modulos / lecciones / matriculas / eventos =====
+  async function crearCurso(d) {
+    var ses = await sesion(); if (!ses) throw new Error("Sin sesión");
+    var r = await sb.from("cursos").insert({
+      titulo: d.titulo, descripcion: d.descripcion || null,
+      profesor_id: ses.user.uid, profesor_nombre: (ses.perfil && ses.perfil.nombre) || ses.user.email,
+      publicado: !!d.publicado
+    }).select("id").single();
+    if (r.error) throw r.error; return r.data.id;
+  }
+  async function actualizarCurso(id, d) { var r = await sb.from("cursos").update(d).eq("id", id); if (r.error) throw r.error; }
+  async function eliminarCurso(id) { var r = await sb.from("cursos").delete().eq("id", id); if (r.error) throw r.error; }
+  async function todosCursos() { var r = await sb.from("cursos").select("*").order("creado_en", { ascending: false }); if (r.error) throw r.error; return r.data; }
+  async function cursosDeProfesor(uid) { var r = await sb.from("cursos").select("*").eq("profesor_id", uid).order("creado_en", { ascending: false }); if (r.error) throw r.error; return r.data; }
+  async function cursosMatriculado() {
+    var r = await sb.from("matriculas").select("id, curso:cursos(*)").order("creado_en", { ascending: false });
+    if (r.error) throw r.error; return r.data.map(function (x) { return x.curso; }).filter(Boolean);
+  }
+
+  async function modulosDeCurso(cursoId) { var r = await sb.from("modulos").select("*").eq("curso_id", cursoId).order("orden", { ascending: true }); if (r.error) throw r.error; return r.data; }
+  async function crearModulo(cursoId, titulo, orden) { var r = await sb.from("modulos").insert({ curso_id: cursoId, titulo: titulo, orden: orden || 0 }).select("id").single(); if (r.error) throw r.error; return r.data.id; }
+  async function eliminarModulo(id) { var r = await sb.from("modulos").delete().eq("id", id); if (r.error) throw r.error; }
+
+  async function leccionesDeModulo(moduloId) { var r = await sb.from("lecciones").select("*").eq("modulo_id", moduloId).order("orden", { ascending: true }); if (r.error) throw r.error; return r.data; }
+  async function crearLeccion(moduloId, d) { var r = await sb.from("lecciones").insert({ modulo_id: moduloId, titulo: d.titulo, tipo: d.tipo || "texto", contenido: d.contenido || null, orden: d.orden || 0 }).select("id").single(); if (r.error) throw r.error; return r.data.id; }
+  async function eliminarLeccion(id) { var r = await sb.from("lecciones").delete().eq("id", id); if (r.error) throw r.error; }
+
+  async function matricular(cursoId, alumnoId, alumnoNombre) { var r = await sb.from("matriculas").insert({ curso_id: cursoId, alumno_id: alumnoId, alumno_nombre: alumnoNombre }).select("id").single(); if (r.error) throw r.error; return r.data.id; }
+  async function desmatricular(id) { var r = await sb.from("matriculas").delete().eq("id", id); if (r.error) throw r.error; }
+  async function matriculasDeCurso(cursoId) { var r = await sb.from("matriculas").select("*").eq("curso_id", cursoId).order("creado_en", { ascending: true }); if (r.error) throw r.error; return r.data; }
+
+  async function registrarEvento(ev) {
+    var ses = await sesion(); if (!ses) return null;
+    var r = await sb.from("learning_events").insert({
+      actor_id: ses.user.uid, actor_nombre: (ses.perfil && ses.perfil.nombre) || ses.user.email,
+      verb: ev.verb, object_type: ev.object_type, object_id: ev.object_id || null, context: ev.context || {}
+    });
+    if (r.error) { console.error(r.error); return null; } return true;
+  }
+
   function mostrarFaltaConfig() {
     document.addEventListener("DOMContentLoaded", function () {
       var d = document.createElement("div");
@@ -257,6 +297,11 @@
     registrarEntrada: registrarEntrada, latido: latido, registrarSalida: registrarSalida, asistenciaDeSala: asistenciaDeSala,
     subirMaterial: subirMaterial, materialesDeClase: materialesDeClase, eliminarMaterial: eliminarMaterial,
     foroMensajes: foroMensajes, publicarForo: publicarForo, eliminarForoMsg: eliminarForoMsg, eliminarUsuario: eliminarUsuario,
+    crearCurso: crearCurso, actualizarCurso: actualizarCurso, eliminarCurso: eliminarCurso, todosCursos: todosCursos,
+    cursosDeProfesor: cursosDeProfesor, cursosMatriculado: cursosMatriculado,
+    modulosDeCurso: modulosDeCurso, crearModulo: crearModulo, eliminarModulo: eliminarModulo,
+    leccionesDeModulo: leccionesDeModulo, crearLeccion: crearLeccion, eliminarLeccion: eliminarLeccion,
+    matricular: matricular, desmatricular: desmatricular, matriculasDeCurso: matriculasDeCurso, registrarEvento: registrarEvento,
     get sb() { return sb; }
   };
 })();
