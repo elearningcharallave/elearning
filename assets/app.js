@@ -300,6 +300,17 @@
   async function iniciarEvaluacion(evalId) { return llamarEval({ action: "start", evaluacion_id: evalId }); }
   async function enviarEvaluacion(intentoId, respuestas) { return llamarEval({ action: "submit", intento_id: intentoId, respuestas: respuestas }); }
 
+  // ===== LMS Fase 3: certificados =====
+  async function llamarCert(payload) {
+    var s = await sb.auth.getSession(); var tok = s.data && s.data.session && s.data.session.access_token;
+    var r = await fetch(window.SUPABASE_URL + "/functions/v1/certificado", { method: "POST", headers: { "Content-Type": "application/json", "apikey": window.SUPABASE_ANON_KEY, "Authorization": "Bearer " + tok }, body: JSON.stringify(payload) });
+    var j = await r.json().catch(function () { return {}; }); if (!r.ok || j.error) throw new Error(j.error || "Error en el certificado"); return j;
+  }
+  async function estadoCertificado(cursoId) { return llamarCert({ action: "estado", curso_id: cursoId }); }
+  async function emitirCertificado(cursoId) { return llamarCert({ action: "emitir", curso_id: cursoId }); }
+  async function misCertificados() { var r = await sb.from("certificados").select("*").order("emitido_en", { ascending: false }); if (r.error) throw r.error; return r.data; }
+  async function verificarCertificado(codigo) { var r = await sb.rpc("verificar_certificado", { cod: codigo }); if (r.error) throw r.error; return r.data; }
+
   function mostrarFaltaConfig() {
     document.addEventListener("DOMContentLoaded", function () {
       var d = document.createElement("div");
@@ -329,6 +340,7 @@
     crearEvaluacion: crearEvaluacion, evaluacionesDeCurso: evaluacionesDeCurso, eliminarEvaluacion: eliminarEvaluacion,
     preguntasDeEval: preguntasDeEval, crearPregunta: crearPregunta, eliminarPregunta: eliminarPregunta,
     intentosDeEval: intentosDeEval, iniciarEvaluacion: iniciarEvaluacion, enviarEvaluacion: enviarEvaluacion,
+    estadoCertificado: estadoCertificado, emitirCertificado: emitirCertificado, misCertificados: misCertificados, verificarCertificado: verificarCertificado,
     get sb() { return sb; }
   };
 })();

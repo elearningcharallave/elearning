@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Verificar certificado — FUNCECAIND</title>
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+<meta name="description" content="Verifica la autenticidad de un certificado emitido por FUNCECAIND con su código.">
+<link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+<div class="topbar">
+  <a href="index.html" class="brand">Funce<span>Caind</span></a>
+  <div class="topbar-right"><a class="btn-logout" href="index.html">Inicio</a></div>
+</div>
+
+<div class="auth-wrap">
+  <div class="auth-card" style="max-width:480px">
+    <div class="logo">Funce<span>Caind</span></div>
+    <div class="tagline">Verificación de certificados</div>
+    <form onsubmit="return verificar(event)">
+      <div class="field"><label>Código del certificado</label><input id="cod" placeholder="Ej. FUNCE-XXXXXXXXXX" required></div>
+      <button class="btn btn-block" id="btn" type="submit">Verificar</button>
+    </form>
+    <div id="res" style="margin-top:18px"></div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="assets/supabase-config.js"></script>
+<script src="assets/app.js"></script>
+<script>
+function E(id){return document.getElementById(id);}
+var pre=new URLSearchParams(location.search).get('codigo');
+if(pre){ E('cod').value=pre; setTimeout(function(){verificar();},200); }
+
+async function verificar(ev){
+  if(ev) ev.preventDefault();
+  var cod=E('cod').value.trim(); if(!cod) return false;
+  var b=E('btn'); b.disabled=true; b.textContent='Verificando…';
+  try{
+    var rows=await FV.verificarCertificado(cod);
+    if(!rows || !rows.length){
+      E('res').innerHTML='<div class="msg err" style="display:block">❌ Certificado <b>no encontrado</b>. Revisa el código.</div>';
+    } else {
+      var c=rows[0]; var fecha=new Date(c.emitido_en).toLocaleDateString('es-VE',{day:'2-digit',month:'long',year:'numeric'});
+      E('res').innerHTML='<div class="msg ok" style="display:block;text-align:left">✅ <b>Certificado VÁLIDO</b><br><br>'+
+        '👤 '+FV.esc(c.alumno_nombre)+'<br>📚 '+FV.esc(c.curso_titulo)+'<br>📅 '+fecha+'</div>'+
+        '<div style="text-align:center;margin-top:10px"><a class="btn btn-sm" href="certificado.html?codigo='+encodeURIComponent(cod)+'">Ver certificado</a></div>';
+    }
+  }catch(e){ E('res').innerHTML='<div class="msg err" style="display:block">Error: '+e.message+'</div>'; }
+  b.disabled=false; b.textContent='Verificar';
+  return false;
+}
+</script>
+</body>
+</html>

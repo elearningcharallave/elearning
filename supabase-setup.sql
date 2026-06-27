@@ -412,3 +412,29 @@ create policy preg_delete on public.preguntas for delete using (public.es_staff(
 -- intentos: leer propio o staff; NUNCA insert/update desde cliente (solo Edge Function)
 drop policy if exists intentos_select on public.intentos;
 create policy intentos_select on public.intentos for select using (alumno_id=auth.uid() or public.es_staff());
+
+-- ============================================================================
+-- 12) LMS Fase 3: certificados verificables
+-- ============================================================================
+create table if not exists public.certificados (
+  id uuid primary key default gen_random_uuid(),
+  curso_id uuid references public.cursos(id) on delete set null,
+  curso_titulo text,
+  alumno_id uuid references auth.users(id) on delete cascade,
+  alumno_nombre text,
+  codigo text unique not null,
+  emitido_en timestamptz not null default now(),
+  unique (curso_id, alumno_id)
+);
+alter table public.certificados enable row level security;
+-- el alumno lee los suyos; staff lee todos. Emision SOLO por Edge Function (service_role).
+drop policy if exists cert_select on public.certificados;
+create policy cert_select on public.certificados for select using (alumno_id=auth.uid() or public.es_staff());
+
+-- verificacion PUBLICA por codigo (sin login, sin exponer toda la tabla)
+create or replace function public.verificar_certificado(cod text)
+returns table(alumno_nombre text, curso_titulo text, emitido_en timestamptz)
+language sql security definer stable set search_path=public as $$
+  select c.alumno_nombre, c.curso_titulo, c.emitido_en from public.certificados c where c.codigo = cod;
+$$;
+grant execute on function public.verificar_certificado(text) to anon, authenticated;

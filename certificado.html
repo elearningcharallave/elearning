@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Certificado — FUNCECAIND</title>
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+<link rel="stylesheet" href="assets/styles.css">
+<style>
+  .cert{max-width:760px;margin:24px auto;background:#fff;border:3px solid var(--teal-700);border-radius:8px;padding:42px 38px;text-align:center;position:relative}
+  .cert::after{content:'';position:absolute;inset:10px;border:1px solid var(--teal-300);border-radius:4px;pointer-events:none}
+  .cert .marca{font-family:'Fraunces',serif;font-size:1.6rem;color:var(--teal-700);letter-spacing:1px}
+  .cert .marca span{color:var(--blue-500);font-style:italic}
+  .cert .tipo{font-size:.8rem;letter-spacing:3px;color:var(--text-light);margin:8px 0 24px;text-transform:uppercase}
+  .cert .otorga{color:var(--text-mid);font-size:.95rem}
+  .cert .nombre{font-family:'Fraunces',serif;font-size:2.2rem;color:var(--text-dark);margin:8px 0;border-bottom:1px solid var(--border);display:inline-block;padding:0 24px 6px}
+  .cert .curso{font-size:1.15rem;color:var(--teal-700);font-weight:600;margin:14px 0}
+  .cert .pie{display:flex;justify-content:space-between;margin-top:34px;font-size:.78rem;color:var(--text-light);text-align:left}
+  .cert .codigo{font-family:monospace;color:var(--text-mid)}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <a href="index.html" class="brand">Funce<span>Caind</span></a>
+  <div class="topbar-right"><a class="btn-logout" href="index.html">Inicio</a></div>
+</div>
+
+<div class="wrap">
+  <div id="cont"><div class="empty">Cargando certificado…</div></div>
+  <div style="text-align:center;margin-top:14px" id="acciones"></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="assets/supabase-config.js"></script>
+<script src="assets/app.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+var CODIGO=new URLSearchParams(location.search).get('codigo'), CERT=null;
+function E(id){return document.getElementById(id);}
+
+(async function(){
+  if(!FV.configOk()){ E('cont').innerHTML='<div class="empty">Falta configurar Supabase.</div>'; return; }
+  if(!CODIGO){ E('cont').innerHTML='<div class="empty">Certificado no especificado.</div>'; return; }
+  try{
+    var rows=await FV.verificarCertificado(CODIGO);
+    if(!rows || !rows.length){ E('cont').innerHTML='<div class="empty">Certificado no encontrado.</div>'; return; }
+    CERT=rows[0];
+    var fecha=new Date(CERT.emitido_en).toLocaleDateString('es-VE',{day:'2-digit',month:'long',year:'numeric'});
+    E('cont').innerHTML='<div class="cert">'+
+      '<div class="marca">Funce<span>Caind</span></div>'+
+      '<div class="tipo">Certificado de finalización</div>'+
+      '<div class="otorga">Se otorga el presente certificado a</div>'+
+      '<div class="nombre">'+FV.esc(CERT.alumno_nombre)+'</div>'+
+      '<div class="otorga">por haber completado satisfactoriamente el curso</div>'+
+      '<div class="curso">'+FV.esc(CERT.curso_titulo)+'</div>'+
+      '<div class="pie"><div>Fecha de emisión<br><b style="color:var(--text-mid)">'+fecha+'</b></div>'+
+        '<div style="text-align:right">Código de verificación<br><span class="codigo">'+FV.esc(CODIGO)+'</span></div></div>'+
+      '</div>'+
+      '<p style="text-align:center;font-size:.82rem;color:var(--text-light)">Verifica este certificado en '+location.origin+location.pathname.replace('certificado.html','verificar.html')+'?codigo='+encodeURIComponent(CODIGO)+'</p>';
+    E('acciones').innerHTML='<button class="btn" onclick="pdf()">⬇ Descargar PDF</button>';
+  }catch(e){ E('cont').innerHTML='<div class="empty">Error: '+e.message+'</div>'; }
+})();
+
+function pdf(){
+  var jsPDF=window.jspdf.jsPDF; var d=new jsPDF({orientation:'landscape',unit:'mm',format:'a4'});
+  var W=297,H=210, teal='#0f6e56';
+  d.setDrawColor(15,110,86); d.setLineWidth(2); d.rect(10,10,W-20,H-20);
+  d.setLineWidth(0.4); d.rect(15,15,W-30,H-30);
+  d.setFont('times','bold'); d.setTextColor(15,110,86); d.setFontSize(30); d.text('FUNCECAIND',W/2,40,{align:'center'});
+  d.setFont('helvetica','normal'); d.setTextColor(120,120,120); d.setFontSize(11); d.text('CERTIFICADO DE FINALIZACIÓN',W/2,50,{align:'center'});
+  d.setTextColor(80,80,80); d.setFontSize(13); d.text('Se otorga el presente certificado a',W/2,78,{align:'center'});
+  d.setFont('times','bold'); d.setTextColor(6,40,32); d.setFontSize(28); d.text(CERT.alumno_nombre,W/2,95,{align:'center'});
+  d.setFont('helvetica','normal'); d.setTextColor(80,80,80); d.setFontSize(13); d.text('por haber completado satisfactoriamente el curso',W/2,110,{align:'center'});
+  d.setFont('times','bold'); d.setTextColor(15,110,86); d.setFontSize(18); d.text(CERT.curso_titulo,W/2,124,{align:'center'});
+  var fecha=new Date(CERT.emitido_en).toLocaleDateString('es-VE',{day:'2-digit',month:'long',year:'numeric'});
+  d.setFont('helvetica','normal'); d.setTextColor(110,110,110); d.setFontSize(10);
+  d.text('Fecha: '+fecha,40,180); d.text('Código: '+CODIGO,W-40,180,{align:'right'});
+  d.text('Charallave, estado Miranda · Venezuela',W/2,190,{align:'center'});
+  d.save('Certificado-'+CODIGO+'.pdf');
+}
+</script>
+</body>
+</html>
