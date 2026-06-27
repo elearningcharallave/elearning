@@ -41,10 +41,19 @@
     <div class="card">
       <h2>📊 Resumen</h2>
       <div class="sub">Usuarios registrados en la plataforma.</div>
-      <div class="row" style="text-align:center">
-        <div><div style="font-family:'Fraunces',serif;font-size:2rem;color:var(--teal-700)" id="n-prof">—</div><div style="font-size:.8rem;color:var(--text-light)">Profesores</div></div>
-        <div><div style="font-family:'Fraunces',serif;font-size:2rem;color:var(--blue-700)" id="n-alum">—</div><div style="font-size:.8rem;color:var(--text-light)">Alumnos</div></div>
-        <div><div style="font-family:'Fraunces',serif;font-size:2rem;color:var(--text-dark)" id="n-clases">—</div><div style="font-size:.8rem;color:var(--text-light)">Clases</div></div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:10px">
+        <div style="background:var(--teal-50);border:1px solid var(--teal-100);border-radius:12px;padding:20px 8px;text-align:center">
+          <div style="font-family:'Fraunces',serif;font-size:2.3rem;line-height:1;color:var(--teal-700)" id="n-prof">—</div>
+          <div style="font-size:.78rem;color:var(--text-mid);margin-top:5px">Profesores</div>
+        </div>
+        <div style="background:var(--blue-50);border:1px solid #cfe6f7;border-radius:12px;padding:20px 8px;text-align:center">
+          <div style="font-family:'Fraunces',serif;font-size:2.3rem;line-height:1;color:var(--blue-700)" id="n-alum">—</div>
+          <div style="font-size:.78rem;color:var(--text-mid);margin-top:5px">Alumnos</div>
+        </div>
+        <div style="background:#eef3f0;border:1px solid var(--border);border-radius:12px;padding:20px 8px;text-align:center">
+          <div style="font-family:'Fraunces',serif;font-size:2.3rem;line-height:1;color:var(--text-dark)" id="n-clases">—</div>
+          <div style="font-size:.78rem;color:var(--text-mid);margin-top:5px">Clases</div>
+        </div>
       </div>
     </div>
   </div>
