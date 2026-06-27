@@ -12,8 +12,10 @@ Thumbs.db
 .vscode/
 .idea/
 
-# Secretos (NUNCA subir) — token de Supabase y archivos locales con credenciales
+# Secretos (NUNCA subir) — token de Supabase, llave JaaS y archivos locales
 .supabase-token
+.jaas-key.pem
+*.pem
 *.local
 .env
 .env.*

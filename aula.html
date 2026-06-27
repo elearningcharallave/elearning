@@ -51,6 +51,9 @@
   <a class="btn" href="index.html">Volver al inicio</a>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="assets/supabase-config.js"></script>
+<script src="assets/app.js"></script>
 <script src="https://meet.jit.si/external_api.js"></script>
 <script>
 var P = new URLSearchParams(location.search);
@@ -104,14 +107,22 @@ function arrancar(){
     }
   });
 
+  var asistId=null, hb=null;
+  function salir(){ if(hb){clearInterval(hb);hb=null;} if(asistId){ FV.registrarSalida(asistId); asistId=null; } }
   api.addListener('videoConferenceJoined', function(){
     if(isTeacher){ api.executeCommand('subject', 'Clase FUNCECAIND'); }
+    if(window.FV && FV.configOk()){
+      FV.registrarEntrada(sala, role).then(function(id){ asistId=id; if(id){ hb=setInterval(function(){ FV.latido(asistId); }, 60000); } });
+    }
   });
+  api.addListener('videoConferenceLeft', salir);
   api.addListener('readyToClose', function(){
+    salir();
     api.dispose();
     document.getElementById('meet').style.display='none';
     document.getElementById('fin').style.display='block';
   });
+  window.addEventListener('beforeunload', salir);
 }
 </script>
 </body>

@@ -40,13 +40,19 @@
     <div class="sub">Entra como profesor para dictar; copia el enlace de alumno para invitar.</div>
     <div class="list" id="clases"><div class="empty">Cargando…</div></div>
   </div>
+
+  <div class="card" id="asis-card" style="display:none">
+    <h2>👥 Asistencia · <span id="asis-titulo"></span></h2>
+    <div class="sub">Quién entró a la clase y cuánto tiempo estuvo (registro automático).</div>
+    <div class="list" id="asis-list"></div>
+  </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="assets/supabase-config.js"></script>
 <script src="assets/app.js"></script>
 <script>
-var ME=null, MIDOC=null;
+var ME=null, MIDOC=null, CLASES=[];
 function show(id,txt,ok){ var m=document.getElementById(id); m.textContent=txt; m.className='msg '+(ok?'ok':'err'); }
 function urlAula(sala, role, nombre){
   var u = new URL('aula.html', location.href);
@@ -63,7 +69,7 @@ FV.requireRole('profesor', function(user, doc){
 
 async function cargar(){
   try{
-    var clases = await FV.clasesDeProfesor(ME.uid);
+    var clases = await FV.clasesDeProfesor(ME.uid); CLASES=clases;
     var cont = document.getElementById('clases');
     if(!clases.length){ cont.innerHTML='<div class="empty">Aún no has creado clases.</div>'; return; }
     cont.innerHTML = clases.map(function(c){
@@ -73,6 +79,7 @@ async function cargar(){
         '<div style="display:flex;gap:8px;flex-wrap:wrap">'+
           '<button class="btn btn-sm" onclick="dictar(\''+c.sala+'\')">▶ Dictar</button>'+
           '<button class="btn btn-ghost btn-sm" onclick="copiar(\''+c.sala+'\',this)">🔗 Link alumno</button>'+
+          '<button class="btn btn-ghost btn-sm" onclick="verAsistencia(\''+c.sala+'\')">👥 Asistencia</button>'+
           '<button class="btn-logout btn-sm" onclick="borrar(\''+c.id+'\')">🗑</button>'+
         '</div></div>';
     }).join('');
@@ -103,6 +110,27 @@ function copiar(sala,btn){
     .catch(function(){ prompt('Copia este enlace para los alumnos:', link); });
 }
 async function borrar(id){ if(confirm('¿Eliminar esta clase?')){ await FV.eliminarClase(id); cargar(); } }
+
+async function verAsistencia(sala){
+  var card=document.getElementById('asis-card'), list=document.getElementById('asis-list');
+  var c=CLASES.find(function(x){return x.sala===sala;});
+  document.getElementById('asis-titulo').textContent=c?c.titulo:sala;
+  card.style.display='block'; list.innerHTML='<div class="empty">Cargando…</div>';
+  card.scrollIntoView({behavior:'smooth',block:'nearest'});
+  try{
+    var a=await FV.asistenciaDeSala(sala);
+    if(!a.length){ list.innerHTML='<div class="empty">Nadie ha entrado a esta clase todavía.</div>'; return; }
+    list.innerHTML=a.map(function(r){
+      var fin=r.salio_at||r.visto_at;
+      var min=Math.max(1,Math.round((new Date(fin)-new Date(r.entro_at))/60000));
+      var hora=new Date(r.entro_at).toLocaleString('es-VE',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});
+      return '<div class="item"><div class="avatar">'+(r.rol==='teacher'?'👩‍🏫':'🎓')+'</div>'+
+        '<div class="info"><div class="name">'+(r.alumno_nombre||'?')+'</div>'+
+        '<div class="meta">Entró '+hora+' · '+min+' min</div></div>'+
+        (r.salio_at?'':'<span class="badge" style="background:var(--teal-50);color:var(--teal-700)">en línea</span>')+'</div>';
+    }).join('');
+  }catch(e){ list.innerHTML='<div class="empty">Error: '+e.message+'</div>'; }
+}
 </script>
 </body>
 </html>

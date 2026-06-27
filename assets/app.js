@@ -159,6 +159,23 @@
     if (r.error) throw r.error;
   }
 
+  // --- Asistencia automática (se llama desde el aula) ---
+  async function registrarEntrada(sala, rol) {
+    var ses = await sesion(); if (!ses) return null; // solo usuarios con sesión
+    var r = await sb.from("asistencia").insert({
+      sala: sala, alumno_id: ses.user.uid,
+      alumno_nombre: (ses.perfil && ses.perfil.nombre) || ses.user.email, rol: rol
+    }).select("id").single();
+    if (r.error) { console.error(r.error); return null; }
+    return r.data.id;
+  }
+  async function latido(id) { if (!id || !sb) return; try { await sb.from("asistencia").update({ visto_at: new Date().toISOString() }).eq("id", id); } catch (e) {} }
+  async function registrarSalida(id) { if (!id || !sb) return; try { await sb.from("asistencia").update({ salio_at: new Date().toISOString() }).eq("id", id); } catch (e) {} }
+  async function asistenciaDeSala(sala) {
+    var r = await sb.from("asistencia").select("*").eq("sala", sala).order("entro_at", { ascending: true });
+    if (r.error) throw r.error; return r.data;
+  }
+
   function mostrarFaltaConfig() {
     document.addEventListener("DOMContentLoaded", function () {
       var d = document.createElement("div");
@@ -177,6 +194,7 @@
     clasesDeProfesor: clasesDeProfesor, todasLasClases: todasLasClases, eliminarClase: eliminarClase,
     sesion: sesion, guardarResultado: guardarResultado, todosResultados: todosResultados, misResultados: misResultados,
     resetPassword: resetPassword, actualizarPassword: actualizarPassword,
+    registrarEntrada: registrarEntrada, latido: latido, registrarSalida: registrarSalida, asistenciaDeSala: asistenciaDeSala,
     get sb() { return sb; }
   };
 })();

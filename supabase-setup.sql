@@ -137,3 +137,28 @@ create policy resultados_select on public.resultados
 drop policy if exists resultados_delete on public.resultados;
 create policy resultados_delete on public.resultados
   for delete using (public.es_admin());
+
+-- 6) ASISTENCIA a clases en vivo (registro automático desde el aula) ---------
+create table if not exists public.asistencia (
+  id            uuid primary key default gen_random_uuid(),
+  sala          text not null,            -- código de sala Jitsi (clases.sala)
+  alumno_id     uuid references auth.users(id) on delete set null,
+  alumno_nombre text,
+  rol           text,                     -- 'teacher' | 'student'
+  entro_at      timestamptz not null default now(),
+  visto_at      timestamptz not null default now(),  -- latido (último visto)
+  salio_at      timestamptz
+);
+alter table public.asistencia enable row level security;
+
+drop policy if exists asistencia_insert on public.asistencia;
+create policy asistencia_insert on public.asistencia
+  for insert with check (alumno_id = auth.uid());
+
+drop policy if exists asistencia_update on public.asistencia;
+create policy asistencia_update on public.asistencia
+  for update using (alumno_id = auth.uid() or public.es_staff());
+
+drop policy if exists asistencia_select on public.asistencia;
+create policy asistencia_select on public.asistencia
+  for select using (alumno_id = auth.uid() or public.es_staff());
