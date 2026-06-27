@@ -554,7 +554,7 @@ async function enviarPrueba() {
   if (!validar()) {
     document.getElementById('errorMsg').textContent = '⚠️ Por favor completa todos los campos y responde las 15 preguntas antes de enviar.';
     document.getElementById('errorMsg').style.display = 'block';
-    document.querySelector('.question-card.unanswered-error')?.scrollIntoView({ behavior:'smooth', block:'center' });
+    var _err = document.querySelector('.question-card.unanswered-error'); if(_err){ _err.scrollIntoView({ behavior:'smooth', block:'center' }); }
     return;
   }
 
