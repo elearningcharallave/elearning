@@ -204,6 +204,8 @@
     var r = await sb.from("materiales").delete().eq("id", id);
     if (r.error) throw r.error;
   }
+  // Bucket privado: genera una URL firmada temporal (1h) para descargar.
+  async function urlMaterial(path) { var r = await sb.storage.from("materiales").createSignedUrl(path, 3600); if (r.error) throw r.error; return r.data.signedUrl; }
 
   // --- Foro (claseId null = foro general; o foro de una clase) ---
   async function foroMensajes(claseId) {
@@ -353,7 +355,7 @@
     sesion: sesion, guardarResultado: guardarResultado, todosResultados: todosResultados, misResultados: misResultados,
     resetPassword: resetPassword, actualizarPassword: actualizarPassword,
     registrarEntrada: registrarEntrada, latido: latido, registrarSalida: registrarSalida, asistenciaDeSala: asistenciaDeSala,
-    subirMaterial: subirMaterial, materialesDeClase: materialesDeClase, eliminarMaterial: eliminarMaterial,
+    subirMaterial: subirMaterial, materialesDeClase: materialesDeClase, eliminarMaterial: eliminarMaterial, urlMaterial: urlMaterial,
     foroMensajes: foroMensajes, publicarForo: publicarForo, eliminarForoMsg: eliminarForoMsg, eliminarUsuario: eliminarUsuario,
     crearCurso: crearCurso, actualizarCurso: actualizarCurso, eliminarCurso: eliminarCurso, todosCursos: todosCursos,
     cursosDeProfesor: cursosDeProfesor, cursosMatriculado: cursosMatriculado,

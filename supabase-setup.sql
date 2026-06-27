@@ -543,3 +543,12 @@ language sql security definer stable set search_path=public as $$
   order by m.alumno_nombre;
 $$;
 grant execute on function public.progreso_curso(uuid) to authenticated;
+
+-- ============================================================================
+-- 15) LMS Fase 5 (#8): materiales en bucket PRIVADO + signed URLs
+--     Quita el acceso anonimo: solo usuarios autenticados obtienen una URL firmada.
+-- ============================================================================
+update storage.buckets set public = false where id = 'materiales';
+drop policy if exists materiales_obj_select on storage.objects;
+create policy materiales_obj_select on storage.objects
+  for select using (bucket_id = 'materiales' and auth.role() = 'authenticated');

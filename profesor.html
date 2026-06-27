@@ -167,12 +167,13 @@ async function listarMat(){
       return '<div class="item"><div class="avatar">📄</div>'+
         '<div class="info"><div class="name">'+FV.esc(x.titulo||'archivo')+'</div>'+
         '<div class="meta">'+new Date(x.creado_en).toLocaleDateString('es-VE')+'</div></div>'+
-        '<a class="btn btn-ghost btn-sm" href="'+x.url+'" target="_blank" rel="noopener">Descargar</a>'+
+        '<button class="btn btn-ghost btn-sm" onclick="descargarMat(\''+x.archivo_path+'\')">Descargar</button>'+
         '<button class="btn-logout btn-sm" onclick="borrarMat(\''+x.id+'\',\''+(x.archivo_path||'')+'\')">🗑</button></div>';
     }).join('');
   }catch(e){ l.innerHTML='<div class="empty">Error: '+e.message+'</div>'; }
 }
 function matMsg(t,ok){ var m=document.getElementById('mat-msg'); m.textContent=t; m.className='msg '+(t?(ok?'ok':'err'):''); }
+async function descargarMat(path){ try{ var u=await FV.urlMaterial(path); window.open(u,'_blank'); }catch(e){ alert('No se pudo abrir: '+e.message); } }
 async function subirMat(){
   var f=document.getElementById('mat-file').files[0];
   if(!f){ matMsg('Elige un archivo.',false); return; }

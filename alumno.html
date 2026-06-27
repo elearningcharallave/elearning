@@ -87,6 +87,7 @@ async function cargar(){
 }
 function entrar(sala){ location.href = urlAula(sala, MIDOC.nombre); }
 
+async function descargarMat(path){ try{ var u=await FV.urlMaterial(path); window.open(u,'_blank'); }catch(e){ alert('No se pudo abrir: '+e.message); } }
 async function verMatA(claseId){
   var card=document.getElementById('mat-card'), l=document.getElementById('mat-list');
   card.style.display='block'; l.innerHTML='<div class="empty">Cargando…</div>';
@@ -98,7 +99,7 @@ async function verMatA(claseId){
       return '<div class="item"><div class="avatar">📄</div>'+
         '<div class="info"><div class="name">'+FV.esc(x.titulo||'archivo')+'</div>'+
         '<div class="meta">'+new Date(x.creado_en).toLocaleDateString('es-VE')+'</div></div>'+
-        '<a class="btn btn-sm" href="'+x.url+'" target="_blank" rel="noopener">Descargar</a></div>';
+        '<button class="btn btn-sm" onclick="descargarMat(\''+x.archivo_path+'\')">Descargar</button></div>';
     }).join('');
   }catch(e){ l.innerHTML='<div class="empty">Error: '+e.message+'</div>'; }
 }
