@@ -12,6 +12,10 @@ Thumbs.db
 .vscode/
 .idea/
 
+# Supabase CLI (temporales)
+supabase/.temp/
+supabase/.branches/
+
 # Secretos (NUNCA subir) — token de Supabase, llave JaaS y archivos locales
 .supabase-token
 .jaas-key.pem
