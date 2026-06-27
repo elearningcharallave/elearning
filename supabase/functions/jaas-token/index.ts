@@ -11,11 +11,17 @@ const PEM = Deno.env.get("JAAS_PRIVATE_KEY")!;
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 
-const cors = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, content-type, apikey",
-  "Access-Control-Allow-Methods": "POST, OPTIONS",
-};
+const ALLOWED = ["https://elearningcharallave.github.io", "http://localhost:8080", "http://localhost:3000"];
+function corsFor(req: Request) {
+  const origin = req.headers.get("Origin") || "";
+  const allow = ALLOWED.indexOf(origin) >= 0 ? origin : ALLOWED[0];
+  return {
+    "Access-Control-Allow-Origin": allow,
+    "Access-Control-Allow-Headers": "authorization, content-type, apikey",
+    "Access-Control-Allow-Methods": "POST, OPTIONS",
+    "Vary": "Origin",
+  };
+}
 
 function pemToDer(pem: string): Uint8Array {
   const b64 = pem.replace(/-----[^-]+-----/g, "").replace(/\s+/g, "");
@@ -50,6 +56,7 @@ async function sign(header: unknown, payload: unknown): Promise<string> {
 }
 
 Deno.serve(async (req) => {
+  const cors = corsFor(req);
   if (req.method === "OPTIONS") return new Response("ok", { headers: cors });
   try {
     const body = await req.json().catch(() => ({} as any));
