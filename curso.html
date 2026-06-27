@@ -77,6 +77,10 @@ async function cargar(){
       var evs=await FV.evaluacionesDeCurso(CID);
       if(evs.length){ html+='<div class="mod-tit">📝 Evaluaciones</div>'+evs.map(function(e){ return '<a class="lec-row" href="evaluacion.html?id='+e.id+'"><span class="ico">📝</span><span>'+FV.esc(e.titulo)+'</span></a>'; }).join(''); }
     }catch(e){}
+    try{
+      var tks=await FV.tareasDeCurso(CID);
+      if(tks.length){ html+='<div class="mod-tit">📋 Tareas</div>'+tks.map(function(t){ return '<a class="lec-row" href="tarea.html?id='+t.id+'"><span class="ico">📋</span><span>'+FV.esc(t.titulo)+'</span></a>'; }).join(''); }
+    }catch(e){}
     cont.innerHTML=html;
     checkCert();
   }catch(e){ E('indice').innerHTML='<div class="empty">Error: '+e.message+'</div>'; }

@@ -438,3 +438,79 @@ language sql security definer stable set search_path=public as $$
   select c.alumno_nombre, c.curso_titulo, c.emitido_en from public.certificados c where c.codigo = cod;
 $$;
 grant execute on function public.verificar_certificado(text) to anon, authenticated;
+
+-- ============================================================================
+-- 13) LMS Fase 4: tareas + entregas + deteccion de similitud (anti-plagio)
+-- ============================================================================
+create extension if not exists pg_trgm;
+
+create table if not exists public.tareas (
+  id uuid primary key default gen_random_uuid(),
+  curso_id uuid references public.cursos(id) on delete cascade,
+  titulo text not null,
+  descripcion text,
+  fecha_limite date,
+  profesor_id uuid references auth.users(id) on delete set null,
+  creado_en timestamptz not null default now()
+);
+create table if not exists public.entregas (
+  id uuid primary key default gen_random_uuid(),
+  tarea_id uuid references public.tareas(id) on delete cascade,
+  alumno_id uuid references auth.users(id) on delete cascade,
+  alumno_nombre text,
+  texto text,
+  archivo_url text,
+  char_count int default 0,
+  paste_events int default 0,
+  pasted_ratio numeric(4,3) default 0,
+  nota int, comentario text, calificado_en timestamptz,
+  creado_en timestamptz not null default now(),
+  unique (tarea_id, alumno_id)
+);
+alter table public.tareas   enable row level security;
+alter table public.entregas enable row level security;
+
+-- el alumno NUNCA se auto-califica: al insertar/actualizar su entrega, los campos de nota se anulan
+create or replace function public.entrega_sin_nota() returns trigger language plpgsql as $$
+begin
+  if not public.es_staff() then
+    new.nota := null; new.comentario := null; new.calificado_en := null;
+  end if;
+  return new;
+end; $$;
+drop trigger if exists entrega_no_self_grade on public.entregas;
+create trigger entrega_no_self_grade before insert or update on public.entregas for each row execute function public.entrega_sin_nota();
+
+-- tareas: leer matriculado/staff; CUD profesor del curso o admin
+drop policy if exists tareas_select on public.tareas;
+create policy tareas_select on public.tareas for select using (public.es_staff() or public.matriculado(curso_id) or public.es_profesor_curso(curso_id));
+drop policy if exists tareas_insert on public.tareas;
+create policy tareas_insert on public.tareas for insert with check (public.es_admin() or public.es_profesor_curso(curso_id));
+drop policy if exists tareas_update on public.tareas;
+create policy tareas_update on public.tareas for update using (public.es_admin() or public.es_profesor_curso(curso_id));
+drop policy if exists tareas_delete on public.tareas;
+create policy tareas_delete on public.tareas for delete using (public.es_admin() or public.es_profesor_curso(curso_id));
+
+-- entregas: leer propia o staff; insertar/editar la propia; calificar (update) lo hace staff (el trigger anula nota si no es staff)
+drop policy if exists entregas_select on public.entregas;
+create policy entregas_select on public.entregas for select using (alumno_id=auth.uid() or public.es_staff());
+drop policy if exists entregas_insert on public.entregas;
+create policy entregas_insert on public.entregas for insert with check (alumno_id=auth.uid());
+drop policy if exists entregas_update on public.entregas;
+create policy entregas_update on public.entregas for update using ((alumno_id=auth.uid() and calificado_en is null) or public.es_staff());
+drop policy if exists entregas_delete on public.entregas;
+create policy entregas_delete on public.entregas for delete using (alumno_id=auth.uid() or public.es_admin());
+
+-- similitud entre entregas de una misma tarea (SOLO staff; pg_trgm)
+create or replace function public.similitud_entregas(t uuid)
+returns table(entrega_id uuid, alumno_nombre text, max_sim numeric, similar_a text)
+language sql security definer stable set search_path=public as $$
+  select e1.id, e1.alumno_nombre,
+         round(max(similarity(e1.texto, e2.texto))::numeric, 2) as max_sim,
+         (array_agg(e2.alumno_nombre order by similarity(e1.texto, e2.texto) desc))[1] as similar_a
+  from public.entregas e1
+  join public.entregas e2 on e2.tarea_id = e1.tarea_id and e2.id <> e1.id and e2.texto is not null
+  where e1.tarea_id = t and e1.texto is not null and public.es_staff()
+  group by e1.id, e1.alumno_nombre;
+$$;
+grant execute on function public.similitud_entregas(uuid) to authenticated;

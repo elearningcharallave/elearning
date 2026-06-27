@@ -123,6 +123,17 @@
     <div class="sub">Resultados de los alumnos en esta evaluación.</div>
     <div class="list" id="notas-list"></div>
   </div>
+
+  <div class="card" id="tareas" style="display:none">
+    <h2>📋 Tareas · <span id="tareas-titulo"></span></h2>
+    <div class="sub">Los alumnos entregan texto/enlace; tú calificas (con aviso de copias entre entregas y de "pegado").</div>
+    <form onsubmit="return nuevaTarea(event)" style="border-bottom:1px solid var(--border);padding-bottom:14px;margin-bottom:14px">
+      <div class="field"><label>Título</label><input id="ta-tit" placeholder="Ej. Ensayo módulo 1" required></div>
+      <div class="row"><div class="field" style="flex:2"><label>Instrucciones</label><input id="ta-desc" placeholder="Qué deben entregar…"></div><div class="field"><label>Fecha límite</label><input id="ta-fecha" type="date"></div></div>
+      <button class="btn btn-sm" type="submit">Crear tarea</button>
+    </form>
+    <div class="list" id="tareas-list"></div>
+  </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -165,6 +176,7 @@ async function cargarCursos(){
           '<button class="btn btn-sm" onclick="abrirContenido(\''+c.id+'\')">📂 Contenido</button>'+
           '<button class="btn btn-ghost btn-sm" onclick="abrirMatriculas(\''+c.id+'\')">👥 Matrículas</button>'+
           '<button class="btn btn-ghost btn-sm" onclick="abrirEvaluaciones(\''+c.id+'\')">📝 Evaluaciones</button>'+
+          '<button class="btn btn-ghost btn-sm" onclick="abrirTareas(\''+c.id+'\')">📋 Tareas</button>'+
           '<button class="btn btn-ghost btn-sm" onclick="togglePublicar(\''+c.id+'\','+(!c.publicado)+')">'+(c.publicado?'👁 Despublicar':'🚀 Publicar')+'</button>'+
           '<button class="btn-logout btn-sm" onclick="borrarCurso(\''+c.id+'\')">🗑</button>'+
         '</div></div>';
@@ -256,7 +268,32 @@ async function matricular(){
 }
 async function quitar(id){ if(confirm('¿Quitar la matrícula?')){ try{ await FV.desmatricular(id); renderMatriculas(); }catch(e){ alert(e.message); } } }
 
-function ocultarPaneles(keep){ ['builder','matriculas','evals','preg-panel','notas-panel'].forEach(function(x){ if(x!==keep){ var e=E(x); if(e) e.style.display='none'; } }); }
+function ocultarPaneles(keep){ ['builder','matriculas','evals','preg-panel','notas-panel','tareas'].forEach(function(x){ if(x!==keep){ var e=E(x); if(e) e.style.display='none'; } }); }
+
+async function abrirTareas(id){
+  ACTUAL=id; var c=cursoPorId(id);
+  E('tareas-titulo').textContent=c?c.titulo:''; E('tareas').style.display='block'; ocultarPaneles('tareas');
+  E('tareas').scrollIntoView({behavior:'smooth',block:'nearest'}); renderTareas();
+}
+async function nuevaTarea(ev){
+  ev.preventDefault();
+  try{ await FV.crearTarea({curso_id:ACTUAL, titulo:E('ta-tit').value.trim(), descripcion:E('ta-desc').value.trim(), fecha_limite:E('ta-fecha').value||null}); E('ta-tit').value='';E('ta-desc').value='';E('ta-fecha').value=''; renderTareas(); }
+  catch(e){ alert(e.message); }
+  return false;
+}
+async function renderTareas(){
+  var cont=E('tareas-list');
+  try{
+    var ts=await FV.tareasDeCurso(ACTUAL);
+    if(!ts.length){ cont.innerHTML='<div class="empty">Sin tareas aún.</div>'; return; }
+    cont.innerHTML=ts.map(function(t){
+      return '<div class="item"><div class="avatar">📋</div><div class="info"><div class="name">'+FV.esc(t.titulo)+'</div><div class="meta">'+(t.fecha_limite?('📅 '+t.fecha_limite):'')+'</div></div>'+
+        '<a class="btn btn-sm" href="tarea.html?id='+t.id+'">Ver entregas</a>'+
+        '<button class="btn-logout btn-sm" onclick="borrarTarea(\''+t.id+'\')">🗑</button></div>';
+    }).join('');
+  }catch(e){ cont.innerHTML='<div class="empty">Error: '+e.message+'</div>'; }
+}
+async function borrarTarea(id){ if(confirm('¿Eliminar la tarea y sus entregas?')){ try{ await FV.eliminarTarea(id); renderTareas(); }catch(e){ alert(e.message); } } }
 
 // ---- EVALUACIONES ----
 var EV_ACTUAL=null;

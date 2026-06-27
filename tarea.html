@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tarea — FUNCECAIND</title>
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+<link rel="stylesheet" href="assets/styles.css">
+<style>.flag{font-size:.72rem;font-weight:600;padding:2px 8px;border-radius:100px;margin-left:6px}.flag.warn{background:#fef2e8;color:var(--amber)}.flag.bad{background:#fdecec;color:var(--red)}</style>
+</head>
+<body>
+<div class="topbar">
+  <a href="index.html" class="brand">Funce<span>Caind</span></a>
+  <div class="topbar-right"><a class="btn-logout" id="back" href="#">← Volver</a><button class="btn-logout" onclick="FV.logout()">Salir</button></div>
+</div>
+<div class="wrap"><div id="app"><div class="empty">Cargando…</div></div></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="assets/supabase-config.js"></script>
+<script src="assets/app.js"></script>
+<script>
+var ME=null,MIDOC=null,TID=new URLSearchParams(location.search).get('id'),TAREA=null;
+var pasteChars=0,pasteEvents=0;
+function E(id){return document.getElementById(id);}
+
+FV.requireRole(['alumno','profesor','admin'], function(u,d){
+  ME=u; MIDOC=d; E('back').href=FV.panelDe(d.rol);
+  if(!TID){ E('app').innerHTML='<div class="empty">Tarea no especificada.</div>'; return; }
+  cargar();
+});
+
+async function cargar(){
+  try{
+    TAREA=await FV.tareaPorId(TID);
+    if(!TAREA){ E('app').innerHTML='<div class="empty">Tarea no disponible.</div>'; return; }
+    var head='<div class="page-head"><h1>📋 '+FV.esc(TAREA.titulo)+'</h1>'+
+      (TAREA.descripcion?'<p>'+FV.esc(TAREA.descripcion)+'</p>':'')+
+      (TAREA.fecha_limite?'<p style="color:var(--amber);font-size:.85rem">📅 Entrega hasta: '+TAREA.fecha_limite+'</p>':'')+'</div>';
+    if(MIDOC.rol==='alumno') E('app').innerHTML=head+'<div id="zona"></div>', vistaAlumno();
+    else E('app').innerHTML=head+'<div id="zona"></div>', vistaProfesor();
+  }catch(e){ E('app').innerHTML='<div class="empty">Error: '+e.message+'</div>'; }
+}
+
+// ---------- ALUMNO ----------
+async function vistaAlumno(){
+  var z=E('zona');
+  var ent=await FV.miEntrega(TID);
+  if(ent && ent.calificado_en){
+    z.innerHTML='<div class="card"><h2>Tu calificación</h2>'+
+      '<div style="font-family:Fraunces,serif;font-size:2.4rem;color:'+(ent.nota>=60?'var(--teal-700)':'var(--red)')+'">'+(ent.nota!=null?ent.nota:'—')+'<span style="font-size:1rem;color:var(--text-light)">/100</span></div>'+
+      (ent.comentario?'<div class="msg ok" style="display:block;text-align:left;margin-top:10px"><b>Comentario del profesor:</b><br>'+FV.esc(ent.comentario)+'</div>':'')+
+      '<h3 style="font-family:Fraunces,serif;margin:16px 0 6px">Tu entrega</h3><div style="white-space:pre-wrap;color:var(--text-mid);line-height:1.6">'+FV.esc(ent.texto||'(archivo)')+'</div></div>';
+    return;
+  }
+  var prev=ent?ent.texto:'';
+  z.innerHTML='<div class="card"><h2>'+(ent?'Editar tu entrega':'Entregar tarea')+'</h2>'+
+    (ent?'<div class="msg ok" style="display:block">✅ Entregado. Puedes editar hasta que el profesor califique.</div>':'')+
+    '<div class="field"><label>Tu respuesta</label><textarea id="t-texto" rows="8" placeholder="Escribe aquí tu trabajo…">'+FV.esc(prev)+'</textarea></div>'+
+    '<div class="field"><label>Enlace de archivo (opcional)</label><input id="t-url" placeholder="https://… (PDF, doc)" value="'+(ent&&ent.archivo_url?FV.esc(ent.archivo_url):'')+'"></div>'+
+    '<div class="msg" id="t-msg"></div>'+
+    '<button class="btn" id="t-btn" onclick="entregar()">'+(ent?'Guardar cambios':'Entregar')+'</button></div>';
+  var ta=E('t-texto');
+  ta.addEventListener('paste', function(e){ pasteEvents++; try{ var t=(e.clipboardData||window.clipboardData).getData('text'); pasteChars+=t.length; }catch(_){} });
+}
+async function entregar(){
+  var texto=E('t-texto').value.trim(), url=E('t-url').value.trim();
+  if(!texto && !url){ E('t-msg').className='msg err'; E('t-msg').textContent='Escribe tu respuesta o pon un enlace.'; return; }
+  var ratio = texto.length>0 ? Math.min(1, pasteChars/texto.length) : 0;
+  var b=E('t-btn'); b.disabled=true; b.textContent='Enviando…';
+  try{ await FV.entregarTarea(TID,{texto:texto,archivo_url:url,paste_events:pasteEvents,pasted_ratio:ratio}); pasteChars=0;pasteEvents=0; vistaAlumno(); }
+  catch(e){ E('t-msg').className='msg err'; E('t-msg').textContent='❌ '+e.message; b.disabled=false; b.textContent='Entregar'; }
+}
+
+// ---------- PROFESOR / ADMIN ----------
+async function vistaProfesor(){
+  var z=E('zona'); z.innerHTML='<div class="empty">Cargando entregas…</div>';
+  try{
+    var ents=await FV.entregasDeTarea(TID);
+    var sim={}; try{ (await FV.similitudTarea(TID)).forEach(function(s){ sim[s.entrega_id]=s; }); }catch(_){}
+    if(!ents.length){ z.innerHTML='<div class="card"><div class="empty">Nadie ha entregado todavía.</div></div>'; return; }
+    z.innerHTML=ents.map(function(en){
+      var s=sim[en.id]; var simFlag=(s&&s.max_sim>=0.5)?'<span class="flag bad">⚠ '+Math.round(s.max_sim*100)+'% similar a '+FV.esc(s.similar_a||'')+'</span>':'';
+      var pasteFlag=(en.pasted_ratio>=0.6||en.paste_events>=3)?'<span class="flag warn">📋 pegado '+Math.round((en.pasted_ratio||0)*100)+'%</span>':'';
+      return '<div class="card"><div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:8px">'+
+        '<b style="font-family:Fraunces,serif">'+FV.esc(en.alumno_nombre||'?')+'</b>'+simFlag+pasteFlag+
+        (en.calificado_en?'<span class="badge" style="margin-left:auto;background:var(--teal-50);color:var(--teal-700)">nota '+(en.nota!=null?en.nota:'—')+'</span>':'')+'</div>'+
+        (en.texto?'<div style="white-space:pre-wrap;color:var(--text-mid);line-height:1.6;font-size:.92rem;max-height:200px;overflow:auto;border:1px solid var(--border);border-radius:8px;padding:10px">'+FV.esc(en.texto)+'</div>':'')+
+        (en.archivo_url?'<div style="margin-top:8px"><a class="btn btn-ghost btn-sm" href="'+FV.esc(en.archivo_url)+'" target="_blank" rel="noopener">📎 Ver archivo</a></div>':'')+
+        '<div class="row" style="align-items:flex-end;margin-top:10px"><div class="field"><label>Nota (0-100)</label><input type="number" id="n-'+en.id+'" min="0" max="100" value="'+(en.nota!=null?en.nota:'')+'"></div>'+
+        '<div class="field" style="flex:2"><label>Comentario</label><input id="c-'+en.id+'" value="'+(en.comentario?FV.esc(en.comentario):'')+'"></div>'+
+        '<button class="btn btn-sm" onclick="calificar(\''+en.id+'\')">Calificar</button></div></div>';
+    }).join('');
+  }catch(e){ z.innerHTML='<div class="empty">Error: '+e.message+'</div>'; }
+}
+async function calificar(id){
+  var nota=parseInt(E('n-'+id).value,10); var com=E('c-'+id).value.trim();
+  if(isNaN(nota)){ alert('Pon una nota.'); return; }
+  try{ await FV.calificarEntrega(id, Math.max(0,Math.min(100,nota)), com); vistaProfesor(); }
+  catch(e){ alert(e.message); }
+}
+</script>
+</body>
+</html>

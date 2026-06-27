@@ -311,6 +311,25 @@
   async function misCertificados() { var r = await sb.from("certificados").select("*").order("emitido_en", { ascending: false }); if (r.error) throw r.error; return r.data; }
   async function verificarCertificado(codigo) { var r = await sb.rpc("verificar_certificado", { cod: codigo }); if (r.error) throw r.error; return r.data; }
 
+  // ===== LMS Fase 4: tareas / entregas / similitud =====
+  async function crearTarea(d) { var ses = await sesion(); var r = await sb.from("tareas").insert({ curso_id: d.curso_id, titulo: d.titulo, descripcion: d.descripcion || null, fecha_limite: d.fecha_limite || null, profesor_id: ses ? ses.user.uid : null }).select("id").single(); if (r.error) throw r.error; return r.data.id; }
+  async function tareasDeCurso(cursoId) { var r = await sb.from("tareas").select("*").eq("curso_id", cursoId).order("creado_en", { ascending: true }); if (r.error) throw r.error; return r.data; }
+  async function tareaPorId(id) { var r = await sb.from("tareas").select("*").eq("id", id).maybeSingle(); if (r.error) throw r.error; return r.data; }
+  async function eliminarTarea(id) { var r = await sb.from("tareas").delete().eq("id", id); if (r.error) throw r.error; }
+  async function miEntrega(tareaId) { var ses = await sesion(); if (!ses) return null; var r = await sb.from("entregas").select("*").eq("tarea_id", tareaId).eq("alumno_id", ses.user.uid).maybeSingle(); if (r.error) throw r.error; return r.data; }
+  async function entregarTarea(tareaId, d) {
+    var ses = await sesion(); if (!ses) throw new Error("Sin sesión");
+    var r = await sb.from("entregas").upsert({
+      tarea_id: tareaId, alumno_id: ses.user.uid, alumno_nombre: (ses.perfil && ses.perfil.nombre) || ses.user.email,
+      texto: d.texto || null, archivo_url: d.archivo_url || null, char_count: (d.texto || "").length,
+      paste_events: d.paste_events || 0, pasted_ratio: d.pasted_ratio || 0
+    }, { onConflict: "tarea_id,alumno_id" }).select("id").single();
+    if (r.error) throw r.error; return r.data.id;
+  }
+  async function entregasDeTarea(tareaId) { var r = await sb.from("entregas").select("*").eq("tarea_id", tareaId).order("creado_en", { ascending: true }); if (r.error) throw r.error; return r.data; }
+  async function calificarEntrega(id, nota, comentario) { var r = await sb.from("entregas").update({ nota: nota, comentario: comentario || null, calificado_en: new Date().toISOString() }).eq("id", id); if (r.error) throw r.error; }
+  async function similitudTarea(tareaId) { var r = await sb.rpc("similitud_entregas", { t: tareaId }); if (r.error) throw r.error; return r.data; }
+
   function mostrarFaltaConfig() {
     document.addEventListener("DOMContentLoaded", function () {
       var d = document.createElement("div");
@@ -341,6 +360,8 @@
     preguntasDeEval: preguntasDeEval, crearPregunta: crearPregunta, eliminarPregunta: eliminarPregunta,
     intentosDeEval: intentosDeEval, iniciarEvaluacion: iniciarEvaluacion, enviarEvaluacion: enviarEvaluacion,
     estadoCertificado: estadoCertificado, emitirCertificado: emitirCertificado, misCertificados: misCertificados, verificarCertificado: verificarCertificado,
+    crearTarea: crearTarea, tareasDeCurso: tareasDeCurso, tareaPorId: tareaPorId, eliminarTarea: eliminarTarea,
+    miEntrega: miEntrega, entregarTarea: entregarTarea, entregasDeTarea: entregasDeTarea, calificarEntrega: calificarEntrega, similitudTarea: similitudTarea,
     get sb() { return sb; }
   };
 })();
