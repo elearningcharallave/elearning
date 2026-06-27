@@ -106,3 +106,34 @@ create policy clases_update on public.clases
 drop policy if exists clases_delete on public.clases;
 create policy clases_delete on public.clases
   for delete using (profesor_id = auth.uid() or public.es_admin());
+
+-- 5) RESULTADOS de pruebas / tests ------------------------------------------
+create table if not exists public.resultados (
+  id            uuid primary key default gen_random_uuid(),
+  alumno_id     uuid references auth.users(id) on delete cascade,
+  alumno_nombre text,
+  prueba        text not null,          -- 'word' | 'excel' | ...
+  puntaje       int  not null,
+  total         int  not null,
+  porcentaje    int  not null,
+  creado_en     timestamptz not null default now()
+);
+alter table public.resultados enable row level security;
+
+-- staff = admin o profesor (pueden ver los resultados de todos)
+create or replace function public.es_staff()
+returns boolean language sql security definer stable set search_path = public as $$
+  select exists (select 1 from public.perfiles where id = auth.uid() and rol in ('admin','profesor'));
+$$;
+
+drop policy if exists resultados_insert on public.resultados;
+create policy resultados_insert on public.resultados
+  for insert with check (alumno_id = auth.uid());
+
+drop policy if exists resultados_select on public.resultados;
+create policy resultados_select on public.resultados
+  for select using (alumno_id = auth.uid() or public.es_staff());
+
+drop policy if exists resultados_delete on public.resultados;
+create policy resultados_delete on public.resultados
+  for delete using (public.es_admin());

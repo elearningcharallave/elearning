@@ -121,6 +121,34 @@
   }
   async function eliminarClase(id) { var r = await sb.from("clases").delete().eq("id", id); if (r.error) throw r.error; }
 
+  // Sesión actual + perfil (para pruebas y vistas que no son guard de página)
+  async function sesion() {
+    if (!sb) return null;
+    var res = await sb.auth.getSession();
+    var s = res.data && res.data.session; if (!s) return null;
+    var p = null; try { p = await perfilDe(s.user.id); } catch (e) {}
+    return { user: wrapUser(s.user), perfil: p };
+  }
+  async function guardarResultado(d) {
+    var ses = await sesion(); if (!ses) throw new Error("Sin sesión");
+    var row = {
+      alumno_id: ses.user.uid,
+      alumno_nombre: (ses.perfil && ses.perfil.nombre) || ses.user.email,
+      prueba: d.prueba, puntaje: d.puntaje, total: d.total, porcentaje: d.porcentaje
+    };
+    var r = await sb.from("resultados").insert(row).select("id").single();
+    if (r.error) throw r.error; return r.data.id;
+  }
+  async function todosResultados() {
+    var r = await sb.from("resultados").select("*").order("creado_en", { ascending: false });
+    if (r.error) throw r.error; return r.data;
+  }
+  async function misResultados() {
+    var ses = await sesion(); if (!ses) return [];
+    var r = await sb.from("resultados").select("*").eq("alumno_id", ses.user.uid).order("creado_en", { ascending: false });
+    if (r.error) throw r.error; return r.data;
+  }
+
   function mostrarFaltaConfig() {
     document.addEventListener("DOMContentLoaded", function () {
       var d = document.createElement("div");
@@ -137,6 +165,7 @@
     login: login, registrarAlumno: registrarAlumno, crearProfesor: crearProfesor, logout: logout,
     listarUsuarios: listarUsuarios, crearClase: crearClase, salaCodigo: salaCodigo,
     clasesDeProfesor: clasesDeProfesor, todasLasClases: todasLasClases, eliminarClase: eliminarClase,
+    sesion: sesion, guardarResultado: guardarResultado, todosResultados: todosResultados, misResultados: misResultados,
     get sb() { return sb; }
   };
 })();

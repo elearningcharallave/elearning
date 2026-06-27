@@ -37,6 +37,12 @@
       <div class="item"><div class="avatar">📊</div><div class="info"><div class="name">Test de Excel</div><div class="meta">Ofimática</div></div><button class="btn btn-ghost btn-sm" onclick="location.href='pruebas/test-excel.html'">Hacer</button></div>
     </div>
   </div>
+
+  <div class="card">
+    <h2>📈 Mis resultados</h2>
+    <div class="sub">Calificaciones de las pruebas que has realizado.</div>
+    <div class="list" id="mis-res"><div class="empty">Cargando…</div></div>
+  </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -48,7 +54,7 @@ function urlAula(sala,nombre){ var u=new URL('aula.html',location.href); u.searc
 
 FV.requireRole('alumno', function(user, doc){
   MIDOC=doc; document.getElementById('al-name').textContent = doc.nombre;
-  cargar();
+  cargar(); cargarMis();
 });
 
 async function cargar(){
@@ -65,6 +71,21 @@ async function cargar(){
   }catch(e){ document.getElementById('clases').innerHTML='<div class="empty">Error: '+e.message+'</div>'; }
 }
 function entrar(sala){ location.href = urlAula(sala, MIDOC.nombre); }
+
+async function cargarMis(){
+  var c=document.getElementById('mis-res');
+  try{
+    var res=await FV.misResultados();
+    if(!res.length){ c.innerHTML='<div class="empty">Aún no has hecho ninguna prueba.</div>'; return; }
+    c.innerHTML=res.map(function(r){
+      var color=r.porcentaje>=70?'var(--teal-700)':r.porcentaje>=50?'var(--amber)':'var(--red)';
+      var fecha=r.creado_en?new Date(r.creado_en).toLocaleDateString('es-VE'):'';
+      return '<div class="item"><div class="avatar">'+(r.prueba==='excel'?'📊':'📝')+'</div>'+
+        '<div class="info"><div class="name">Test de '+r.prueba+'</div><div class="meta">'+r.puntaje+'/'+r.total+' correctas · '+fecha+'</div></div>'+
+        '<span class="badge" style="background:transparent;color:'+color+';border:1px solid '+color+'">'+r.porcentaje+'%</span></div>';
+    }).join('');
+  }catch(e){ c.innerHTML='<div class="empty">Error: '+e.message+'</div>'; }
+}
 </script>
 </body>
 </html>

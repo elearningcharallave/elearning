@@ -1,121 +1,25 @@
-
-<style>
-*{box-sizing:border-box;margin:0;padding:0}
-.wrap{padding:1.5rem 0;max-width:680px;font-family:var(--font-sans)}
-.screen{display:none}
-.screen.active{display:block}
-.card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:1.5rem}
-h2{font-size:18px;font-weight:500;color:var(--color-text-primary);margin-bottom:6px}
-.sub{font-size:13px;color:var(--color-text-secondary);margin-bottom:1.5rem;line-height:1.6}
-label{display:block;font-size:13px;color:var(--color-text-secondary);margin-bottom:6px}
-input[type=text]{width:100%;padding:10px 14px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);font-size:15px;background:var(--color-background-primary);color:var(--color-text-primary);margin-bottom:1rem}
-input[type=text]:focus{outline:none;border-color:#7F77DD}
-.btn-primary{width:100%;padding:12px;background:#7F77DD;border:none;border-radius:var(--border-radius-md);color:#fff;font-size:15px;font-weight:500;cursor:pointer}
-.btn-primary:hover{background:#534AB7}
-.btn-secondary{padding:8px 18px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);background:var(--color-background-primary);color:var(--color-text-primary);font-size:14px;cursor:pointer}
-.btn-secondary:hover{background:var(--color-background-secondary)}
-.progress-bar{height:4px;background:var(--color-border-tertiary);border-radius:2px;margin-bottom:1.5rem;overflow:hidden}
-.progress-fill{height:100%;background:#7F77DD;border-radius:2px;transition:width 0.3s}
-.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:1.5rem}
-.stat{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:0.75rem;text-align:center}
-.stat-num{font-size:22px;font-weight:500;color:var(--color-text-primary)}
-.stat-lbl{font-size:11px;color:var(--color-text-secondary);margin-top:2px}
-.q-badge{display:inline-block;font-size:11px;padding:3px 10px;border-radius:var(--border-radius-md);margin-bottom:10px;font-weight:500}
-.badge-tf{background:#EEEDFE;color:#3C3489}
-.badge-mc{background:#E1F5EE;color:#085041}
-.q-text{font-size:15px;color:var(--color-text-primary);line-height:1.6;margin-bottom:1rem}
-.options{display:flex;flex-direction:column;gap:8px}
-.opt-btn{width:100%;text-align:left;padding:10px 14px;border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);background:var(--color-background-primary);color:var(--color-text-primary);font-size:14px;cursor:pointer;transition:all 0.15s}
-.opt-btn:hover:not(:disabled){background:var(--color-background-secondary);border-color:var(--color-border-secondary)}
-.opt-btn.correct{background:#EAF3DE;border-color:#3B6D11;color:#173404}
-.opt-btn.wrong{background:#FCEBEB;border-color:#A32D2D;color:#501313}
-.feedback{margin-top:10px;font-size:13px;padding:8px 12px;border-radius:var(--border-radius-md);line-height:1.5;display:none}
-.fb-correct{background:#EAF3DE;color:#27500A;display:block}
-.fb-wrong{background:#FCEBEB;color:#791F1F;display:block}
-.nav{display:flex;gap:8px;margin-top:1rem;align-items:center}
-.q-counter{font-size:13px;color:var(--color-text-secondary);margin-left:auto}
-.user-badge{display:inline-flex;align-items:center;gap:8px;background:#EEEDFE;color:#3C3489;font-size:13px;padding:6px 14px;border-radius:var(--border-radius-md);margin-bottom:1rem}
-.results-score{text-align:center;padding:1.5rem 0}
-.big-score{font-size:56px;font-weight:500;color:#7F77DD}
-.result-msg{font-size:16px;font-weight:500;color:var(--color-text-primary);margin-top:8px}
-.result-sub{font-size:13px;color:var(--color-text-secondary);margin-top:4px}
-.result-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:1.5rem 0}
-.email-box{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:1rem;margin-top:1rem;font-size:13px;color:var(--color-text-secondary);line-height:1.6}
-.email-box strong{color:var(--color-text-primary)}
-.send-btn{width:100%;padding:12px;background:#7F77DD;border:none;border-radius:var(--border-radius-md);color:#fff;font-size:15px;font-weight:500;cursor:pointer;margin-top:1rem;display:flex;align-items:center;justify-content:center;gap:8px}
-.send-btn:hover{background:#534AB7}
-.sent-ok{background:#EAF3DE;color:#27500A;border-radius:var(--border-radius-md);padding:12px;text-align:center;font-size:14px;margin-top:1rem;display:none}
-.err{color:#A32D2D;font-size:13px;margin-top:-10px;margin-bottom:10px}
-</style>
-
-<div class="wrap">
-
-<!-- PANTALLA 1: INICIO -->
-<div class="screen active" id="screen-start">
-  <div class="card">
-    <div style="text-align:center;margin-bottom:1.5rem">
-      <div style="width:56px;height:56px;background:#EEEDFE;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;font-size:24px">📊</div>
-      <h2>Test de Excel</h2>
-      <p class="sub" style="margin-bottom:0">Fórmulas y operaciones básicas<br>15 verdadero/falso · 10 selección múltiple</p>
-    </div>
-    <label for="nombre">Tu nombre completo</label>
-    <input type="text" id="nombre" placeholder="Ej. María García López" maxlength="80">
-    <div class="err" id="err-nombre" style="display:none">Por favor, introduce tu nombre para continuar.</div>
-    <button class="btn-primary" onclick="startTest()">Comenzar el test →</button>
-  </div>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Test de Excel — FUNCECAIND</title>
+<link rel="stylesheet" href="../assets/styles.css">
+</head>
+<body>
+<div class="topbar">
+  <a href="../index.html" class="brand">Funce<span>Caind</span></a>
+  <div class="topbar-right"><a class="btn-logout" href="../alumno.html">Mi panel</a></div>
 </div>
 
-<!-- PANTALLA 2: TEST -->
-<div class="screen" id="screen-test">
-  <div class="user-badge" id="user-badge">👤 <span id="user-name-display"></span></div>
-  <div class="progress-bar"><div class="progress-fill" id="progress" style="width:4%"></div></div>
-  <div class="stats">
-    <div class="stat"><div class="stat-num" id="s-total">0</div><div class="stat-lbl">Respondidas</div></div>
-    <div class="stat"><div class="stat-num" id="s-correct" style="color:#3B6D11">0</div><div class="stat-lbl">Correctas</div></div>
-    <div class="stat"><div class="stat-num" id="s-wrong" style="color:#A32D2D">0</div><div class="stat-lbl">Incorrectas</div></div>
-    <div class="stat"><div class="stat-num" id="s-pct">0%</div><div class="stat-lbl">Puntuación</div></div>
-  </div>
-  <div id="q-area"></div>
-  <div class="nav">
-    <button class="btn-secondary" onclick="prev()">← Anterior</button>
-    <button class="btn-primary" onclick="next()" id="btn-next" style="width:auto;padding:8px 18px">Siguiente →</button>
-    <span class="q-counter" id="q-counter">1 / 25</span>
-  </div>
-</div>
+<div id="app"></div>
 
-<!-- PANTALLA 3: RESULTADOS -->
-<div class="screen" id="screen-results">
-  <div class="card">
-    <div class="results-score">
-      <div style="font-size:14px;color:var(--color-text-secondary);margin-bottom:4px">Resultado de <strong id="res-name"></strong></div>
-      <div class="big-score" id="res-pct"></div>
-      <div class="result-msg" id="res-msg"></div>
-      <div class="result-sub" id="res-sub"></div>
-    </div>
-    <div class="result-grid">
-      <div class="stat"><div class="stat-num" style="color:#3B6D11" id="r-correct"></div><div class="stat-lbl">Correctas</div></div>
-      <div class="stat"><div class="stat-num" style="color:#A32D2D" id="r-wrong"></div><div class="stat-lbl">Incorrectas</div></div>
-      <div class="stat"><div class="stat-num" id="r-blank"></div><div class="stat-lbl">Sin responder</div></div>
-    </div>
-    <div style="border-top:0.5px solid var(--color-border-tertiary);padding-top:1rem">
-      <div style="font-size:13px;font-weight:500;color:var(--color-text-secondary);margin-bottom:8px">Enviar resultado por correo electrónico</div>
-      <div class="email-box">
-        Se abrirá tu cliente de correo con el resultado listo para enviar a <strong>jahulin@gmail.com</strong>. Solo tendrás que pulsar "Enviar".
-      </div>
-      <button class="send-btn" onclick="sendEmail()">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-        Enviar resultado a jahulin@gmail.com
-      </button>
-      <div class="sent-ok" id="sent-ok">✓ Se ha abierto tu cliente de correo. Revisa el borrador y pulsa Enviar.</div>
-      <button class="btn-secondary" onclick="restartTest()" style="width:100%;margin-top:8px;text-align:center">Repetir el test</button>
-    </div>
-  </div>
-</div>
-
-</div>
-
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../assets/supabase-config.js"></script>
+<script src="../assets/app.js"></script>
+<script src="test-engine.js"></script>
 <script>
-const questions = [
+const QS = [
   {type:'tf',text:'En Excel, toda fórmula debe comenzar con el signo igual (=).',correct:true,fb:'El signo = indica a Excel que lo que sigue es una fórmula y no texto.'},
   {type:'tf',text:'La función SUMA() puede sumar solo dos celdas a la vez, no rangos.',correct:false,fb:'SUMA() puede sumar rangos completos, por ejemplo =SUMA(A1:A100) suma 100 celdas.'},
   {type:'tf',text:'En una referencia absoluta como $A$1, la fila y la columna no cambian al copiar la fórmula.',correct:true,fb:'El signo $ fija tanto la columna como la fila, por lo que no se ajusta al copiar.'},
@@ -142,158 +46,7 @@ const questions = [
   {type:'mc',text:'¿Qué función convierte texto en minúsculas en Excel?',options:['=MINUSC()','=LOWER()','=TEXTO()'],correct:0,fb:'MINUSC() convierte todo el texto a minúsculas. Por ejemplo, =MINUSC("HOLA") → "hola".'},
   {type:'mc',text:'¿Qué resultado da =REDONDEAR(3.756, 2)?',options:['3.7','3.75','3.76'],correct:2,fb:'REDONDEAR(3.756,2): el tercer decimal es 6 (≥5), sube → resultado 3.76.'},
 ];
-
-let current=0, answers=new Array(25).fill(null), userName='';
-
-function startTest(){
-  const n=document.getElementById('nombre').value.trim();
-  if(!n){document.getElementById('err-nombre').style.display='block';return;}
-  userName=n;
-  document.getElementById('err-nombre').style.display='none';
-  document.getElementById('user-name-display').textContent=n;
-  show('screen-test');
-  renderQ();
-}
-
-function show(id){
-  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-}
-
-function getStats(){
-  let correct=0,wrong=0,total=0;
-  answers.forEach((a,i)=>{if(a!==null){total++;if(a===questions[i].correct)correct++;else wrong++;}});
-  return{correct,wrong,total};
-}
-
-function updateStats(){
-  const{correct,wrong,total}=getStats();
-  document.getElementById('s-total').textContent=total;
-  document.getElementById('s-correct').textContent=correct;
-  document.getElementById('s-wrong').textContent=wrong;
-  document.getElementById('s-pct').textContent=total?Math.round(correct/total*100)+'%':'0%';
-  document.getElementById('progress').style.width=Math.max(4,Math.round((current+1)/25*100))+'%';
-  document.getElementById('q-counter').textContent=(current+1)+' / 25';
-}
-
-function renderQ(){
-  const q=questions[current];
-  const answered=answers[current]!==null;
-  const userAns=answers[current];
-  let html='';
-  const badge=q.type==='tf'?'<span class="q-badge badge-tf">Verdadero / Falso</span>':'<span class="q-badge badge-mc">Selección múltiple</span>';
-  html+=`<div class="card" style="margin-bottom:1rem">${badge}<div class="q-text">${q.text}</div><div class="options">`;
-  if(q.type==='tf'){
-    [{label:'Verdadero',val:true},{label:'Falso',val:false}].forEach(o=>{
-      let cls='opt-btn';
-      if(answered){if(o.val===q.correct)cls+=' correct';else if(o.val===userAns&&userAns!==q.correct)cls+=' wrong';}
-      html+=`<button class="${cls}" onclick="answer(${JSON.stringify(o.val)})" ${answered?'disabled':''}>${o.label}</button>`;
-    });
-  } else {
-    q.options.forEach((opt,i)=>{
-      let cls='opt-btn';
-      if(answered){if(i===q.correct)cls+=' correct';else if(i===userAns&&userAns!==q.correct)cls+=' wrong';}
-      html+=`<button class="${cls}" onclick="answer(${i})" ${answered?'disabled':''}><strong>${['A','B','C'][i]}.</strong> ${opt}</button>`;
-    });
-  }
-  html+='</div>';
-  if(answered){
-    const ok=userAns===q.correct;
-    html+=`<div class="feedback ${ok?'fb-correct':'fb-wrong'}">${ok?'✓ Correcto':'✗ Incorrecto'} — ${q.fb}</div>`;
-  }
-  html+='</div>';
-  document.getElementById('q-area').innerHTML=html;
-  document.getElementById('btn-next').textContent=current===24?'Ver resultados →':'Siguiente →';
-  updateStats();
-}
-
-function answer(val){
-  if(answers[current]!==null)return;
-  answers[current]=val;
-  renderQ();
-}
-
-function next(){
-  if(current===24){showResults();return;}
-  current=Math.min(24,current+1);
-  renderQ();
-}
-
-function prev(){
-  current=Math.max(0,current-1);
-  renderQ();
-}
-
-function showResults(){
-  const{correct,wrong,total}=getStats();
-  const blank=25-total;
-  const pct=Math.round(correct/25*100);
-  let msg='',sub='';
-  if(pct>=80){msg='¡Excelente dominio de Excel!';sub='Dominas las fórmulas y operaciones básicas.';}
-  else if(pct>=60){msg='Buen nivel, sigue practicando.';sub='Repasa las fórmulas en las que fallaste.';}
-  else{msg='Necesitas repasar los contenidos.';sub='Dedica más tiempo a las fórmulas básicas.';}
-  document.getElementById('res-name').textContent=userName;
-  document.getElementById('res-pct').textContent=pct+'%';
-  document.getElementById('res-msg').textContent=msg;
-  document.getElementById('res-sub').textContent=sub;
-  document.getElementById('r-correct').textContent=correct;
-  document.getElementById('r-wrong').textContent=wrong;
-  document.getElementById('r-blank').textContent=blank;
-  show('screen-results');
-}
-
-function sendEmail(){
-  const{correct,wrong,total}=getStats();
-  const blank=25-total;
-  const pct=Math.round(correct/25*100);
-  const now=new Date().toLocaleDateString('es-ES',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'});
-  
-  const detalle=questions.map((q,i)=>{
-    const a=answers[i];
-    let resp='Sin responder';
-    if(a!==null){
-      if(q.type==='tf') resp=a?'Verdadero':'Falso';
-      else resp=['A','B','C'][a]+'. '+q.options[a];
-    }
-    const correcto=a===q.correct?'✓':'✗';
-    let correctaLabel='';
-    if(q.type==='tf') correctaLabel=q.correct?'Verdadero':'Falso';
-    else correctaLabel=['A','B','C'][q.correct]+'. '+q.options[q.correct];
-    return `${i+1}. ${correcto} ${q.text}\n   Respuesta: ${resp} | Correcta: ${correctaLabel}`;
-  }).join('\n\n');
-
-  const subject=encodeURIComponent(`Resultado Test Excel — ${userName} — ${pct}%`);
-  const body=encodeURIComponent(
-`RESULTADO DEL TEST DE EXCEL — FÓRMULAS Y OPERACIONES BÁSICAS
-=============================================================
-Alumno/a : ${userName}
-Fecha     : ${now}
-Puntuación: ${pct}% (${correct} correctas de 25 preguntas)
-Correctas : ${correct}
-Incorrectas: ${wrong}
-Sin responder: ${blank}
-
-NIVEL: ${pct>=80?'EXCELENTE':pct>=60?'APROBADO':'NECESITA REFUERZO'}
-
-─────────────────────────────────────────────────────────────
-DETALLE POR PREGUNTA
-─────────────────────────────────────────────────────────────
-
-${detalle}
-
-─────────────────────────────────────────────────────────────
-Este resultado ha sido generado automáticamente desde el test interactivo de Excel (FP para el Empleo).`
-  );
-
-  window.location.href=`mailto:jahulin@gmail.com?subject=${subject}&body=${body}`;
-  document.getElementById('sent-ok').style.display='block';
-}
-
-function restartTest(){
-  answers=new Array(25).fill(null);
-  current=0;
-  userName='';
-  document.getElementById('nombre').value='';
-  show('screen-start');
-}
+TestEngine.run({ clave:'excel', titulo:'Test de Excel — fórmulas básicas', icono:'📊', acento:'#1d9e75', preguntas:QS });
 </script>
+</body>
+</html>
