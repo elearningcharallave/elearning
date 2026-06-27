@@ -162,3 +162,36 @@ create policy asistencia_update on public.asistencia
 drop policy if exists asistencia_select on public.asistencia;
 create policy asistencia_select on public.asistencia
   for select using (alumno_id = auth.uid() or public.es_staff());
+
+-- 7) MATERIALES de clase (archivos en Supabase Storage) ---------------------
+insert into storage.buckets (id, name, public)
+  values ('materiales', 'materiales', true)
+  on conflict (id) do nothing;
+
+drop policy if exists materiales_obj_insert on storage.objects;
+create policy materiales_obj_insert on storage.objects
+  for insert with check (bucket_id = 'materiales' and public.es_staff());
+drop policy if exists materiales_obj_delete on storage.objects;
+create policy materiales_obj_delete on storage.objects
+  for delete using (bucket_id = 'materiales' and public.es_staff());
+
+create table if not exists public.materiales (
+  id           uuid primary key default gen_random_uuid(),
+  clase_id     uuid references public.clases(id) on delete cascade,
+  titulo       text,
+  archivo_path text,
+  url          text,
+  profesor_id  uuid references auth.users(id) on delete set null,
+  creado_en    timestamptz not null default now()
+);
+alter table public.materiales enable row level security;
+
+drop policy if exists materiales_select on public.materiales;
+create policy materiales_select on public.materiales
+  for select using (auth.role() = 'authenticated');
+drop policy if exists materiales_insert on public.materiales;
+create policy materiales_insert on public.materiales
+  for insert with check (profesor_id = auth.uid() and public.es_staff());
+drop policy if exists materiales_delete on public.materiales;
+create policy materiales_delete on public.materiales
+  for delete using (profesor_id = auth.uid() or public.es_admin());

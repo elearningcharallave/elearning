@@ -44,6 +44,12 @@
     <div class="sub">Calificaciones de las pruebas que has realizado.</div>
     <div class="list" id="mis-res"><div class="empty">Cargando…</div></div>
   </div>
+
+  <div class="card" id="mat-card" style="display:none">
+    <h2>📎 Materiales de la clase</h2>
+    <div class="sub">Documentos que compartió el profesor.</div>
+    <div class="list" id="mat-list"></div>
+  </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -67,11 +73,28 @@ async function cargar(){
       return '<div class="item"><div class="avatar">🎥</div>'+
         '<div class="info"><div class="name">'+c.titulo+'</div>'+
         '<div class="meta">'+(c.profesorNombre?('👩‍🏫 '+c.profesorNombre+' · '):'')+(c.horario?('🕒 '+c.horario):'')+'</div></div>'+
+        '<button class="btn btn-ghost btn-sm" onclick="verMatA(\''+c.id+'\')">📎</button>'+
         '<button class="btn btn-sm" onclick="entrar(\''+c.sala+'\')">Entrar</button></div>';
     }).join('');
   }catch(e){ document.getElementById('clases').innerHTML='<div class="empty">Error: '+e.message+'</div>'; }
 }
 function entrar(sala){ location.href = urlAula(sala, MIDOC.nombre); }
+
+async function verMatA(claseId){
+  var card=document.getElementById('mat-card'), l=document.getElementById('mat-list');
+  card.style.display='block'; l.innerHTML='<div class="empty">Cargando…</div>';
+  card.scrollIntoView({behavior:'smooth',block:'nearest'});
+  try{
+    var m=await FV.materialesDeClase(claseId);
+    if(!m.length){ l.innerHTML='<div class="empty">Esta clase aún no tiene materiales.</div>'; return; }
+    l.innerHTML=m.map(function(x){
+      return '<div class="item"><div class="avatar">📄</div>'+
+        '<div class="info"><div class="name">'+(x.titulo||'archivo')+'</div>'+
+        '<div class="meta">'+new Date(x.creado_en).toLocaleDateString('es-VE')+'</div></div>'+
+        '<a class="btn btn-sm" href="'+x.url+'" target="_blank" rel="noopener">Descargar</a></div>';
+    }).join('');
+  }catch(e){ l.innerHTML='<div class="empty">Error: '+e.message+'</div>'; }
+}
 
 async function cargarMis(){
   var c=document.getElementById('mis-res');

@@ -176,6 +176,29 @@
     if (r.error) throw r.error; return r.data;
   }
 
+  // --- Materiales de clase (Supabase Storage) ---
+  async function subirMaterial(claseId, file, titulo) {
+    var ses = await sesion(); if (!ses) throw new Error("Sin sesión");
+    var safe = (file.name || "archivo").replace(/[^a-zA-Z0-9._-]/g, "_");
+    var path = claseId + "/" + Date.now() + "-" + safe;
+    var up = await sb.storage.from("materiales").upload(path, file, { upsert: false });
+    if (up.error) throw up.error;
+    var url = sb.storage.from("materiales").getPublicUrl(path).data.publicUrl;
+    var r = await sb.from("materiales").insert({
+      clase_id: claseId, titulo: titulo || file.name, archivo_path: path, url: url, profesor_id: ses.user.uid
+    }).select("id").single();
+    if (r.error) throw r.error; return r.data.id;
+  }
+  async function materialesDeClase(claseId) {
+    var r = await sb.from("materiales").select("*").eq("clase_id", claseId).order("creado_en", { ascending: false });
+    if (r.error) throw r.error; return r.data;
+  }
+  async function eliminarMaterial(id, path) {
+    if (path) { try { await sb.storage.from("materiales").remove([path]); } catch (e) {} }
+    var r = await sb.from("materiales").delete().eq("id", id);
+    if (r.error) throw r.error;
+  }
+
   function mostrarFaltaConfig() {
     document.addEventListener("DOMContentLoaded", function () {
       var d = document.createElement("div");
@@ -195,6 +218,7 @@
     sesion: sesion, guardarResultado: guardarResultado, todosResultados: todosResultados, misResultados: misResultados,
     resetPassword: resetPassword, actualizarPassword: actualizarPassword,
     registrarEntrada: registrarEntrada, latido: latido, registrarSalida: registrarSalida, asistenciaDeSala: asistenciaDeSala,
+    subirMaterial: subirMaterial, materialesDeClase: materialesDeClase, eliminarMaterial: eliminarMaterial,
     get sb() { return sb; }
   };
 })();

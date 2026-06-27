@@ -46,6 +46,18 @@
     <div class="sub">Quién entró a la clase y cuánto tiempo estuvo (registro automático).</div>
     <div class="list" id="asis-list"></div>
   </div>
+
+  <div class="card" id="mat-card" style="display:none">
+    <h2>📎 Materiales · <span id="mat-titulo"></span></h2>
+    <div class="sub">Sube PDFs, diapositivas o documentos para que tus alumnos los descarguen (máx. 15 MB).</div>
+    <div class="row" style="align-items:flex-end">
+      <div class="field" style="flex:2"><label>Archivo</label><input type="file" id="mat-file"></div>
+      <div class="field" style="flex:2"><label>Título (opcional)</label><input type="text" id="mat-tit" placeholder="Ej. Guía de Word"></div>
+      <button class="btn btn-sm" id="mat-btn" onclick="subirMat()">Subir</button>
+    </div>
+    <div class="msg" id="mat-msg"></div>
+    <div class="list" id="mat-list" style="margin-top:12px"></div>
+  </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -80,6 +92,7 @@ async function cargar(){
           '<button class="btn btn-sm" onclick="dictar(\''+c.sala+'\')">▶ Dictar</button>'+
           '<button class="btn btn-ghost btn-sm" onclick="copiar(\''+c.sala+'\',this)">🔗 Link alumno</button>'+
           '<button class="btn btn-ghost btn-sm" onclick="verAsistencia(\''+c.sala+'\')">👥 Asistencia</button>'+
+          '<button class="btn btn-ghost btn-sm" onclick="verMateriales(\''+c.id+'\')">📎 Materiales</button>'+
           '<button class="btn-logout btn-sm" onclick="borrar(\''+c.id+'\')">🗑</button>'+
         '</div></div>';
     }).join('');
@@ -131,6 +144,45 @@ async function verAsistencia(sala){
     }).join('');
   }catch(e){ list.innerHTML='<div class="empty">Error: '+e.message+'</div>'; }
 }
+
+var MAT_CLASE=null;
+async function verMateriales(claseId){
+  MAT_CLASE=claseId;
+  var c=CLASES.find(function(x){return x.id===claseId;});
+  document.getElementById('mat-titulo').textContent=c?c.titulo:'';
+  document.getElementById('mat-card').style.display='block';
+  document.getElementById('mat-card').scrollIntoView({behavior:'smooth',block:'nearest'});
+  matMsg('',true);
+  await listarMat();
+}
+async function listarMat(){
+  var l=document.getElementById('mat-list');
+  try{
+    var m=await FV.materialesDeClase(MAT_CLASE);
+    if(!m.length){ l.innerHTML='<div class="empty">Aún no hay materiales en esta clase.</div>'; return; }
+    l.innerHTML=m.map(function(x){
+      return '<div class="item"><div class="avatar">📄</div>'+
+        '<div class="info"><div class="name">'+(x.titulo||'archivo')+'</div>'+
+        '<div class="meta">'+new Date(x.creado_en).toLocaleDateString('es-VE')+'</div></div>'+
+        '<a class="btn btn-ghost btn-sm" href="'+x.url+'" target="_blank" rel="noopener">Descargar</a>'+
+        '<button class="btn-logout btn-sm" onclick="borrarMat(\''+x.id+'\',\''+(x.archivo_path||'')+'\')">🗑</button></div>';
+    }).join('');
+  }catch(e){ l.innerHTML='<div class="empty">Error: '+e.message+'</div>'; }
+}
+function matMsg(t,ok){ var m=document.getElementById('mat-msg'); m.textContent=t; m.className='msg '+(t?(ok?'ok':'err'):''); }
+async function subirMat(){
+  var f=document.getElementById('mat-file').files[0];
+  if(!f){ matMsg('Elige un archivo.',false); return; }
+  if(f.size>15*1024*1024){ matMsg('Máximo 15 MB por archivo.',false); return; }
+  var b=document.getElementById('mat-btn'); b.disabled=true; b.textContent='Subiendo…';
+  try{
+    await FV.subirMaterial(MAT_CLASE, f, document.getElementById('mat-tit').value.trim());
+    document.getElementById('mat-file').value=''; document.getElementById('mat-tit').value='';
+    matMsg('✅ Material subido.',true); await listarMat();
+  }catch(e){ matMsg('❌ '+(e.message||e),false); }
+  b.disabled=false; b.textContent='Subir';
+}
+async function borrarMat(id,path){ if(confirm('¿Eliminar este material?')){ try{ await FV.eliminarMaterial(id,path); await listarMat(); }catch(e){ matMsg('❌ '+e.message,false);} } }
 </script>
 </body>
 </html>
