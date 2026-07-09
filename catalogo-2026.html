@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Catálogo de cursos 2026 - FUNCECAIND</title>
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+<meta name="description" content="Catálogo 2026 de cursos de capacitación FUNCECAIND por áreas: administración, calidad, electricidad, gerencia, mecánica, producción, recursos humanos, seguridad industrial y supervisión.">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --teal-50:#e0f5ef;--teal-100:#b3e6d8;--teal-300:#4db8a0;--teal-500:#1d9e75;--teal-700:#0f6e56;--teal-900:#063d30;
+  --blue-50:#e1f0fb;--blue-500:#1a7fc4;--text-dark:#062820;--text-mid:#2a5248;--text-light:#648f84;--white:#f8fdfb;--border:#d9efe7;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:var(--white);color:var(--text-dark);line-height:1.55}
+.topbar{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:space-between;gap:20px;padding:14px 44px;background:rgba(248,253,251,.94);backdrop-filter:blur(14px);border-bottom:1px solid var(--teal-100)}
+.brand{width:176px;height:58px;background:url("assets/funcecaind/logo-funcecaind.png") left center/contain no-repeat;overflow:hidden;text-indent:-999px;white-space:nowrap}
+.nav{display:flex;align-items:center;gap:16px;font-size:.9rem;color:var(--text-mid)}
+.nav a{text-decoration:none;color:inherit}.nav a:hover{color:var(--teal-700)}
+.btn{display:inline-flex;align-items:center;justify-content:center;border-radius:100px;min-height:40px;padding:9px 20px;background:var(--teal-500);color:#fff;text-decoration:none;font-weight:600}
+.btn:hover{background:var(--teal-700)}
+.btn.secondary{background:transparent;color:var(--teal-700);border:1.5px solid var(--teal-300)}
+.hero{padding:80px 44px 54px;background:linear-gradient(135deg,var(--white) 54%,var(--teal-50));border-bottom:1px solid var(--teal-100)}
+.inner{max-width:1180px;margin:0 auto}
+.label{display:inline-block;font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;color:var(--teal-700);font-weight:700;margin-bottom:12px}
+h1{font-family:'Fraunces',serif;font-size:clamp(2.2rem,5vw,3.8rem);line-height:1.1;margin-bottom:16px}
+.lead{max-width:780px;color:var(--text-mid);font-size:1.05rem;font-weight:300;margin-bottom:24px}
+.stats{display:flex;gap:12px;flex-wrap:wrap}
+.stat{background:#fff;border:1px solid var(--border);border-radius:14px;padding:13px 16px;min-width:148px}
+.stat b{display:block;color:var(--teal-700);font-size:1.2rem}.stat span{font-size:.82rem;color:var(--text-light)}
+.section{padding:54px 44px}
+.area{margin-bottom:34px}
+.area-head{display:flex;align-items:end;justify-content:space-between;gap:16px;border-bottom:1px solid var(--border);padding-bottom:12px;margin-bottom:16px}
+.area h2{font-family:'Fraunces',serif;font-size:1.55rem;color:var(--text-dark)}
+.area-count{font-size:.82rem;color:var(--text-light)}
+.course-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:13px}
+.course{background:#fff;border:1px solid var(--border);border-radius:14px;padding:16px;min-height:132px}
+.course h3{font-family:'Fraunces',serif;font-size:1rem;line-height:1.25;margin-bottom:8px}
+.meta{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:9px}
+.pill{font-size:.72rem;font-weight:700;color:var(--teal-700);background:var(--teal-50);border:1px solid var(--teal-100);border-radius:100px;padding:3px 8px}
+.course p{font-size:.86rem;color:var(--text-mid);font-weight:300}
+.note{background:var(--teal-50);border:1px solid var(--teal-100);border-left:5px solid var(--teal-500);border-radius:12px;padding:18px;color:var(--text-mid);margin-top:18px}
+.footer{background:var(--teal-900);color:rgba(255,255,255,.65);padding:34px 44px}
+.footer .inner{display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}
+.footer-logo{width:172px;height:66px;background:url("assets/funcecaind/logo-funcecaind.png") left center/contain no-repeat;overflow:hidden;text-indent:-999px;white-space:nowrap}
+@media(max-width:760px){
+  .topbar{padding:12px 18px}.brand{width:138px;height:46px}.nav{gap:10px;font-size:.82rem;flex-wrap:wrap;justify-content:flex-end}
+  .hero,.section{padding-left:20px;padding-right:20px}.area-head{align-items:flex-start;flex-direction:column}
+  .footer{padding:30px 20px}.footer .inner{text-align:center;justify-content:center}.footer-logo{background-position:center}
+}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="index.html">FUNCECAIND</a>
+  <nav class="nav" aria-label="Principal">
+    <a href="index.html">Inicio</a>
+    <a href="pensum-fp-emp.html">Pensum F.P EMP</a>
+    <a href="control-calidad.html">Control de Calidad</a>
+    <a class="btn secondary" href="login.html">Aula virtual</a>
+  </nav>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="inner">
+      <span class="label">Catálogo de cursos</span>
+      <h1>Catálogo FUNCECAIND 2026</h1>
+      <p class="lead">Cursos de capacitación organizados por áreas de conocimiento para empresas, sector público, trabajadores y participantes particulares.</p>
+      <div class="stats">
+        <div class="stat"><b>9</b><span>Áreas visibles</span></div>
+        <div class="stat"><b>60+</b><span>Cursos de capacitación</span></div>
+        <div class="stat"><b>8-28 h</b><span>Rutas cortas por curso</span></div>
+        <div class="stat"><b>F.P EMP</b><span>Pensum por programas</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="inner">
+      <div class="area">
+        <div class="area-head"><h2>Administración</h2><span class="area-count">Cursos Adm.001-Adm.013</span></div>
+        <div class="course-grid">
+          <article class="course"><h3>Logística de almacén y control de stock</h3><div class="meta"><span class="pill">Adm.001</span><span class="pill">21 horas</span></div><p>Almacenamiento, distribución, control de materiales y costos asociados.</p></article>
+          <article class="course"><h3>Contabilidad Básica</h3><div class="meta"><span class="pill">Adm.002</span><span class="pill">28 horas</span></div><p>Terminología, técnicas y procedimientos básicos de contabilidad.</p></article>
+          <article class="course"><h3>Contabilidad Complementaria</h3><div class="meta"><span class="pill">Adm.003</span><span class="pill">28 horas</span></div><p>Estructura de cuentas y registro en libros contables.</p></article>
+          <article class="course"><h3>Contabilidad Superior</h3><div class="meta"><span class="pill">Adm.004</span><span class="pill">28 horas</span></div><p>Conceptos y bases fundamentales de la contabilidad financiera.</p></article>
+          <article class="course"><h3>Abastecimiento y compras</h3><div class="meta"><span class="pill">Adm.005</span><span class="pill">21 horas</span></div><p>Sistema integral de compras, eficacia operativa y planes de acción.</p></article>
+          <article class="course"><h3>Estructura de Costos</h3><div class="meta"><span class="pill">Adm.006</span><span class="pill">21 horas</span></div><p>Identificación de costos y gastos, control de costos y competitividad.</p></article>
+          <article class="course"><h3>Análisis de Estados Financieros</h3><div class="meta"><span class="pill">Adm.007</span><span class="pill">21 horas</span></div><p>Estados financieros para toma de decisiones y reducción de riesgos de crédito.</p></article>
+          <article class="course"><h3>Planificación estratégica del tiempo</h3><div class="meta"><span class="pill">Adm.010</span><span class="pill">16 horas</span></div><p>Planificación del trabajo y administración del tiempo.</p></article>
+          <article class="course"><h3>Atención al público e imagen de la empresa</h3><div class="meta"><span class="pill">Adm.011</span><span class="pill">16 horas</span></div><p>Comunicación, conducta, apariencia personal e imagen institucional.</p></article>
+          <article class="course"><h3>Ortografía Aplicada</h3><div class="meta"><span class="pill">Adm.012</span><span class="pill">20 horas</span></div><p>Normas ortográficas, corrección de errores y comunicación oral y escrita.</p></article>
+          <article class="course"><h3>Aritmética aplicada</h3><div class="meta"><span class="pill">Adm.013</span><span class="pill">20 horas</span></div><p>Operaciones fundamentales y cálculos matemáticos.</p></article>
+        </div>
+      </div>
+
+      <div class="area">
+        <div class="area-head"><h2>Calidad</h2><span class="area-count">Cursos Cc.007-Cc.011 y ruta ampliada</span></div>
+        <div class="course-grid">
+          <article class="course"><h3>Redacción de Informes Técnicos</h3><div class="meta"><span class="pill">Cc.007</span><span class="pill">16 horas</span></div><p>Comunicación efectiva mediante informes técnicos.</p></article>
+          <article class="course"><h3>Calidad en el Trabajo</h3><div class="meta"><span class="pill">Cc.011</span><span class="pill">16 horas</span></div><p>Estándares personales y laborales para desarrollar y mantener la calidad.</p></article>
+          <article class="course"><h3>Control de Calidad</h3><div class="meta"><span class="pill">Programa</span><span class="pill">Ver malla</span></div><p>Fundamentos, medición, muestreo, control estadístico, ISO 9000 y auditorías.</p></article>
+        </div>
+        <div class="note"><a href="control-calidad.html">Ver página del curso de Control de Calidad</a></div>
+      </div>
+
+      <div class="area">
+        <div class="area-head"><h2>Electricidad</h2><span class="area-count">Cursos El.001-El.011</span></div>
+        <div class="course-grid">
+          <article class="course"><h3>Fundamentos de Tecnología Eléctrica</h3><div class="meta"><span class="pill">El.001</span><span class="pill">16 horas</span></div><p>Conocimientos teóricos para prácticas de tecnología eléctrica.</p></article>
+          <article class="course"><h3>Mediciones Eléctricas</h3><div class="meta"><span class="pill">El.002</span><span class="pill">16 horas</span></div><p>Sistema de mediciones e instrumentos usados en equipos eléctricos.</p></article>
+          <article class="course"><h3>Instalaciones Eléctricas</h3><div class="meta"><span class="pill">El.003</span><span class="pill">21 horas</span></div><p>Herramientas, materiales y equipos para instalaciones eléctricas.</p></article>
+          <article class="course"><h3>Lectura e Interpretación de Planos Eléctricos</h3><div class="meta"><span class="pill">El.004</span><span class="pill">21 horas</span></div><p>Signos, elementos e interpretación de planos eléctricos.</p></article>
+          <article class="course"><h3>Localización de Fallas Eléctricas</h3><div class="meta"><span class="pill">El.005</span><span class="pill">16 horas</span></div><p>Localización de fallas y aplicación de correctivos.</p></article>
+          <article class="course"><h3>Electricidad de Mantenimiento</h3><div class="meta"><span class="pill">El.006</span><span class="pill">21 horas</span></div><p>Circuitos eléctricos, motores de corriente alterna y continua.</p></article>
+          <article class="course"><h3>Motores y Transformadores</h3><div class="meta"><span class="pill">El.007</span><span class="pill">21 horas</span></div><p>Clasificación, conexiones y regulaciones en transformadores.</p></article>
+          <article class="course"><h3>Mantenimiento y Análisis de Fallas</h3><div class="meta"><span class="pill">El.008</span><span class="pill">21 horas</span></div><p>Caracterización y solución de fallas.</p></article>
+          <article class="course"><h3>Control de Motores Eléctricos Industriales</h3><div class="meta"><span class="pill">El.009</span><span class="pill">21 horas</span></div><p>Control de motores eléctricos industriales.</p></article>
+          <article class="course"><h3>Introducción a los PLC</h3><div class="meta"><span class="pill">El.010</span><span class="pill">20 horas</span></div><p>Sistema Siemens LOGO para automatización y control de motores.</p></article>
+          <article class="course"><h3>Control de Motores I y II</h3><div class="meta"><span class="pill">El.011</span><span class="pill">28 horas</span></div><p>Arranques, inversión y protección de motores.</p></article>
+        </div>
+      </div>
+
+      <div class="area">
+        <div class="area-head"><h2>Gerencia, Mecánica y Producción</h2><span class="area-count">Cursos técnicos y gerenciales</span></div>
+        <div class="course-grid">
+          <article class="course"><h3>Herramientas Gerenciales</h3><div class="meta"><span class="pill">Ge.001</span><span class="pill">21 horas</span></div><p>Conceptos gerenciales, liderazgo, comunicación y metas.</p></article>
+          <article class="course"><h3>Gerencia por Objetivos</h3><div class="meta"><span class="pill">Ge.002</span><span class="pill">21 horas</span></div><p>Planificación con objetivos generales y sectoriales.</p></article>
+          <article class="course"><h3>Análisis Sistemático de Problemas y Decisiones</h3><div class="meta"><span class="pill">Ge.003</span><span class="pill">21 horas</span></div><p>Proceso de toma de decisiones como herramienta gerencial.</p></article>
+          <article class="course"><h3>Máquinas y Equipos</h3><div class="meta"><span class="pill">Me.005</span><span class="pill">16 horas</span></div><p>Elementos de máquinas y resistencia de materiales.</p></article>
+          <article class="course"><h3>Elementos de Máquinas</h3><div class="meta"><span class="pill">Me.006</span><span class="pill">21 horas</span></div><p>Cálculo de dimensiones de elementos de máquinas.</p></article>
+          <article class="course"><h3>Programa Práctico de Soldadura</h3><div class="meta"><span class="pill">Me.013</span><span class="pill">28 horas</span></div><p>Soldadura eléctrica por arco y componentes asociados.</p></article>
+          <article class="course"><h3>Operador de Montacargas</h3><div class="meta"><span class="pill">Me.018</span><span class="pill">16 horas</span></div><p>Operación eficaz y mantenimiento básico del montacargas.</p></article>
+          <article class="course"><h3>Planificación y Control de Producción</h3><div class="meta"><span class="pill">Pp.001</span><span class="pill">21 horas</span></div><p>Rendimiento operacional y productividad de recursos.</p></article>
+          <article class="course"><h3>Medición y rentabilidad de la productividad</h3><div class="meta"><span class="pill">Pp.002</span><span class="pill">16 horas</span></div><p>Productividad, inflación de costos y mejoras productivas.</p></article>
+        </div>
+      </div>
+
+      <div class="area">
+        <div class="area-head"><h2>Recursos Humanos</h2><span class="area-count">Cursos Rh.001-Rh.021</span></div>
+        <div class="course-grid">
+          <article class="course"><h3>Estructura y Funcionamiento de Gerencia de RRHH</h3><div class="meta"><span class="pill">Rh.001</span><span class="pill">16 horas</span></div><p>Entrevistas, inducción y evaluación de personal.</p></article>
+          <article class="course"><h3>Principios Administrativos</h3><div class="meta"><span class="pill">Rh.002</span><span class="pill">16 horas</span></div><p>Teorías administrativas y estructura de RRHH.</p></article>
+          <article class="course"><h3>Administración de Personal</h3><div class="meta"><span class="pill">Rh.003</span><span class="pill">16 horas</span></div><p>Técnicas para dotación de recursos humanos.</p></article>
+          <article class="course"><h3>Obligaciones Legales Laborales y Cálculos Laborales</h3><div class="meta"><span class="pill">Rh.005</span><span class="pill">21 horas</span></div><p>Contratación, permanencia, egreso y cálculos laborales.</p></article>
+          <article class="course"><h3>Taller de Seguro Social</h3><div class="meta"><span class="pill">Rh.006</span><span class="pill">8 horas</span></div><p>Auto-liquidación de SSO, ingresos y egresos de trabajadores.</p></article>
+          <article class="course"><h3>Técnicas de Reclutamiento y Selección</h3><div class="meta"><span class="pill">Rh.007</span><span class="pill">16 horas</span></div><p>Proceso básico de reclutamiento y selección de personal.</p></article>
+          <article class="course"><h3>Administración de Sueldos y Salarios</h3><div class="meta"><span class="pill">Rh.009</span><span class="pill">16 horas</span></div><p>Políticas salariales, descripción y valoración de cargos.</p></article>
+          <article class="course"><h3>Motivación al Logro</h3><div class="meta"><span class="pill">Rh.013</span><span class="pill">8 horas</span></div><p>Herramientas psicológicas para desempeño laboral e individual.</p></article>
+          <article class="course"><h3>Servicios al Cliente</h3><div class="meta"><span class="pill">Rh.017</span><span class="pill">16 horas</span></div><p>Comunicación, apariencia personal e imagen de la empresa.</p></article>
+          <article class="course"><h3>Administración Efectiva del Tiempo</h3><div class="meta"><span class="pill">Rh.018</span><span class="pill">16 horas</span></div><p>Técnicas para mejorar la efectividad administrativa del tiempo.</p></article>
+        </div>
+      </div>
+
+      <div class="area">
+        <div class="area-head"><h2>Seguridad Industrial y Supervisión</h2><span class="area-count">Cursos Si.001-Su.006</span></div>
+        <div class="course-grid">
+          <article class="course"><h3>Higiene y Seguridad Industrial</h3><div class="meta"><span class="pill">Si.001</span><span class="pill">16 horas</span></div><p>Riesgos laborales, prevención de accidentes y LOPCYMAT.</p></article>
+          <article class="course"><h3>Prevención y Extinción de Incendio</h3><div class="meta"><span class="pill">Si.003</span><span class="pill">21 horas</span></div><p>Control de incendio y uso de medios de extinción.</p></article>
+          <article class="course"><h3>Primeros Auxilios</h3><div class="meta"><span class="pill">Si.004</span><span class="pill">21 horas</span></div><p>Soporte de vida oportuno antes del traslado asistencial.</p></article>
+          <article class="course"><h3>Operación segura de Caldera de Vapor</h3><div class="meta"><span class="pill">Si.005</span><span class="pill">8 horas</span></div><p>Tipos de calderas, tratamiento de agua, aspectos legales y riesgos.</p></article>
+          <article class="course"><h3>Manejo de Materiales Peligrosos</h3><div class="meta"><span class="pill">Si.006</span><span class="pill">8 horas</span></div><p>Identificación, etiquetado y almacenamiento de materiales peligrosos.</p></article>
+          <article class="course"><h3>Método de Trabajo</h3><div class="meta"><span class="pill">Su.002</span><span class="pill">16 horas</span></div><p>Normas, procedimientos y control del trabajo realizado.</p></article>
+          <article class="course"><h3>Toma de Decisiones</h3><div class="meta"><span class="pill">Su.003</span><span class="pill">8 horas</span></div><p>Criterios para decidir en incertidumbre y crisis.</p></article>
+          <article class="course"><h3>Técnicas de Delegación</h3><div class="meta"><span class="pill">Su.004</span><span class="pill">8 horas</span></div><p>Sistema flexible de delegación y desarrollo del personal.</p></article>
+          <article class="course"><h3>Calidad y productividad</h3><div class="meta"><span class="pill">Su.006</span><span class="pill">8 horas</span></div><p>Uniformidad de calidad en el proceso productivo y gráficos de control.</p></article>
+        </div>
+      </div>
+
+      <div class="note">FUNCECAIND también puede diseñar y rediseñar programas o cursos según necesidades específicas del sector productivo, en sede o en instalaciones de la organización.</div>
+      <div class="note"><a href="pensum-fp-emp.html">Ver contenidos F.P EMP: pensum de los programas que se dictan</a></div>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="inner">
+    <div class="footer-logo">FUNCECAIND</div>
+    <small>Carretera Charallave-Cúa, Urbanización Industrial Río Tuy, Avenida G, Edificio FUNCECAIND · funcecaind@gmail.com</small>
+  </div>
+</footer>
+</body>
+</html>

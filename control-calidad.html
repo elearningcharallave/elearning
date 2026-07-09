@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Control de Calidad - FUNCECAIND</title>
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+<meta name="description" content="Curso de Control de Calidad de FUNCECAIND: fundamentos, medición, muestreo, control estadístico, ISO 9000, auditorías e informes técnicos.">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --teal-50:#e0f5ef;--teal-100:#b3e6d8;--teal-300:#4db8a0;--teal-500:#1d9e75;
+  --teal-700:#0f6e56;--teal-900:#063d30;--blue-50:#e1f0fb;--blue-500:#1a7fc4;
+  --text-dark:#062820;--text-mid:#2a5248;--text-light:#648f84;--white:#f8fdfb;
+  --border:#d9efe7;--card:#fff;--shadow:0 12px 36px rgba(15,110,86,.11);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:var(--white);color:var(--text-dark);line-height:1.6}
+a{color:inherit}
+.topbar{position:sticky;top:0;z-index:10;display:flex;align-items:center;justify-content:space-between;gap:20px;padding:14px 44px;background:rgba(248,253,251,.92);backdrop-filter:blur(14px);border-bottom:1px solid var(--teal-100)}
+.brand{width:176px;height:58px;background:url("assets/funcecaind/logo-funcecaind.png") left center/contain no-repeat;overflow:hidden;text-indent:-999px;white-space:nowrap}
+.nav{display:flex;align-items:center;gap:16px;font-size:.9rem;color:var(--text-mid)}
+.nav a{text-decoration:none}
+.nav a:hover{color:var(--teal-700)}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:42px;border-radius:100px;padding:10px 22px;background:var(--teal-500);color:#fff;text-decoration:none;font-weight:600;border:0;cursor:pointer;box-shadow:0 5px 20px rgba(29,158,117,.22)}
+.btn:hover{background:var(--teal-700)}
+.btn.secondary{background:transparent;color:var(--teal-700);border:1.5px solid var(--teal-300);box-shadow:none}
+.hero{background:linear-gradient(135deg,var(--white) 54%,var(--teal-50));padding:84px 44px 70px;border-bottom:1px solid var(--teal-100)}
+.hero-inner{max-width:1120px;margin:0 auto;display:grid;grid-template-columns:minmax(0,1.15fr) minmax(300px,.85fr);gap:42px;align-items:center}
+.label{display:inline-block;font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;color:var(--teal-700);font-weight:700;margin-bottom:14px}
+h1{font-family:'Fraunces',serif;font-size:clamp(2.3rem,5vw,4rem);line-height:1.08;margin-bottom:20px;color:var(--text-dark)}
+.lead{font-size:1.08rem;color:var(--text-mid);font-weight:300;max-width:680px;margin-bottom:30px}
+.hero-actions{display:flex;gap:14px;flex-wrap:wrap}
+.summary{background:#fff;border:1px solid var(--border);border-radius:18px;padding:24px;box-shadow:var(--shadow)}
+.summary h2{font-family:'Fraunces',serif;font-size:1.25rem;margin-bottom:14px}
+.summary-row{display:flex;gap:12px;padding:13px 0;border-top:1px solid var(--border)}
+.summary-row:first-of-type{border-top:0}
+.summary-row b{min-width:112px;color:var(--teal-700)}
+.summary-row span{color:var(--text-mid)}
+.section{padding:72px 44px}
+.section-inner{max-width:1120px;margin:0 auto}
+.section-title{font-family:'Fraunces',serif;font-size:clamp(1.8rem,3vw,2.5rem);line-height:1.18;margin-bottom:18px}
+.section-copy{color:var(--text-mid);font-weight:300;max-width:760px;margin-bottom:30px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px}
+.card{background:#fff;border:1px solid var(--border);border-radius:16px;padding:22px;box-shadow:0 8px 26px rgba(15,110,86,.08)}
+.card h3{font-family:'Fraunces',serif;font-size:1.08rem;margin-bottom:8px;color:var(--text-dark)}
+.card p{color:var(--text-mid);font-size:.94rem;font-weight:300}
+.pill{display:inline-flex;align-items:center;gap:6px;border-radius:100px;background:var(--teal-50);color:var(--teal-700);border:1px solid var(--teal-100);padding:4px 10px;font-size:.76rem;font-weight:700;margin-bottom:12px}
+.modules{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
+.module{background:#fff;border:1px solid var(--border);border-radius:14px;padding:18px;min-height:166px}
+.module-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:8px}
+.module-code{font-size:.72rem;font-weight:700;color:var(--teal-700);background:var(--teal-50);border-radius:100px;padding:3px 9px;white-space:nowrap}
+.module h3{font-family:'Fraunces',serif;font-size:1rem;line-height:1.25;color:var(--text-dark)}
+.module p{font-size:.88rem;color:var(--text-mid);font-weight:300}
+.band{background:var(--teal-50);border-top:1px solid var(--teal-100);border-bottom:1px solid var(--teal-100)}
+.note{background:#fff;border:1px solid var(--teal-100);border-left:5px solid var(--teal-500);border-radius:12px;padding:18px;color:var(--text-mid)}
+.footer{background:var(--teal-900);color:rgba(255,255,255,.65);padding:38px 44px}
+.footer-inner{max-width:1120px;margin:0 auto;display:flex;gap:24px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.footer-logo{width:172px;height:66px;background:url("assets/funcecaind/logo-funcecaind.png") left center/contain no-repeat;overflow:hidden;text-indent:-999px;white-space:nowrap}
+.footer small{line-height:1.6}
+@media(max-width:760px){
+  .topbar{padding:12px 18px}.brand{width:138px;height:46px}.nav{gap:10px;font-size:.82rem}
+  .hero,.section{padding-left:20px;padding-right:20px}.hero-inner{grid-template-columns:1fr}.summary{order:-1}
+  .footer{padding:30px 20px}.footer-logo{background-position:center}.footer-inner{text-align:center;justify-content:center}
+}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="index.html">FUNCECAIND</a>
+  <nav class="nav" aria-label="Principal">
+    <a href="index.html#cursos">Cursos</a>
+    <a href="catalogo-2026.html">Catálogo 2026</a>
+    <a href="pensum-fp-emp.html">Pensum F.P EMP</a>
+    <a href="login.html">Aula virtual</a>
+    <a class="btn secondary" href="index.html#contacto">Contacto</a>
+  </nav>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="hero-inner">
+      <div>
+        <span class="label">Área: Control de Calidad</span>
+        <h1>Control de Calidad</h1>
+        <p class="lead">Formación técnica para reconocer problemas de calidad en la empresa, aplicar medición, muestreo, control estadístico, normas ISO 9000, auditorías, informes técnicos y mejora continua.</p>
+        <div class="hero-actions">
+          <a class="btn" href="login.html">Entrar al aula</a>
+          <a class="btn secondary" href="#programa">Ver programa</a>
+          <a class="btn secondary" href="pensum-fp-emp.html">Ver pensum F.P EMP</a>
+        </div>
+      </div>
+      <aside class="summary" aria-label="Resumen del curso">
+        <h2>Resumen</h2>
+        <div class="summary-row"><b>Modalidad</b><span>Teleformación con clases en vivo, tareas y evaluación.</span></div>
+        <div class="summary-row"><b>Dirigido a</b><span>Personal obrero, administrativo, técnico, profesional, inspectores y supervisores.</span></div>
+        <div class="summary-row"><b>Base</b><span>Programa de Control de Calidad FUNCECAIND, códigos Cc.001-Cc.014.</span></div>
+        <div class="summary-row"><b>Certificado</b><span>Disponible al completar las evaluaciones del curso en el aula virtual.</span></div>
+      </aside>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-inner">
+      <span class="label">Objetivo</span>
+      <h2 class="section-title">Qué aprenderá el participante</h2>
+      <p class="section-copy">A partir de las estrategias metodológicas del instructor, el participante podrá identificar términos y casos de uso cotidiano en la problemática del control de calidad, analizar por qué la calidad de un producto es un factor clave para colocarlo en el mercado y aplicar herramientas técnicas en procesos industriales.</p>
+      <div class="grid">
+        <article class="card">
+          <span class="pill">Fundamentos</span>
+          <h3>Calidad, normas y tolerancias</h3>
+          <p>Conceptos de calidad, consumidor o mercado, norma, especificación, tolerancia, ciclo de calidad y costos de fallas.</p>
+        </article>
+        <article class="card">
+          <span class="pill">Herramientas</span>
+          <h3>Medición, muestreo y gráficos</h3>
+          <p>Instrumentos de medición, técnicas de muestreo, gráficos de control, histogramas, Pareto, causa-efecto y control estadístico.</p>
+        </article>
+        <article class="card">
+          <span class="pill">Gestión</span>
+          <h3>ISO 9000, auditorías e informes</h3>
+          <p>Interpretación de normas ISO Serie 9000, auditorías de sistemas de calidad, manuales de calidad y redacción de informes técnicos.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section band" id="programa">
+    <div class="section-inner">
+      <span class="label">Programa</span>
+      <h2 class="section-title">Malla de Control de Calidad</h2>
+      <p class="section-copy">La siguiente malla está organizada a partir de las fichas del material de Control de Calidad de FUNCECAIND. No se publica el documento fuente; se presenta como estructura académica del curso.</p>
+      <div class="modules">
+        <article class="module"><div class="module-head"><h3>Técnicas básicas de la calidad I</h3><span class="module-code">Cc.001 · 16 h</span></div><p>Control de calidad, calidad de producto, consumidor o mercado, ciclo de calidad, normas, especificaciones, tolerancias, costos de calidad y derechos del consumidor.</p></article>
+        <article class="module"><div class="module-head"><h3>Técnicas básicas de calidad II</h3><span class="module-code">Cc.002 · 16 h</span></div><p>Implementación del sistema de calidad, 14 puntos de Deming, tormenta de ideas, causa-efecto, Pareto, flujo, matriz, árbol, gráficos de control y COVENIN-ISO 9000.</p></article>
+        <article class="module"><div class="module-head"><h3>Instrumentos de medición</h3><span class="module-code">Cc.003 · 21 h</span></div><p>Sistemas de medición, instrumentos usados en el área, errores de uso, conservación, regla, metro, vernier, micrómetro, goniómetro e instrumentos de comparación.</p></article>
+        <article class="module"><div class="module-head"><h3>Técnicas de muestreo</h3><span class="module-code">Cc.004 · 16 h</span></div><p>Justificación del muestreo, tipos de muestras, A.Q.L., inspección normal, reducida y crítica, listas de muestreo, defectos, exactitud, precisión y planes de muestreo.</p></article>
+        <article class="module"><div class="module-head"><h3>Elaboración de manuales de calidad</h3><span class="module-code">Cc.005 · 16 h</span></div><p>Documentación de sistemas de calidad, proceso de elaboración, aprobación, emisión, control, actualización y plan de calidad.</p></article>
+        <article class="module"><div class="module-head"><h3>Control estadístico de proceso</h3><span class="module-code">Cc.006 · 16 h</span></div><p>Metodología de gráficos de control, análisis de capacidades, histogramas, distribución normal, variables, atributos y normas COVENIN 598-75.</p></article>
+        <article class="module"><div class="module-head"><h3>Redacción de informes técnicos</h3><span class="module-code">Cc.007 · 16 h</span></div><p>Comunicación organizacional, estructura del informe técnico, introducción, parte central, conclusiones, recomendaciones, planeación, borrador y revisión final.</p></article>
+        <article class="module"><div class="module-head"><h3>Análisis químico</h3><span class="module-code">Cc.008 · 28 h</span></div><p>Química inorgánica, análisis volumétrico y gravimétrico, tipos de soluciones, concentración, errores, precisión, medición, temperatura, soluto y solvente.</p></article>
+        <article class="module"><div class="module-head"><h3>Auditorías de sistemas de calidad</h3><span class="module-code">Cc.009 · 16 h</span></div><p>Lineamientos, criterios y gestión para auditar sistemas de calidad, responsabilidades, culminación de auditoría, seguimiento de acción correctiva y código de ética.</p></article>
+        <article class="module"><div class="module-head"><h3>Norma ISO 9000</h3><span class="module-code">Cc.010 · 16 h</span></div><p>Antecedentes, estructura, familia ISO 9000, ventajas, requisitos, procedimientos, costos, certificación en Venezuela y comparación COVENIN ISO 9000-9003.</p></article>
+        <article class="module"><div class="module-head"><h3>Calidad en el trabajo</h3><span class="module-code">Cc.011 · 16 h</span></div><p>Calidad total, sistema de calidad, ciclo de Deming, calidad personal, resistencia al cambio, mejora continua, competencia, comunicación y calidad de servicio.</p></article>
+        <article class="module"><div class="module-head"><h3>Inspectores y supervisores</h3><span class="module-code">Cc.012 · 21 h</span></div><p>Control de recepción, proceso y producto, cálculos, listas de chequeo, gráficos de control, muestreo de aceptación, curva de operación, causa-efecto y Pareto.</p></article>
+        <article class="module"><div class="module-head"><h3>Reuniones y presentaciones orales</h3><span class="module-code">Cc.014 · 16 h</span></div><p>Conducción de reuniones, presentaciones orales, comunicación, preparación de reunión asertiva, análisis de situación, agenda y ayudas audiovisuales.</p></article>
+        <article class="module"><div class="module-head"><h3>Filosofía de la calidad</h3><span class="module-code">Cc. · 8 h</span></div><p>Origen y evolución del control de calidad, definiciones ISO, control total de calidad, reacción en cadena de Deming, herramientas básicas y mejora continua.</p></article>
+        <article class="module"><div class="module-head"><h3>Analista de Control de Calidad</h3><span class="module-code">F.P. Cc.002 · 1 año</span></div><p>Programa profesional por módulos: nivelación, comportamiento laboral, técnicas de estudio, higiene y seguridad, instrumentos, control estadístico, ISO 9000, manuales, auditoría, método de trabajo y computación.</p></article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-inner">
+      <span class="label">Aula virtual</span>
+      <h2 class="section-title">Cómo se cursa</h2>
+      <div class="grid">
+        <article class="card"><h3>Clases en vivo</h3><p>El profesor dicta sesiones por videollamada y registra asistencia dentro del aula virtual.</p></article>
+        <article class="card"><h3>Materiales privados</h3><p>Los materiales se comparten dentro de cada clase o curso, solo para usuarios autenticados y con acceso autorizado.</p></article>
+        <article class="card"><h3>Evaluación y certificado</h3><p>Las evaluaciones se corrigen desde servidor y el certificado se emite con código verificable cuando se completan los requisitos.</p></article>
+      </div>
+      <div class="note" style="margin-top:22px">Para inscripción o apertura de cohorte, entra al aula virtual o contacta a FUNCECAIND desde la sección de contacto.</div>
+      <div class="note" style="margin-top:12px">El programa profesional relacionado es <strong>Analista de Control de Calidad - F.P. Cc.002</strong>, incluido en los contenidos F.P EMP.</div>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-logo">FUNCECAIND</div>
+    <small>FUNDACION PARA LA PLANIFICACION Y DESARROLLO DE CENTROS DE CAPACITACION INDUSTRIAL · RIF J002321385 · Charallave, Miranda.</small>
+  </div>
+</footer>
+</body>
+</html>

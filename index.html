@@ -348,6 +348,8 @@ nav {
 .course-card:nth-child(2) .course-thumb { background: linear-gradient(135deg, var(--blue-50), #c8e2f7); }
 .course-card:nth-child(3) .course-thumb { background: linear-gradient(135deg, #e8f5e9, var(--teal-50)); }
 .course-card:nth-child(4) .course-thumb { background: linear-gradient(135deg, var(--teal-100), var(--blue-50)); }
+.course-card:nth-child(5) .course-thumb { background: linear-gradient(135deg, #fff7e8, var(--teal-50)); }
+.course-card:nth-child(6) .course-thumb { background: linear-gradient(135deg, var(--blue-50), var(--teal-100)); }
 
 .course-body { padding: 20px; }
 
@@ -550,6 +552,8 @@ footer {
   <div class="logo">Funce<span>Caind</span></div>
   <ul class="nav-links">
     <li><a href="#cursos">Cursos</a></li>
+    <li><a href="catalogo-2026.html">Catálogo 2026</a></li>
+    <li><a href="pensum-fp-emp.html">Pensum F.P EMP</a></li>
     <li><a href="#pruebas">Pruebas</a></li>
     <li><a href="#nosotros">Nosotros</a></li>
     <li><a href="#contacto">Contacto</a></li>
@@ -613,6 +617,11 @@ footer {
 <section class="section" id="cursos">
   <div class="section-label">Catálogo</div>
   <h2 class="section-title">Cursos diseñados para el mundo real</h2>
+  <p style="color:var(--text-mid);max-width:680px;margin:-32px 0 40px;font-weight:300;line-height:1.7;">Consulta el catálogo 2026 completo y los pensum F.P EMP de los programas que se dictan en FUNCECAIND.</p>
+  <div style="display:flex;gap:12px;flex-wrap:wrap;margin:-22px 0 34px;">
+    <button class="btn-secondary" onclick="location.href='catalogo-2026.html'">Ver catálogo 2026</button>
+    <button class="btn-secondary" onclick="location.href='pensum-fp-emp.html'">Ver pensum F.P EMP</button>
+  </div>
 
   <div class="courses-grid">
     <div class="course-card">
@@ -631,6 +640,15 @@ footer {
         <div class="course-name">Microsoft Excel — Hojas de cálculo</div>
         <div class="course-meta"><span>⏱ 16 horas</span><span>📈 Fórmulas</span><span>🎓 Certificado</span></div>
         <button class="course-cta" onclick="location.href='pruebas/test-excel.html'">Hacer test de Excel →</button>
+      </div>
+    </div>
+    <div class="course-card">
+      <div class="course-thumb">✅</div>
+      <div class="course-body">
+        <span class="course-tag">Calidad</span>
+        <div class="course-name">Control de Calidad</div>
+        <div class="course-meta"><span>⏱ Programa F.P</span><span>📋 Malla</span><span>🎓 Certificado</span></div>
+        <button class="course-cta" onclick="location.href='control-calidad.html'">Ver programa →</button>
       </div>
     </div>
     <div class="course-card">

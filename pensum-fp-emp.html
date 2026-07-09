@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pensum F.P EMP - FUNCECAIND</title>
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+<meta name="description" content="Pensum F.P EMP de FUNCECAIND: programas de formación profesional empresarial organizados por módulos.">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--teal-50:#e0f5ef;--teal-100:#b3e6d8;--teal-300:#4db8a0;--teal-500:#1d9e75;--teal-700:#0f6e56;--teal-900:#063d30;--text-dark:#062820;--text-mid:#2a5248;--text-light:#648f84;--white:#f8fdfb;--border:#d9efe7}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:var(--white);color:var(--text-dark);line-height:1.55}
+.topbar{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:space-between;gap:18px;padding:14px 44px;background:rgba(248,253,251,.94);backdrop-filter:blur(14px);border-bottom:1px solid var(--teal-100)}
+.brand{width:176px;height:58px;background:url("assets/funcecaind/logo-funcecaind.png") left center/contain no-repeat;overflow:hidden;text-indent:-999px;white-space:nowrap}
+.nav{display:flex;gap:16px;align-items:center;font-size:.9rem;color:var(--text-mid);flex-wrap:wrap;justify-content:flex-end}.nav a{color:inherit;text-decoration:none}.nav a:hover{color:var(--teal-700)}
+.btn{display:inline-flex;align-items:center;justify-content:center;border-radius:100px;min-height:40px;padding:9px 20px;background:var(--teal-500);color:#fff!important;text-decoration:none;font-weight:600}.btn:hover{background:var(--teal-700)}
+.btn.secondary{background:transparent;color:var(--teal-700)!important;border:1.5px solid var(--teal-300)}
+.hero{padding:78px 44px 52px;background:linear-gradient(135deg,var(--white) 56%,var(--teal-50));border-bottom:1px solid var(--teal-100)}
+.inner{max-width:1180px;margin:0 auto}.label{display:inline-block;font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;color:var(--teal-700);font-weight:700;margin-bottom:12px}
+h1{font-family:'Fraunces',serif;font-size:clamp(2.2rem,5vw,3.8rem);line-height:1.1;margin-bottom:16px}.lead{max-width:800px;color:var(--text-mid);font-size:1.05rem;font-weight:300}
+.section{padding:54px 44px}.program{background:#fff;border:1px solid var(--border);border-radius:18px;margin-bottom:20px;overflow:hidden;box-shadow:0 8px 26px rgba(15,110,86,.07)}
+.program-head{padding:22px 24px;background:var(--teal-50);border-bottom:1px solid var(--border);display:flex;gap:14px;align-items:flex-start;justify-content:space-between}
+.program h2{font-family:'Fraunces',serif;font-size:1.35rem;line-height:1.2}.program-meta{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}.pill{font-size:.72rem;font-weight:700;color:var(--teal-700);background:#fff;border:1px solid var(--teal-100);border-radius:100px;padding:3px 8px;white-space:nowrap}
+.objective{padding:18px 24px;color:var(--text-mid);font-weight:300;border-bottom:1px solid var(--border)}
+.modules{display:grid;grid-template-columns:repeat(3,1fr);gap:0}.module{padding:20px 22px;border-right:1px solid var(--border)}.module:last-child{border-right:0}
+.module h3{font-family:'Fraunces',serif;font-size:1rem;margin-bottom:10px;color:var(--teal-700)}.module ul{padding-left:18px;color:var(--text-mid);font-size:.9rem}.module li{margin-bottom:5px}
+.note{background:var(--teal-50);border:1px solid var(--teal-100);border-left:5px solid var(--teal-500);border-radius:12px;padding:18px;color:var(--text-mid);margin-bottom:24px}
+.footer{background:var(--teal-900);color:rgba(255,255,255,.65);padding:34px 44px}.footer .inner{display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}
+.footer-logo{width:172px;height:66px;background:url("assets/funcecaind/logo-funcecaind.png") left center/contain no-repeat;overflow:hidden;text-indent:-999px;white-space:nowrap}
+@media(max-width:900px){.modules{grid-template-columns:1fr}.module{border-right:0;border-bottom:1px solid var(--border)}.module:last-child{border-bottom:0}}
+@media(max-width:760px){.topbar{padding:12px 18px}.brand{width:138px;height:46px}.hero,.section{padding-left:20px;padding-right:20px}.program-head{flex-direction:column}.footer{padding:30px 20px}.footer .inner{text-align:center;justify-content:center}.footer-logo{background-position:center}}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="index.html">FUNCECAIND</a>
+  <nav class="nav" aria-label="Principal">
+    <a href="index.html">Inicio</a>
+    <a href="catalogo-2026.html">Catálogo 2026</a>
+    <a href="control-calidad.html">Control de Calidad</a>
+    <a class="btn secondary" href="login.html">Aula virtual</a>
+  </nav>
+</header>
+<main>
+  <section class="hero">
+    <div class="inner">
+      <span class="label">Pensum de cursos a dictar</span>
+      <h1>Contenidos F.P EMP</h1>
+      <p class="lead">Programas de formación profesional empresarial organizados por módulos. Cada pensum se presenta como estructura académica para el aula virtual, sin publicar el documento fuente.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="inner">
+      <div class="note">Duración base de los programas: 01 año, según las fichas F.P EMP. Los módulos se cargan aquí como pensum visible para orientar a estudiantes, docentes y empresas.</div>
+
+      <article class="program">
+        <div class="program-head"><div><h2>Electro-mecánica Industrial</h2><div class="program-meta"><span class="pill">Electricidad</span><span class="pill">F.P. El.001</span><span class="pill">01 año</span></div></div></div>
+        <p class="objective">Objetivo: utilizar bases teóricas y tecnológicas para operar, mantener y dirigir máquinas industriales según el área laboral, atendiendo normas de higiene y seguridad.</p>
+        <div class="modules"><div class="module"><h3>Módulo I</h3><ul><li>Autoestima</li><li>Nivelación aritmética y ortográfica</li><li>Comportamiento laboral</li><li>Técnicas de estudio e investigación</li><li>Toma de decisiones</li><li>Higiene y seguridad industrial</li></ul></div><div class="module"><h3>Módulo II</h3><ul><li>Instrumentos de medición</li><li>Fundamentos de tecnología eléctrica</li><li>Mediciones e instalaciones eléctricas</li><li>Electricidad de mantenimiento</li><li>Motores y transformadores</li><li>Planos eléctricos</li></ul></div><div class="module"><h3>Módulo III</h3><ul><li>Localización de fallas eléctricas</li><li>Máquinas y equipos</li><li>Elementos de máquinas</li><li>Lubricación aplicada</li><li>Hidráulica y neumática</li><li>Informe final</li></ul></div></div>
+      </article>
+
+      <article class="program">
+        <div class="program-head"><div><h2>Analista de Control de Calidad</h2><div class="program-meta"><span class="pill">Control de Calidad</span><span class="pill">F.P. Cc.002</span><span class="pill">01 año</span></div></div><a class="btn secondary" href="control-calidad.html">Ver curso</a></div>
+        <p class="objective">Objetivo: aplicar técnicas necesarias en el control de calidad de procesos industriales dentro de las especificaciones del producto y la tolerancia establecida.</p>
+        <div class="modules"><div class="module"><h3>Módulo I</h3><ul><li>Autoestima</li><li>Nivelación aritmética y ortográfica</li><li>Comportamiento laboral</li><li>Técnicas de estudio e investigación</li><li>Toma de decisiones</li><li>Higiene y seguridad industrial</li></ul></div><div class="module"><h3>Módulo II</h3><ul><li>Instrumentos de medición</li><li>Técnicas básicas de calidad I y II</li><li>Técnicas de muestreo</li><li>Control estadístico del proceso</li><li>Análisis químico</li><li>Informes técnicos</li></ul></div><div class="module"><h3>Módulo III</h3><ul><li>Norma ISO 9000</li><li>Manuales de calidad</li><li>Auditoría de sistemas de calidad</li><li>Logística de almacén y stock</li><li>Planificación y control de producción</li><li>Computación e informe final</li></ul></div></div>
+      </article>
+
+      <article class="program">
+        <div class="program-head"><div><h2>Electrónica Industrial</h2><div class="program-meta"><span class="pill">Electrónica</span><span class="pill">F.P. Elt.003</span><span class="pill">01 año</span></div></div></div>
+        <p class="objective">Objetivo: realizar actividades de mantenimiento preventivo y correctivo en equipos electrónicos en calidad de ayudante técnico.</p>
+        <div class="modules"><div class="module"><h3>Módulo I</h3><ul><li>Autoestima</li><li>Nivelación aritmética y ortográfica</li><li>Comportamiento laboral</li><li>Técnicas de estudio</li><li>Documentación e investigación</li><li>Higiene y seguridad industrial</li></ul></div><div class="module"><h3>Módulo II</h3><ul><li>Fundamentos de tecnología electrónica</li><li>Mediciones electrónicas</li><li>Rectificación y fuentes</li><li>Circuitos transistorizados</li><li>Circuitos lineales</li><li>Microcontroladores</li></ul></div><div class="module"><h3>Módulo III</h3><ul><li>Tiristores y triac</li><li>Lógica digital</li><li>Planos electrónicos</li><li>Localización de fallas</li><li>Proyectos locales</li><li>Computación e informe final</li></ul></div></div>
+      </article>
+
+      <article class="program">
+        <div class="program-head"><div><h2>Asistente de Producción</h2><div class="program-meta"><span class="pill">Producción - Productividad</span><span class="pill">F.P. Pp.004</span><span class="pill">01 año</span></div></div></div>
+        <p class="objective">Objetivo: aplicar técnicas para preparar planes de trabajo en producción y analizar procesos industriales dentro de especificaciones y tolerancias.</p>
+        <div class="modules"><div class="module"><h3>Módulo I</h3><ul><li>Autoestima</li><li>Nivelación aritmética y ortográfica</li><li>Comportamiento laboral</li><li>Técnicas de estudio</li><li>Investigación y documentación</li><li>Seguridad industrial</li></ul></div><div class="module"><h3>Módulo II</h3><ul><li>Instrumentos de medición</li><li>Tecnología eléctrica</li><li>Elementos de máquinas</li><li>Almacén y stock</li><li>Archivo y kardex</li><li>Calidad I y II</li></ul></div><div class="module"><h3>Módulo III</h3><ul><li>Técnicas de muestreo</li><li>Control estadístico</li><li>Planificación y control de producción</li><li>Funciones supervisoras</li><li>Calidad y productividad</li><li>Computación e informe final</li></ul></div></div>
+      </article>
+
+      <article class="program">
+        <div class="program-head"><div><h2>Asistente Administrativo de Recursos Humanos</h2><div class="program-meta"><span class="pill">Relaciones Industriales</span><span class="pill">F.P. Ri.005</span><span class="pill">01 año</span></div></div></div>
+        <p class="objective">Objetivo: aplicar técnicas y criterios de asistencia a los subsistemas de relaciones industriales.</p>
+        <div class="modules"><div class="module"><h3>Módulo I</h3><ul><li>Autoestima</li><li>Nivelación aritmética y ortográfica</li><li>Comportamiento laboral</li><li>Técnicas de estudio</li><li>Documentación e investigación</li><li>Archivo y kardex</li></ul></div><div class="module"><h3>Módulo II</h3><ul><li>Informes técnicos</li><li>Principios administrativos</li><li>Documentos mercantiles</li><li>Contabilidad básica</li><li>Gerencia de RRHH</li><li>Bienestar social</li></ul></div><div class="module"><h3>Módulo III</h3><ul><li>Administración de personal</li><li>Reclutamiento y selección</li><li>Planes de adiestramiento</li><li>Evaluación de personal</li><li>Sueldos y salarios</li><li>Obligaciones legales e informe final</li></ul></div></div>
+      </article>
+
+      <article class="program">
+        <div class="program-head"><div><h2>Especialista del Plástico</h2><div class="program-meta"><span class="pill">Plástico</span><span class="pill">F.P. Pl.006</span><span class="pill">01 año</span></div></div></div>
+        <p class="objective">Objetivo: identificar y clasificar polímeros, conocer técnicas de tratamiento del polímero y operar maquinarias del área.</p>
+        <div class="modules"><div class="module"><h3>Módulo I</h3><ul><li>Autoestima</li><li>Comportamiento laboral</li><li>Nivelación aritmética y ortográfica</li><li>Técnicas de estudio</li><li>Documentación e investigación</li><li>Seguridad industrial</li></ul></div><div class="module"><h3>Módulo II</h3><ul><li>Instrumentos de medición</li><li>Tecnología eléctrica</li><li>Elementos de máquinas</li><li>Muestreo</li><li>Control estadístico</li><li>Análisis químico</li></ul></div><div class="module"><h3>Módulo III</h3><ul><li>Calidad y productividad</li><li>Básico de polímeros</li><li>Impresión flexográfica</li><li>Técnicas para colorista</li><li>Extrusión e inyección de plástico</li><li>Computación e informe final</li></ul></div></div>
+      </article>
+
+      <article class="program">
+        <div class="program-head"><div><h2>Mecánico de Mantenimiento</h2><div class="program-meta"><span class="pill">Mecánica</span><span class="pill">F.P. Me.007</span><span class="pill">01 año</span></div></div></div>
+        <p class="objective">Objetivo: utilizar términos e instrumentos asociados a la mecánica y manejar elementos aplicados a tecnología mecánica.</p>
+        <div class="modules"><div class="module"><h3>Módulo I</h3><ul><li>Autoestima</li><li>Nivelación aritmética y ortográfica</li><li>Comportamiento laboral</li><li>Técnicas de estudio</li><li>Documentación e investigación</li><li>Seguridad industrial</li></ul></div><div class="module"><h3>Módulo II</h3><ul><li>Tecnología mecánica</li><li>Instrumentos de medición</li><li>Ajuste y trazado mecánico</li><li>Máquinas y equipos</li><li>Elementos de máquinas</li><li>Lubricación industrial</li></ul></div><div class="module"><h3>Módulo III</h3><ul><li>Hidráulica y neumática</li><li>Planos mecánicos</li><li>Fallas mecánicas</li><li>Mantenimiento preventivo</li><li>Computación</li><li>AutoCAD 2D y 3D</li></ul></div></div>
+      </article>
+
+      <article class="program">
+        <div class="program-head"><div><h2>Electricidad de Mantenimiento</h2><div class="program-meta"><span class="pill">Electricidad</span><span class="pill">F.P. El.008</span><span class="pill">01 año</span></div></div></div>
+        <p class="objective">Objetivo: utilizar términos e instrumentos asociados a la electricidad y manejar elementos aplicados a tecnología eléctrica.</p>
+        <div class="modules"><div class="module"><h3>Módulo I</h3><ul><li>Autoestima</li><li>Comportamiento laboral</li><li>Nivelación aritmética y ortográfica</li><li>Técnicas de estudio</li><li>Documentación e investigación</li><li>Seguridad industrial</li></ul></div><div class="module"><h3>Módulo II</h3><ul><li>Tecnología eléctrica</li><li>Mediciones eléctricas</li><li>Instalaciones eléctricas</li><li>Electricidad de mantenimiento</li><li>Planos eléctricos</li><li>Fallas, motores y transformadores</li></ul></div><div class="module"><h3>Módulo III</h3><ul><li>Mantenimiento y análisis de fallas</li><li>Electricidad industrial</li><li>Control de motores</li><li>PLC Siemens LOGO</li><li>Electrónica para electricistas</li><li>Informes técnicos e informe final</li></ul></div></div>
+      </article>
+
+      <article class="program">
+        <div class="program-head"><div><h2>Operador de Máquinas y Herramientas</h2><div class="program-meta"><span class="pill">Mecánica</span><span class="pill">F.P. Me.009</span><span class="pill">01 año</span></div></div></div>
+        <p class="objective">Objetivo: manejar herramientas manuales y máquinas-herramientas, torno y fresadora según la tecnología requerida.</p>
+        <div class="modules"><div class="module"><h3>Módulo I</h3><ul><li>Autoestima</li><li>Comportamiento laboral</li><li>Nivelación aritmética y ortográfica</li><li>Técnicas de estudio</li><li>Documentación e investigación</li><li>Seguridad industrial</li></ul></div><div class="module"><h3>Módulo II</h3><ul><li>Taller de trigonometría</li><li>Instrumentos de medición</li><li>Planos mecánicos</li><li>Trazado mecánico</li><li>Ajuste mecánico</li><li>Soldadura</li></ul></div><div class="module"><h3>Módulo III</h3><ul><li>Materiales ferrosos y no ferrosos</li><li>Torno I, II y III</li><li>Fresa I, II y III</li><li>Ruedas dentadas</li><li>Tallado de levas</li><li>Informe final</li></ul></div></div>
+      </article>
+
+      <article class="program">
+        <div class="program-head"><div><h2>Desarrollo Gerencial</h2><div class="program-meta"><span class="pill">Gerencia</span><span class="pill">F.P. Ge.010</span><span class="pill">01 año</span></div></div></div>
+        <p class="objective">Objetivo: aportar visión estratégica a la planificación y analizar balances para tomar decisiones financieras con mayor efectividad.</p>
+        <div class="modules"><div class="module"><h3>Módulo I</h3><ul><li>Autoestima</li><li>Nivelación aritmética y ortográfica</li><li>Comportamiento laboral</li><li>Técnicas de estudio</li><li>Toma de decisiones</li><li>Redacción comercial</li></ul></div><div class="module"><h3>Módulo II</h3><ul><li>Principios administrativos</li><li>Contabilidad superior</li><li>Almacén y stock</li><li>Compras y costos</li><li>Estados financieros</li><li>Calidad y presentaciones</li></ul></div><div class="module"><h3>Módulo III</h3><ul><li>ISO 9000 gerencial</li><li>Gerencia por objetivos</li><li>Problemas y decisiones</li><li>Ventas</li><li>Supervisión gerencial</li><li>Word, Excel, PowerPoint e informe final</li></ul></div></div>
+      </article>
+
+      <article class="program">
+        <div class="program-head"><div><h2>Secretariado Ejecutivo</h2><div class="program-meta"><span class="pill">Secretarial</span><span class="pill">Se.011</span><span class="pill">01 año</span></div></div></div>
+        <p class="objective">Objetivo: incorporar conocimientos técnicos de oficina, desarrollar habilidades de ejecución y control, y planificar actividades del área.</p>
+        <div class="modules"><div class="module"><h3>Módulo I</h3><ul><li>Autoestima</li><li>Nivelación aritmética y ortográfica</li><li>Comportamiento laboral</li><li>Técnicas de estudio</li><li>Documentación e investigación</li><li>Redacción comercial</li></ul></div><div class="module"><h3>Módulo II</h3><ul><li>Principios administrativos</li><li>Servicios al cliente</li><li>Archivo y kardex</li><li>Contabilidad básica y complementaria</li><li>Documentos mercantiles</li><li>Calidad y presentaciones</li></ul></div><div class="module"><h3>Módulo III</h3><ul><li>Atención al público</li><li>Administración del trabajo</li><li>Planificación del trabajo</li><li>Procesos administrativos</li><li>Delegación y toma de decisiones</li><li>Computación</li></ul></div></div>
+      </article>
+
+      <article class="program">
+        <div class="program-head"><div><h2>Impresión sobre Plástico</h2><div class="program-meta"><span class="pill">Plástico</span><span class="pill">F.P. Pl.012</span><span class="pill">01 año</span></div></div></div>
+        <p class="objective">Objetivo: identificar y utilizar materiales y equipos para impresión flexográfica y sistema de reproducción a color en flexografía.</p>
+        <div class="modules"><div class="module"><h3>Módulo I</h3><ul><li>Autoestima</li><li>Nivelación aritmética y ortográfica</li><li>Técnicas de estudio</li><li>Documentación e investigación</li><li>Redacción de informes técnicos</li></ul></div><div class="module"><h3>Módulo II</h3><ul><li>Planos mecánicos</li><li>Control estadístico del proceso</li><li>Técnicas de muestreo</li><li>Método de trabajo</li></ul></div><div class="module"><h3>Módulo III</h3><ul><li>Planificación y control de producción</li><li>Análisis químico</li><li>Manejo de tintas y solventes</li><li>Métodos de impresión</li><li>Técnicas de muestreo</li><li>Informe final</li></ul></div></div>
+      </article>
+    </div>
+  </section>
+</main>
+<footer class="footer"><div class="inner"><div class="footer-logo">FUNCECAIND</div><small>FUNDACION PARA LA PLANIFICACION Y DESARROLLO DE CENTROS DE CAPACITACION INDUSTRIAL · RIF J002321385.</small></div></footer>
+</body>
+</html>
