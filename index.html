@@ -60,8 +60,14 @@ nav {
   font-weight: 600;
   color: var(--teal-700);
   letter-spacing: -0.02em;
+  width: 170px;
+  height: 56px;
+  background: url("assets/funcecaind/logo-funcecaind.png") left center / contain no-repeat;
+  overflow: hidden;
+  text-indent: -999px;
+  white-space: nowrap;
 }
-.logo span { color: var(--blue-500); font-style: italic; }
+.logo span { display: none; }
 
 .nav-links { display: flex; gap: 32px; list-style: none; }
 .nav-links a {
@@ -493,14 +499,37 @@ footer {
   font-family: 'Fraunces', serif;
   font-size: 1.3rem;
   color: #fff;
+  width: 190px;
+  height: 74px;
+  background: url("assets/funcecaind/logo-funcecaind.png") left center / contain no-repeat;
+  overflow: hidden;
+  text-indent: -999px;
+  white-space: nowrap;
 }
 .footer-links { display: flex; gap: 24px; font-size: .85rem; }
 .footer-links a { color: rgba(255,255,255,.5); text-decoration: none; transition: color .2s; }
 .footer-links a:hover { color: var(--teal-300); }
+.footer-legal {
+  width: 100%;
+  border-top: 1px solid rgba(255,255,255,.12);
+  padding-top: 18px;
+  color: rgba(255,255,255,.52);
+  font-size: .78rem;
+  line-height: 1.65;
+}
+.footer-legal strong {
+  display: block;
+  color: rgba(255,255,255,.82);
+  margin-bottom: 6px;
+}
+.footer-legal span {
+  display: block;
+}
 
 /* MOBILE */
 @media (max-width: 768px) {
   nav { padding: 14px 20px; }
+  .logo { width: 138px; height: 46px; }
   .nav-links { display: none; }
   .hero { grid-template-columns: 1fr; padding: 100px 20px 60px; }
   .hero-visual { display: none; }
@@ -509,6 +538,8 @@ footer {
   .section, .instructors { padding: 60px 20px; }
   .cta-banner { padding: 60px 20px; }
   footer { padding: 32px 20px; flex-direction: column; text-align: center; }
+  .footer-logo { background-position: center; }
+  .footer-legal { text-align: left; }
 }
 </style>
 </head>
@@ -710,6 +741,14 @@ footer {
     <span>📞 0239-2485225 · 0239-2480709</span>
     <span>🕒 Lun–Sáb · 7:00 a.m. – 3:00 p.m.</span>
     <span>🌐 <a href="https://www.instagram.com/funcecaind/">Instagram</a> · <a href="https://www.facebook.com/p/Funcecaind-100065134325347/">Facebook</a> · <a href="login.html" style="color:var(--teal-300);">Aula virtual</a> · <a href="verificar.html" style="color:var(--teal-300);">Verificar certificado</a></span>
+  </div>
+  <div class="footer-legal" aria-label="Datos legales">
+    <strong>Datos legales</strong>
+    <span>Razón social: FUNDACION PARA LA PLANIFICACION Y DESARROLLO DE CENTROS DE CAPACITACION INDUSTRIAL.</span>
+    <span>RIF: J002321385 · Comprobante: 202501E0000069161471.</span>
+    <span>Domicilio fiscal: CTRA NACIONAL CHARALLAVE - CUA LOCAL S/N URB INDUSTRIAL RIO TUY, HACIENDA LA CULEBRA O MUME, CHARALLAVE, MIRANDA, ZONA POSTAL 1210.</span>
+    <span>Fecha de inscripción: 21/11/1994 · Última actualización: 04/11/2025 · Vencimiento: 04/11/2028.</span>
+    <span>Condición: Contribuyente Ordinario del IVA. Verificación del comprobante digital RIF en www.seniat.gob.ve.</span>
   </div>
   <div style="font-size:.8rem;width:100%;text-align:center;border-top:1px solid rgba(255,255,255,.12);padding-top:18px;margin-top:8px;color:rgba(255,255,255,.45);">© 2026 FUNCECAIND · Charallave, estado Miranda, Venezuela</div>
 </footer>

@@ -336,6 +336,20 @@
   async function resumenCurso(cid) { var r = await sb.rpc("resumen_curso", { cid: cid }); if (r.error) throw r.error; return r.data && r.data[0]; }
   async function progresoCurso(cid) { var r = await sb.rpc("progreso_curso", { cid: cid }); if (r.error) throw r.error; return r.data; }
 
+  async function preguntarIA(d) {
+    var sr = await sb.auth.getSession();
+    var tok = sr.data && sr.data.session && sr.data.session.access_token;
+    if (!tok) throw new Error("No autenticado");
+    var r = await fetch(window.SUPABASE_URL + "/functions/v1/ai-assistant", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "apikey": window.SUPABASE_ANON_KEY, "Authorization": "Bearer " + tok },
+      body: JSON.stringify(d || {})
+    });
+    var j = await r.json().catch(function () { return {}; });
+    if (!r.ok || j.error) throw new Error(j.error || "Error consultando IA");
+    return j;
+  }
+
   function mostrarFaltaConfig() {
     document.addEventListener("DOMContentLoaded", function () {
       var d = document.createElement("div");
@@ -369,6 +383,7 @@
     crearTarea: crearTarea, tareasDeCurso: tareasDeCurso, tareaPorId: tareaPorId, eliminarTarea: eliminarTarea,
     miEntrega: miEntrega, entregarTarea: entregarTarea, entregasDeTarea: entregasDeTarea, calificarEntrega: calificarEntrega, similitudTarea: similitudTarea,
     resumenCurso: resumenCurso, progresoCurso: progresoCurso,
+    preguntarIA: preguntarIA,
     get sb() { return sb; }
   };
 })();

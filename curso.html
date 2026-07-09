@@ -13,6 +13,8 @@
   .lec-row.activa{border-color:var(--teal-500);background:var(--teal-50);font-weight:600}
   .lec-row .ico{font-size:1.1rem}
   .visto{color:var(--teal-500);font-size:.8rem;margin-left:auto}
+  .ai-answer{white-space:pre-wrap;line-height:1.65;color:var(--text-mid);border:1px solid var(--border);border-radius:12px;background:var(--teal-50);padding:14px 16px;margin-top:12px}
+  .ai-answer.err{background:#fef2f2;border-color:#f3c9c9;color:var(--red)}
 </style>
 </head>
 <body>
@@ -36,6 +38,15 @@
       <div class="empty">Elige una lección de la izquierda para verla.</div>
     </div>
   </div>
+  <div class="card" id="ia-card" style="display:none">
+    <h2>Asistente IA</h2>
+    <div class="field">
+      <label>Pregunta sobre este curso</label>
+      <textarea id="ia-pregunta" rows="3" placeholder="Ej. Explícame este tema con un ejemplo práctico"></textarea>
+    </div>
+    <button class="btn btn-sm" id="ia-btn" onclick="preguntarIA()">Preguntar</button>
+    <div id="ia-res"></div>
+  </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -48,6 +59,7 @@ function E(id){return document.getElementById(id);}
 FV.requireRole(['alumno','profesor','admin'], function(user, doc){
   ME=user; MIDOC=doc;
   E('back').href = doc.rol==='alumno' ? 'alumno.html' : 'cursos.html';
+  if(window.ENABLE_AI_ASSISTANT){ E('ia-card').style.display='block'; }
   if(!CID){ E('indice').innerHTML='<div class="empty">Curso no especificado.</div>'; return; }
   cargar();
 });
@@ -103,6 +115,22 @@ async function obtenerCert(){
   var b=E('cert-btn'); if(b){b.disabled=true;b.textContent='Emitiendo…';}
   try{ var r=await FV.emitirCertificado(CID); if(r.certificado) location.href='certificado.html?codigo='+encodeURIComponent(r.certificado.codigo); }
   catch(e){ alert(e.message); if(b){b.disabled=false;b.textContent='Obtener mi certificado';} }
+}
+
+async function preguntarIA(){
+  var pregunta=(E('ia-pregunta').value||'').trim();
+  var res=E('ia-res'), btn=E('ia-btn');
+  if(!window.ENABLE_AI_ASSISTANT){ res.innerHTML='<div class="ai-answer err">La IA no esta activada.</div>'; return; }
+  if(!pregunta){ res.innerHTML='<div class="ai-answer err">Escribe una pregunta.</div>'; return; }
+  btn.disabled=true; btn.textContent='Consultando...';
+  res.innerHTML='<div class="ai-answer">Consultando...</div>';
+  try{
+    var r=await FV.preguntarIA({curso_id:CID,pregunta:pregunta});
+    res.innerHTML='<div class="ai-answer">'+FV.esc(r.respuesta||'Sin respuesta.')+'</div>';
+  }catch(e){
+    res.innerHTML='<div class="ai-answer err">'+FV.esc(e.message||e)+'</div>';
+  }
+  btn.disabled=false; btn.textContent='Preguntar';
 }
 
 function ytId(u){ var m=(u||'').match(/(?:youtu\.be\/|[?&]v=|embed\/)([\w-]{11})/); return m?m[1]:null; }

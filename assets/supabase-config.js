@@ -14,3 +14,7 @@ window.ADMIN_EMAIL = "elearningcharallave@yahoo.com";
 /* JaaS (8x8) — AppID PÚBLICO para las clases en vivo (dominio 8x8.vc).
    El token firmado lo emite la Edge Function 'jaas-token' (la llave es secreta). */
 window.JAAS_APP_ID = "vpaas-magic-cookie-faa3c929c7cf4bfab029740468ec50c9";
+
+/* Asistente IA: activar solo cuando la Edge Function 'ai-assistant' este desplegada
+   y Supabase tenga configurado el secreto OPENAI_API_KEY. */
+window.ENABLE_AI_ASSISTANT = false;

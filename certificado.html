@@ -9,8 +9,12 @@
 <style>
   .cert{max-width:760px;margin:24px auto;background:#fff;border:3px solid var(--teal-700);border-radius:8px;padding:42px 38px;text-align:center;position:relative}
   .cert::after{content:'';position:absolute;inset:10px;border:1px solid var(--teal-300);border-radius:4px;pointer-events:none}
-  .cert .marca{font-family:'Fraunces',serif;font-size:1.6rem;color:var(--teal-700);letter-spacing:1px}
-  .cert .marca span{color:var(--blue-500);font-style:italic}
+  .cert .marca{
+    width:190px;height:88px;margin:0 auto;
+    background:url("assets/funcecaind/logo-funcecaind.png") center/contain no-repeat;
+    overflow:hidden;text-indent:-999px;white-space:nowrap;color:transparent;
+  }
+  .cert .marca span{display:none}
   .cert .tipo{font-size:.8rem;letter-spacing:3px;color:var(--text-light);margin:8px 0 24px;text-transform:uppercase}
   .cert .otorga{color:var(--text-mid);font-size:.95rem}
   .cert .nombre{font-family:'Fraunces',serif;font-size:2.2rem;color:var(--text-dark);margin:8px 0;border-bottom:1px solid var(--border);display:inline-block;padding:0 24px 6px}

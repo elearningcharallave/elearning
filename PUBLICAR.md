@@ -46,6 +46,20 @@ El sitio publicado (Pages / Cloudflare / Netlify) se **actualiza solo** en uno o
 
 ---
 
+## Activar el asistente IA
+
+El asistente IA funciona desde una Edge Function de Supabase, no desde el HTML. Para activarlo:
+
+```bash
+supabase secrets set OPENAI_API_KEY=tu_clave_openai
+supabase secrets set OPENAI_MODEL=gpt-5.6-luna
+supabase functions deploy ai-assistant
+```
+
+Luego cambia `window.ENABLE_AI_ASSISTANT` a `true` en `assets/supabase-config.js`. Si `OPENAI_API_KEY` no está configurada, la función devolverá que falta la configuración y no expondrá ninguna clave en el navegador.
+
+---
+
 ## Recordatorio de seguridad
 
 - Cambia o borra las **cuentas de prueba** (`admin@admin.com`, `profe1/2@test.com`, `alumno1/2/3@test.com`) antes del uso real.
