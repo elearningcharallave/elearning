@@ -33,6 +33,15 @@
     <form onsubmit="return crearCurso(event)">
       <div class="field"><label>Título del curso</label><input id="c-titulo" placeholder="Ej. Ofimática básica" required></div>
       <div class="field"><label>Descripción (opcional)</label><textarea id="c-desc" rows="2" placeholder="De qué trata el curso…"></textarea></div>
+      <div style="display:flex;gap:10px">
+        <div class="field" style="flex:1"><label>Horas académicas</label><input id="c-horas" type="number" min="0" placeholder="Ej. 40"></div>
+        <div class="field" style="flex:2"><label>Especialización</label><input id="c-esp" placeholder="Ej. Ofimática avanzada"></div>
+      </div>
+      <div style="display:flex;gap:10px">
+        <div class="field" style="flex:1"><label>Fecha inicio</label><input id="c-ini" type="date"></div>
+        <div class="field" style="flex:1"><label>Fecha fin</label><input id="c-fin" type="date"></div>
+      </div>
+      <div class="sub" style="margin:-4px 0 8px;font-size:.78rem">Estos datos aparecerán en el certificado del alumno.</div>
       <div class="msg" id="c-msg"></div>
       <button class="btn" id="c-btn" type="submit">Crear curso</button>
     </form>
@@ -155,7 +164,7 @@ async function crearCurso(ev){
   ev.preventDefault();
   var b=E('c-btn'); b.disabled=true; b.textContent='Creando…';
   try{
-    await FV.crearCurso({titulo:E('c-titulo').value.trim(), descripcion:E('c-desc').value.trim()});
+    await FV.crearCurso({titulo:E('c-titulo').value.trim(), descripcion:E('c-desc').value.trim(), horas:parseInt(E('c-horas').value)||null, especializacion:E('c-esp').value.trim(), fecha_inicio:E('c-ini').value||null, fecha_fin:E('c-fin').value||null});
     E('c-titulo').value=''; E('c-desc').value=''; cmsg('c-msg','✅ Curso creado.',true);
     cargarCursos();
   }catch(e){ cmsg('c-msg','❌ '+e.message,false); }

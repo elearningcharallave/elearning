@@ -4,6 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Prueba de Acceso — Teleformación</title>
+<script>
+/* Acceso restringido: solo usuarios registrados (alumno/profesor).
+   Si no hay sesión de Supabase, se envía al login/registro. */
+if(!localStorage.getItem('sb-nfptkjlxcmoegphhvnam-auth-token')){ location.replace('../login.html'); }
+</script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Sora:wght@400;600;700&display=swap');

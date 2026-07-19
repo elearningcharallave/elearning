@@ -31,8 +31,19 @@
     <!-- REGISTRO ALUMNO -->
     <form id="form-reg" style="display:none" onsubmit="return doReg(event)">
       <div class="field"><label>Nombre completo</label><input type="text" id="r-nombre" placeholder="Ej. María González" required></div>
+      <div class="field"><label>Cédula</label><input type="text" id="r-cedula" placeholder="V-12345678" required></div>
+      <div class="field"><label>Fecha de nacimiento</label><input type="date" id="r-fnac" required></div>
+      <div class="field"><label>Teléfono móvil</label><input type="tel" id="r-tel" placeholder="0414-1234567" required></div>
+      <div class="field"><label>Dirección</label><input type="text" id="r-dir" placeholder="Sector, calle, casa…" required></div>
+      <div class="field"><label>Ciudad</label><input type="text" id="r-ciudad" placeholder="Charallave" required></div>
+      <div class="field"><label>Especialidad / Área de interés <span style="color:var(--text-light);font-weight:400">(opcional)</span></label><input type="text" id="r-esp" placeholder="Ej. Ofimática, Electricidad…"></div>
+      <div class="field"><label>Foto de perfil (identificación)</label><input type="file" id="r-foto" accept="image/*" required></div>
       <div class="field"><label>Correo</label><input type="email" id="r-email" placeholder="tucorreo@correo.com" required></div>
       <div class="field"><label>Contraseña (mín. 6)</label><input type="password" id="r-pass" placeholder="••••••••" minlength="6" required></div>
+      <label style="display:flex;gap:8px;align-items:flex-start;font-size:.85rem;color:var(--text-mid,#475569);margin:4px 0 12px;cursor:pointer">
+        <input type="checkbox" id="r-consent" style="margin-top:3px;flex-shrink:0" required>
+        <span>He leído y acepto la <a href="privacidad.html" target="_blank" rel="noopener">Política de Privacidad y Tratamiento de Datos</a>. Autorizo el uso de mis datos para mi formación, según lo allí descrito.</span>
+      </label>
       <div class="msg" id="r-msg"></div>
       <button class="btn btn-blue btn-block" id="r-btn" type="submit">Crear mi cuenta de alumno</button>
       <p class="muted">Las cuentas de profesor las crea el administrador.</p>
@@ -67,6 +78,9 @@ if(!FV.configOk()){
 } else {
   FV.redirigirSiSesion();  // si ya hay sesión, va directo al panel
 }
+if(new URLSearchParams(location.search).get('bloqueado')){
+  show('l-msg','⛔ Tu cuenta está bloqueada. Contacta al administrador.',false);
+}
 
 async function olvide(){
   var email=(document.getElementById('l-email').value||'').trim();
@@ -84,12 +98,21 @@ async function doLogin(ev){
   }catch(e){ show('l-msg',traduce(e),false); b.disabled=false; b.textContent='Entrar'; }
   return false;
 }
+function v(id){ return (document.getElementById(id).value||'').trim(); }
 async function doReg(ev){
   ev.preventDefault();
+  if(!document.getElementById('r-consent').checked){
+    show('r-msg','Debes aceptar la Política de Privacidad para crear tu cuenta.',false);
+    return false;
+  }
   var b=document.getElementById('r-btn'); b.disabled=true; b.textContent='Creando…';
   try{
-    var rol = await FV.registrarAlumno(document.getElementById('r-nombre').value.trim(),
-      document.getElementById('r-email').value.trim(), document.getElementById('r-pass').value);
+    var foto=document.getElementById('r-foto').files[0]||null;
+    var rol = await FV.registrarAlumno({
+      nombre: v('r-nombre'), email: v('r-email'), pass: document.getElementById('r-pass').value,
+      cedula: v('r-cedula'), fecha_nac: v('r-fnac'), telefono: v('r-tel'), direccion: v('r-dir'),
+      ciudad: v('r-ciudad'), especialidad: v('r-esp'), foto: foto, consentimiento: true
+    });
     location.href = FV.panelDe(rol);
   }catch(e){ show('r-msg',traduce(e),false); b.disabled=false; b.textContent='Crear mi cuenta de alumno'; }
   return false;

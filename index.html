@@ -139,14 +139,24 @@ nav {
 }
 
 .hero-institution {
-  max-width: 560px;
-  margin-bottom: 18px;
+  max-width: 640px;
+  margin: 0 auto 6px;
+  text-align: center;
   color: var(--teal-700);
-  font-size: .95rem;
+  font-size: 1.14rem;            /* 20% más grande que el .95rem original */
   line-height: 1.35;
   font-weight: 700;
   text-transform: uppercase;
   animation: fadeUp .7s .16s both ease;
+}
+.hero-tagline {
+  text-align: center;
+  color: var(--teal-500);
+  font-weight: 500;
+  font-size: .98rem;
+  letter-spacing: .02em;
+  margin: 0 auto 26px;
+  animation: fadeUp .7s .2s both ease;
 }
 
 @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(1.3)} }
@@ -602,21 +612,21 @@ footer {
   <div class="logo">Funce<span>Caind</span></div>
   <ul class="nav-links">
     <li><a href="#cursos">Cursos</a></li>
-    <li><a href="catalogo-2026.html">Catálogo 2026</a></li>
-    <li><a href="pensum-fp-emp.html">Pensum F.P EMP</a></li>
+    <li><a href="catalogo-2026.html">Catálogo</a></li>
+    <li><a href="pensum-fp-emp.html">Pensum</a></li>
     <li><a href="#pruebas">Pruebas</a></li>
     <li><a href="#nosotros">Nosotros</a></li>
     <li><a href="resena-historica.html">Reseña</a></li>
     <li><a href="#contacto">Contacto</a></li>
   </ul>
-  <button class="nav-cta" onclick="location.href='login.html'">Entrar al aula →</button>
+  <a href="login.html" title="Acceso para alumnos y profesores registrados" style="font-size:.8rem;color:var(--text-light);text-decoration:none;font-weight:500;border:1px solid var(--border);padding:6px 13px;border-radius:8px;transition:color .2s,border-color .2s;" onmouseover="this.style.color='var(--teal-700)';this.style.borderColor='var(--teal-300)'" onmouseout="this.style.color='var(--text-light)';this.style.borderColor='var(--border)'">Iniciar sesión</a>
 </nav>
 
 <!-- HERO -->
 <section class="hero">
   <div class="hero-text">
-    <div class="hero-badge">🟢 Teleformación técnica y ofimática · Venezuela</div>
     <div class="hero-institution">FUNDACIÓN PARA LA PLANIFICACIÓN Y DESARROLLO<br>DE CENTROS DE CAPACITACIÓN INDUSTRIAL</div>
+    <div class="hero-tagline">Teleformación técnica y ofimática · Venezuela</div>
     <h1>Aprende a tu ritmo,<br><em>crece sin límites</em></h1>
     <p>Formación en línea en ofimática y áreas técnicas, con evaluaciones, materiales actualizados y certificado al finalizar. Accesible desde tu computadora o tu celular.</p>
     <div class="hero-actions">
@@ -628,32 +638,27 @@ footer {
   <div class="hero-visual">
     <div class="hero-card">
       <div class="card-header">
-        <div class="card-avatar">MG</div>
+        <div class="card-avatar">🎓</div>
         <div>
-          <div class="card-title">María González</div>
-          <div class="card-sub">Ofimática · Nivel básico</div>
+          <div class="card-title">Tu formación, paso a paso</div>
+          <div class="card-sub">Ofimática · Técnica · Certificable</div>
         </div>
       </div>
-      <div style="font-size:.82rem;color:var(--text-light);margin-bottom:4px;">Progreso del curso</div>
-      <div class="progress-bar"><div class="progress-fill" style="width:72%"></div></div>
-      <div class="progress-label">72% completado · 1 módulo restante</div>
       <div class="modules">
         <div class="module-item">
-          <div class="module-icon">📝</div>
-          <span>Word: documentos</span>
-          <span class="module-done">✓ Listo</span>
+          <div class="module-icon">🎥</div>
+          <span>Clases en vivo por videollamada</span>
         </div>
         <div class="module-item">
-          <div class="module-icon">📊</div>
-          <span>Excel: fórmulas básicas</span>
-          <span class="module-done">✓ Listo</span>
+          <div class="module-icon">📚</div>
+          <span>Materiales y evaluaciones en línea</span>
         </div>
         <div class="module-item">
-          <div class="module-icon">🎓</div>
-          <span>Evaluación final</span>
-          <span class="module-pending">En curso</span>
+          <div class="module-icon">🏅</div>
+          <span>Certificado con validez institucional</span>
         </div>
       </div>
+      <div style="font-size:.78rem;color:var(--text-light);margin-top:14px;text-align:center;">Tu progreso aparece aquí al iniciar sesión.</div>
     </div>
   </div>
 </section>
@@ -668,7 +673,7 @@ footer {
 <!-- CURSOS -->
 <section class="section" id="cursos">
   <div class="section-label">Catálogo</div>
-  <h2 class="section-title">Cursos diseñados para el mundo real</h2>
+  <h2 class="section-title">Formación Profesional, modalidad teleformación diseñada para el empleo en el mundo real.</h2>
   <p style="color:var(--text-mid);max-width:680px;margin:-32px 0 40px;font-weight:300;line-height:1.7;">Consulta el catálogo 2026 completo y los pensum F.P EMP de los programas que se dictan en FUNCECAIND.</p>
   <div style="display:flex;gap:12px;flex-wrap:wrap;margin:-22px 0 34px;">
     <button class="btn-secondary" onclick="location.href='catalogo-2026.html'">Ver catálogo 2026</button>
@@ -682,7 +687,7 @@ footer {
         <span class="course-tag">Ofimática</span>
         <div class="course-name">Microsoft Word — Nivel básico</div>
         <div class="course-meta"><span>⏱ 12 horas</span><span>📄 Documentos</span><span>🎓 Certificado</span></div>
-        <button class="course-cta" onclick="location.href='pruebas/test-word.html'">Hacer test de Word →</button>
+        <button class="course-cta" onclick="location.href='login.html'">Ver en el aula →</button>
       </div>
     </div>
     <div class="course-card">
@@ -691,7 +696,7 @@ footer {
         <span class="course-tag">Ofimática</span>
         <div class="course-name">Microsoft Excel — Hojas de cálculo</div>
         <div class="course-meta"><span>⏱ 16 horas</span><span>📈 Fórmulas</span><span>🎓 Certificado</span></div>
-        <button class="course-cta" onclick="location.href='pruebas/test-excel.html'">Hacer test de Excel →</button>
+        <button class="course-cta" onclick="location.href='login.html'">Ver en el aula →</button>
       </div>
     </div>
     <div class="course-card">
@@ -792,6 +797,27 @@ footer {
     <p style="margin-top:18px;">La fundación forma profesionalmente mano de obra calificada y desarrolla programas acordes con las necesidades reales de la industria, combinando formación técnica, cursos, talleres y actualización profesional.</p>
     <p style="margin-top:22px;"><button class="btn-secondary" onclick="location.href='resena-historica.html'">Leer reseña histórica</button></p>
   </div>
+
+  <!-- TESTIMONIOS -->
+  <div style="margin-top:56px;">
+    <div class="section-label">Testimonios</div>
+    <h3 style="font-family:'Fraunces',serif;font-size:1.6rem;font-weight:600;color:var(--text-dark);margin-bottom:28px;">Lo que dicen quienes se han formado con nosotros</h3>
+    <div class="courses-grid">
+      <div class="course-card" style="padding:24px;">
+        <p style="color:var(--text-mid);font-style:italic;line-height:1.7;">"El curso de Excel me abrió las puertas a un mejor empleo. Las clases en vivo y el certificado marcaron la diferencia."</p>
+        <div style="margin-top:16px;font-weight:600;color:var(--teal-700);font-size:.9rem;">Egresada — Ofimática</div>
+      </div>
+      <div class="course-card" style="padding:24px;">
+        <p style="color:var(--text-mid);font-style:italic;line-height:1.7;">"Capacitamos a nuestro personal en seguridad industrial con FUNCECAIND. Formación seria y adaptada a la realidad de la industria."</p>
+        <div style="margin-top:16px;font-weight:600;color:var(--teal-700);font-size:.9rem;">Empresa del sector industrial — Valles del Tuy</div>
+      </div>
+      <div class="course-card" style="padding:24px;">
+        <p style="color:var(--text-mid);font-style:italic;line-height:1.7;">"Más de 40 años formando talento en Charallave, con instructores de experiencia real en cada área."</p>
+        <div style="margin-top:16px;font-weight:600;color:var(--teal-700);font-size:.9rem;">Aliado institucional</div>
+      </div>
+    </div>
+    <p style="margin-top:14px;color:var(--text-light);font-size:.82rem;">¿Te formaste con nosotros o eres una empresa aliada? Comparte tu testimonio en <a href="#contacto" style="color:var(--teal-700);font-weight:600;">Contacto</a>.</p>
+  </div>
 </section>
 
 <!-- CTA FINAL -->
@@ -801,8 +827,34 @@ footer {
   <button class="btn-white" onclick="location.href='pruebas/acceso-alumno.html'">Hacer prueba de acceso</button>
 </section>
 
+<!-- CONTACTO -->
+<section class="section" id="contacto" style="background:var(--teal-50);">
+  <div class="section-label">Contacto</div>
+  <h2 class="section-title">¿Necesitas información?</h2>
+  <p style="color:var(--text-mid);max-width:560px;margin:-32px 0 32px;font-weight:300;">Déjanos tus datos y te enviaremos la información que solicitas sobre cursos, inscripciones o formación para tu empresa.</p>
+  <form onsubmit="return enviarContacto(event)" style="max-width:540px;display:flex;flex-direction:column;gap:14px;">
+    <input id="c-nombre" placeholder="Nombre y apellido" required style="padding:13px 16px;border:1.5px solid var(--teal-100);border-radius:12px;font-family:'DM Sans',sans-serif;font-size:1rem;background:#fff;">
+    <input id="c-correo" type="email" placeholder="Correo electrónico" required style="padding:13px 16px;border:1.5px solid var(--teal-100);border-radius:12px;font-family:'DM Sans',sans-serif;font-size:1rem;background:#fff;">
+    <input id="c-movil" placeholder="Móvil (opcional)" style="padding:13px 16px;border:1.5px solid var(--teal-100);border-radius:12px;font-family:'DM Sans',sans-serif;font-size:1rem;background:#fff;">
+    <textarea id="c-msg" rows="3" placeholder="¿Qué información necesitas?" style="padding:13px 16px;border:1.5px solid var(--teal-100);border-radius:12px;font-family:'DM Sans',sans-serif;font-size:1rem;background:#fff;resize:vertical;"></textarea>
+    <button class="btn-primary" type="submit" style="align-self:flex-start;">Enviar solicitud →</button>
+  </form>
+</section>
+<script>
+function enviarContacto(e){
+  e.preventDefault();
+  var n=document.getElementById('c-nombre').value.trim();
+  var c=document.getElementById('c-correo').value.trim();
+  var m=document.getElementById('c-movil').value.trim();
+  var msg=document.getElementById('c-msg').value.trim();
+  var body='Nombre: '+n+'\nCorreo: '+c+'\nMóvil: '+(m||'(no indicado)')+'\n\nMensaje:\n'+(msg||'(sin mensaje)');
+  window.location.href='mailto:funcecaind@gmail.com?subject='+encodeURIComponent('Solicitud de información — '+n)+'&body='+encodeURIComponent(body);
+  return false;
+}
+</script>
+
 <!-- FOOTER -->
-<footer id="contacto">
+<footer id="pie">
   <div style="max-width:300px;">
     <div class="footer-logo">Funce<span style="color:var(--teal-300);font-style:italic;">Caind</span></div>
     <div style="font-size:.8rem;margin-top:8px;line-height:1.6;color:rgba(255,255,255,.5);">Fundación para la Planificación y Desarrollo de Centros de Capacitación Industrial · 42 años formando en Venezuela.</div>

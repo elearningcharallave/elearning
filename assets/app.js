@@ -49,6 +49,8 @@
       try {
         var perfil = await perfilDe(session.user.id);
         if (!perfil) { await sb.auth.signOut(); location.href = "login.html"; return; }
+        // Bloqueo (#6): una cuenta inactiva no puede usar la plataforma.
+        if (perfil.activo === false) { await sb.auth.signOut(); location.href = "login.html?bloqueado=1"; return; }
         if (roles.indexOf(perfil.rol) === -1) { location.href = panelDe(perfil.rol); return; }
         cb(wrapUser(session.user), perfil);
       } catch (e) { console.error(e); alert("Error cargando tu perfil: " + (e.message || e)); }
@@ -68,15 +70,49 @@
     var r = await sb.auth.signInWithPassword({ email: email, password: pass });
     if (r.error) throw r.error;
     var p = await perfilDe(r.data.user.id);
+    // Bloqueo (#6): cuenta inactiva no puede entrar.
+    if (p && p.activo === false) { try { await sb.auth.signOut(); } catch (e) {} throw new Error("Tu cuenta está bloqueada. Contacta al administrador."); }
     return p || { rol: "alumno" };
   }
 
-  async function registrarAlumno(nombre, email, pass) {
-    var r = await sb.auth.signUp({ email: email, password: pass, options: { data: { nombre: nombre } } });
+  // Registro de alumno (#7): recibe un objeto con la identificación completa.
+  // d = { nombre, email, pass, consentimiento, cedula, telefono, direccion,
+  //       ciudad, especialidad, fecha_nac, foto (File opcional) }
+  async function registrarAlumno(d) {
+    d = d || {};
+    // LOPDP: no se crea la cuenta sin consentimiento explícito.
+    if (!d.consentimiento) throw new Error("Debes aceptar la Política de Privacidad para crear tu cuenta.");
+    var meta = {
+      nombre: d.nombre,
+      cedula: d.cedula || "", telefono: d.telefono || "", direccion: d.direccion || "",
+      ciudad: d.ciudad || "", especialidad: d.especialidad || "", fecha_nac: d.fecha_nac || "",
+      consentimiento: true, consentimiento_en: new Date().toISOString()
+    };
+    var r = await sb.auth.signUp({ email: d.email, password: d.pass, options: { data: meta } });
     if (r.error) throw r.error;
     if (!r.data.session) { throw new Error("Revisa tu correo para confirmar la cuenta antes de entrar."); }
-    var p = await perfilDe(r.data.user.id);
+    var uid = r.data.user.id;
+    // Foto de perfil (best-effort: si falla, no bloquea el registro).
+    if (d.foto) {
+      try {
+        var ext = ((d.foto.name || "").split(".").pop() || "jpg").toLowerCase();
+        if (["jpg", "jpeg", "png", "webp"].indexOf(ext) === -1) ext = "jpg";
+        var path = uid + "/perfil." + ext;
+        var up = await sb.storage.from("perfiles").upload(path, d.foto, { upsert: true, contentType: d.foto.type || "image/jpeg" });
+        if (!up.error) {
+          var url = sb.storage.from("perfiles").getPublicUrl(path).data.publicUrl;
+          await sb.from("perfiles").update({ foto_url: url }).eq("id", uid);
+        }
+      } catch (e) { /* la foto es opcional */ }
+    }
+    var p = await perfilDe(uid);
     return p ? p.rol : "alumno";
+  }
+
+  // Bloquear / activar un usuario (#6). Solo admin (RLS lo exige).
+  async function setActivo(id, activo) {
+    var r = await sb.from("perfiles").update({ activo: !!activo }).eq("id", id);
+    if (r.error) throw r.error;
   }
 
   // El ADMIN crea una cuenta de PROFESOR sin perder su propia sesión.
@@ -243,6 +279,8 @@
     var ses = await sesion(); if (!ses) throw new Error("Sin sesión");
     var r = await sb.from("cursos").insert({
       titulo: d.titulo, descripcion: d.descripcion || null,
+      horas: d.horas || null, especializacion: d.especializacion || null,
+      fecha_inicio: d.fecha_inicio || null, fecha_fin: d.fecha_fin || null,
       profesor_id: ses.user.uid, profesor_nombre: (ses.perfil && ses.perfil.nombre) || ses.user.email,
       publicado: !!d.publicado
     }).select("id").single();
@@ -364,7 +402,7 @@
   window.FV = {
     configOk: configOk, panelDe: panelDe, esc: esc, requireRole: requireRole, redirigirSiSesion: redirigirSiSesion,
     login: login, registrarAlumno: registrarAlumno, crearProfesor: crearProfesor, logout: logout,
-    listarUsuarios: listarUsuarios, crearClase: crearClase, salaCodigo: salaCodigo,
+    listarUsuarios: listarUsuarios, setActivo: setActivo, crearClase: crearClase, salaCodigo: salaCodigo,
     clasesDeProfesor: clasesDeProfesor, todasLasClases: todasLasClases, eliminarClase: eliminarClase,
     sesion: sesion, guardarResultado: guardarResultado, todosResultados: todosResultados, misResultados: misResultados,
     resetPassword: resetPassword, actualizarPassword: actualizarPassword,

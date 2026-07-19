@@ -19,8 +19,13 @@
   .cert .otorga{color:var(--text-mid);font-size:.95rem}
   .cert .nombre{font-family:'Fraunces',serif;font-size:2.2rem;color:var(--text-dark);margin:8px 0;border-bottom:1px solid var(--border);display:inline-block;padding:0 24px 6px}
   .cert .curso{font-size:1.15rem;color:var(--teal-700);font-weight:600;margin:14px 0}
-  .cert .pie{display:flex;justify-content:space-between;margin-top:34px;font-size:.78rem;color:var(--text-light);text-align:left}
+  .cert .pie{display:flex;justify-content:space-between;align-items:flex-end;margin-top:30px;font-size:.78rem;color:var(--text-light);text-align:left}
   .cert .codigo{font-family:monospace;color:var(--text-mid)}
+  .cert .detalles{display:flex;justify-content:center;flex-wrap:wrap;gap:10px 26px;margin:18px 0 6px}
+  .cert .det{font-size:.8rem;color:var(--text-light)}
+  .cert .det b{display:block;color:var(--text-dark);font-size:.92rem}
+  .cert #qr{display:inline-block;padding:5px;background:#fff;border:1px solid var(--border);border-radius:6px}
+  .cert #qr img,.cert #qr canvas{display:block}
 </style>
 </head>
 <body>
@@ -38,8 +43,9 @@
 <script src="assets/supabase-config.js"></script>
 <script src="assets/app.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
 <script>
-var CODIGO=new URLSearchParams(location.search).get('codigo'), CERT=null;
+var CODIGO=new URLSearchParams(location.search).get('codigo'), CERT=null, VERIFY_URL='';
 function E(id){return document.getElementById(id);}
 
 (async function(){
@@ -49,7 +55,13 @@ function E(id){return document.getElementById(id);}
     var rows=await FV.verificarCertificado(CODIGO);
     if(!rows || !rows.length){ E('cont').innerHTML='<div class="empty">Certificado no encontrado.</div>'; return; }
     CERT=rows[0];
+    var fmt=function(x){ return x ? new Date(x+'T00:00:00').toLocaleDateString('es-VE',{day:'2-digit',month:'long',year:'numeric'}) : null; };
     var fecha=new Date(CERT.emitido_en).toLocaleDateString('es-VE',{day:'2-digit',month:'long',year:'numeric'});
+    VERIFY_URL=location.origin+location.pathname.replace('certificado.html','verificar.html')+'?codigo='+encodeURIComponent(CODIGO);
+    var det='';
+    if(CERT.especializacion) det+='<div class="det"><span>Especialización</span><b>'+FV.esc(CERT.especializacion)+'</b></div>';
+    if(CERT.horas) det+='<div class="det"><span>Horas académicas</span><b>'+CERT.horas+' h</b></div>';
+    if(CERT.fecha_inicio||CERT.fecha_fin) det+='<div class="det"><span>Período de formación</span><b>'+(fmt(CERT.fecha_inicio)||'—')+' — '+(fmt(CERT.fecha_fin)||'—')+'</b></div>';
     E('cont').innerHTML='<div class="cert">'+
       '<div class="marca">Funce<span>Caind</span></div>'+
       '<div class="tipo">Certificado de finalización</div>'+
@@ -57,29 +69,44 @@ function E(id){return document.getElementById(id);}
       '<div class="nombre">'+FV.esc(CERT.alumno_nombre)+'</div>'+
       '<div class="otorga">por haber completado satisfactoriamente el curso</div>'+
       '<div class="curso">'+FV.esc(CERT.curso_titulo)+'</div>'+
-      '<div class="pie"><div>Fecha de emisión<br><b style="color:var(--text-mid)">'+fecha+'</b></div>'+
-        '<div style="text-align:right">Código de verificación<br><span class="codigo">'+FV.esc(CODIGO)+'</span></div></div>'+
+      (det?'<div class="detalles">'+det+'</div>':'')+
+      '<div class="pie">'+
+        '<div>Fecha de emisión<br><b style="color:var(--text-mid)">'+fecha+'</b></div>'+
+        '<div style="text-align:center"><div id="qr"></div><div style="font-size:.62rem;margin-top:4px">Escanea para verificar</div></div>'+
+        '<div style="text-align:right">Código de verificación<br><span class="codigo">'+FV.esc(CODIGO)+'</span></div>'+
       '</div>'+
-      '<p style="text-align:center;font-size:.82rem;color:var(--text-light)">Verifica este certificado en '+location.origin+location.pathname.replace('certificado.html','verificar.html')+'?codigo='+encodeURIComponent(CODIGO)+'</p>';
+      '</div>'+
+      '<p style="text-align:center;font-size:.82rem;color:var(--text-light)">Verifica la autenticidad en<br><span style="color:var(--teal-700)">'+VERIFY_URL+'</span></p>';
+    try{ new QRCode(document.getElementById('qr'), {text:VERIFY_URL, width:82, height:82, correctLevel:QRCode.CorrectLevel.M}); }catch(e){}
     E('acciones').innerHTML='<button class="btn" onclick="pdf()">⬇ Descargar PDF</button>';
   }catch(e){ E('cont').innerHTML='<div class="empty">Error: '+e.message+'</div>'; }
 })();
 
 function pdf(){
   var jsPDF=window.jspdf.jsPDF; var d=new jsPDF({orientation:'landscape',unit:'mm',format:'a4'});
-  var W=297,H=210, teal='#0f6e56';
+  var W=297,H=210;
+  var fmt=function(x){ return x ? new Date(x+'T00:00:00').toLocaleDateString('es-VE',{day:'2-digit',month:'2-digit',year:'numeric'}) : '—'; };
   d.setDrawColor(15,110,86); d.setLineWidth(2); d.rect(10,10,W-20,H-20);
   d.setLineWidth(0.4); d.rect(15,15,W-30,H-30);
-  d.setFont('times','bold'); d.setTextColor(15,110,86); d.setFontSize(30); d.text('FUNCECAIND',W/2,40,{align:'center'});
-  d.setFont('helvetica','normal'); d.setTextColor(120,120,120); d.setFontSize(11); d.text('CERTIFICADO DE FINALIZACIÓN',W/2,50,{align:'center'});
-  d.setTextColor(80,80,80); d.setFontSize(13); d.text('Se otorga el presente certificado a',W/2,78,{align:'center'});
-  d.setFont('times','bold'); d.setTextColor(6,40,32); d.setFontSize(28); d.text(CERT.alumno_nombre,W/2,95,{align:'center'});
-  d.setFont('helvetica','normal'); d.setTextColor(80,80,80); d.setFontSize(13); d.text('por haber completado satisfactoriamente el curso',W/2,110,{align:'center'});
-  d.setFont('times','bold'); d.setTextColor(15,110,86); d.setFontSize(18); d.text(CERT.curso_titulo,W/2,124,{align:'center'});
+  d.setFont('times','bold'); d.setTextColor(15,110,86); d.setFontSize(30); d.text('FUNCECAIND',W/2,38,{align:'center'});
+  d.setFont('helvetica','normal'); d.setTextColor(120,120,120); d.setFontSize(11); d.text('CERTIFICADO DE FINALIZACIÓN',W/2,47,{align:'center'});
+  d.setTextColor(80,80,80); d.setFontSize(13); d.text('Se otorga el presente certificado a',W/2,72,{align:'center'});
+  d.setFont('times','bold'); d.setTextColor(6,40,32); d.setFontSize(26); d.text(CERT.alumno_nombre,W/2,88,{align:'center'});
+  d.setFont('helvetica','normal'); d.setTextColor(80,80,80); d.setFontSize(13); d.text('por haber completado satisfactoriamente',W/2,101,{align:'center'});
+  d.setFont('times','bold'); d.setTextColor(15,110,86); d.setFontSize(17); d.text(CERT.curso_titulo,W/2,113,{align:'center'});
+  var linea=[];
+  if(CERT.especializacion) linea.push('Especialización: '+CERT.especializacion);
+  if(CERT.horas) linea.push(CERT.horas+' horas académicas');
+  if(CERT.fecha_inicio||CERT.fecha_fin) linea.push('Del '+fmt(CERT.fecha_inicio)+' al '+fmt(CERT.fecha_fin));
+  d.setFont('helvetica','normal'); d.setTextColor(90,90,90); d.setFontSize(10.5);
+  if(linea.length) d.text(linea.join('    ·    '),W/2,125,{align:'center'});
+  // Código QR de verificación (esquina inferior derecha)
+  try{ var qc=document.querySelector('#qr canvas'); if(qc){ d.addImage(qc.toDataURL('image/png'),'PNG',W-50,152,26,26); d.setFontSize(7); d.setTextColor(120,120,120); d.text('Escanea para verificar',W-37,181,{align:'center'}); } }catch(e){}
   var fecha=new Date(CERT.emitido_en).toLocaleDateString('es-VE',{day:'2-digit',month:'long',year:'numeric'});
   d.setFont('helvetica','normal'); d.setTextColor(110,110,110); d.setFontSize(10);
-  d.text('Fecha: '+fecha,40,180); d.text('Código: '+CODIGO,W-40,180,{align:'right'});
-  d.text('Charallave, estado Miranda · Venezuela',W/2,190,{align:'center'});
+  d.text('Fecha de emisión: '+fecha,26,166); d.text('Código: '+CODIGO,26,173);
+  d.setFontSize(7.5); d.text('Verifica en: '+VERIFY_URL,26,180);
+  d.setFontSize(9); d.setTextColor(130,130,130); d.text('Charallave, estado Miranda · Venezuela',W/2,196,{align:'center'});
   d.save('Certificado-'+CODIGO+'.pdf');
 }
 </script>

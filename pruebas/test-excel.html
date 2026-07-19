@@ -6,6 +6,11 @@
 <title>Test de Excel — FUNCECAIND</title>
 <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
 <link rel="stylesheet" href="../assets/styles.css">
+<script>
+/* Acceso restringido: solo usuarios registrados (alumno/profesor).
+   Si no hay sesión de Supabase, se envía al login/registro. */
+if(!localStorage.getItem('sb-nfptkjlxcmoegphhvnam-auth-token')){ location.replace('../login.html'); }
+</script>
 </head>
 <body>
 <div class="topbar">
