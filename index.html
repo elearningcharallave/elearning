@@ -8,7 +8,7 @@
 <meta name="description" content="FUNCECAIND — Aula virtual de teleformación en Charallave, Venezuela. Ofimática (Word, Excel), seguridad industrial, electricidad e informática con clases en vivo.">
 <meta name="theme-color" content="#0f6e56">
 <meta property="og:title" content="FUNCECAIND — Aula Virtual">
-<meta property="og:description" content="Formación técnica y ofimática en línea, con clases en vivo. 42 años formando en Venezuela.">
+<meta property="og:description" content="Formación técnica y ofimática en línea, con clases en vivo. 40 años formando en Venezuela.">
 <meta property="og:type" content="website">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,600;1,300&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
@@ -611,13 +611,11 @@ footer {
 <nav>
   <div class="logo">Funce<span>Caind</span></div>
   <ul class="nav-links">
-    <li><a href="#cursos">Cursos</a></li>
-    <li><a href="catalogo-2026.html">Catálogo</a></li>
+    <li><a href="index.html">Inicio</a></li>
+    <li><a href="catalogo-2026.html">Cursos</a></li>
     <li><a href="pensum-fp-emp.html">Pensum</a></li>
-    <li><a href="#pruebas">Pruebas</a></li>
-    <li><a href="#nosotros">Nosotros</a></li>
-    <li><a href="resena-historica.html">Reseña</a></li>
-    <li><a href="#contacto">Contacto</a></li>
+    <li><a href="resena-historica.html">Nosotros</a></li>
+    <li><a href="login.html">Aula Virtual</a></li>
   </ul>
   <a href="login.html" title="Acceso para alumnos y profesores registrados" style="font-size:.8rem;color:var(--text-light);text-decoration:none;font-weight:500;border:1px solid var(--border);padding:6px 13px;border-radius:8px;transition:color .2s,border-color .2s;" onmouseover="this.style.color='var(--teal-700)';this.style.borderColor='var(--teal-300)'" onmouseout="this.style.color='var(--text-light)';this.style.borderColor='var(--border)'">Iniciar sesión</a>
 </nav>
@@ -662,6 +660,49 @@ footer {
     </div>
   </div>
 </section>
+<section class="section" id="contacto" style="background:var(--teal-50);">
+  <div class="section-label">Contacto</div>
+  <h2 class="section-title">¿Necesitas información?</h2>
+  <p style="color:var(--text-mid);max-width:560px;margin:-32px 0 14px;font-weight:300;">Déjanos tus datos y te enviaremos la información que solicitas sobre cursos, inscripciones o formación para tu empresa.</p>
+  <!-- Se dice cuál es obligatorio ANTES de que la persona empiece a escribir.
+       El asterisco rojo al enviar llega tarde: para entonces ya rellenó todo
+       y siente que le regañan. -->
+  <p style="color:var(--text-light);max-width:560px;margin:0 0 26px;font-size:.85rem;"><strong style="color:var(--teal-700);">Nombre y correo son obligatorios</strong> — son los datos con los que te enviamos la información. El móvil es opcional.</p>
+  <form onsubmit="return enviarContacto(event)" style="max-width:540px;display:flex;flex-direction:column;gap:14px;">
+    <input id="c-nombre" placeholder="Nombre y apellido *" required style="padding:13px 16px;border:1.5px solid var(--teal-100);border-radius:12px;font-family:'DM Sans',sans-serif;font-size:1rem;background:#fff;">
+    <input id="c-correo" type="email" placeholder="Correo electrónico *" required style="padding:13px 16px;border:1.5px solid var(--teal-100);border-radius:12px;font-family:'DM Sans',sans-serif;font-size:1rem;background:#fff;">
+    <input id="c-movil" placeholder="Móvil (opcional)" style="padding:13px 16px;border:1.5px solid var(--teal-100);border-radius:12px;font-family:'DM Sans',sans-serif;font-size:1rem;background:#fff;">
+    <textarea id="c-msg" rows="3" placeholder="¿Qué información necesitas?" style="padding:13px 16px;border:1.5px solid var(--teal-100);border-radius:12px;font-family:'DM Sans',sans-serif;font-size:1rem;background:#fff;resize:vertical;"></textarea>
+    <button class="btn-primary" type="submit" style="align-self:flex-start;">Enviar solicitud →</button>
+  </form>
+</section>
+
+<!-- NOVEDADES · pedida en las modificaciones del 10/08/2026.
+     Va sin noticias de relleno a proposito: aqui se anuncian inicios de
+     cohorte, cursos nuevos y fechas de inscripcion. Para publicar una,
+     se copia una tarjeta y se cambia el texto. -->
+<section class="section" id="novedades">
+  <div class="section-label">Novedades</div>
+  <h2 class="section-title">Lo último de FUNCECAIND</h2>
+  <p style="color:var(--text-mid);max-width:640px;margin:-24px 0 28px;font-weight:300;">
+    Aquí publicamos los inicios de cohorte, los cursos nuevos y las fechas de inscripción.
+  </p>
+  <div class="facts">
+    <div class="fact">
+      <b>Inscripciones abiertas</b>
+      <span>Consulta el catálogo y escríbenos para reservar tu cupo en la próxima cohorte.</span>
+    </div>
+    <div class="fact">
+      <b>Modalidad teleformación</b>
+      <span>Clases en vivo, materiales descargables y certificado al culminar.</span>
+    </div>
+    <div class="fact">
+      <b>40 años formando</b>
+      <span>Desde 1986 en Charallave, con programas ajustados a lo que pide la industria.</span>
+    </div>
+  </div>
+</section>
+
 
 <!-- STATS -->
 <div class="stats">
@@ -671,90 +712,10 @@ footer {
 </div>
 
 <!-- CURSOS -->
-<section class="section" id="cursos">
-  <div class="section-label">Catálogo</div>
-  <h2 class="section-title">Formación Profesional, modalidad teleformación diseñada para el empleo en el mundo real.</h2>
-  <p style="color:var(--text-mid);max-width:680px;margin:-32px 0 40px;font-weight:300;line-height:1.7;">Consulta el catálogo 2026 completo y los pensum F.P EMP de los programas que se dictan en FUNCECAIND.</p>
-  <div style="display:flex;gap:12px;flex-wrap:wrap;margin:-22px 0 34px;">
-    <button class="btn-secondary" onclick="location.href='catalogo-2026.html'">Ver catálogo 2026</button>
-    <button class="btn-secondary" onclick="location.href='pensum-fp-emp.html'">Ver pensum F.P EMP</button>
-  </div>
 
-  <div class="courses-grid">
-    <div class="course-card">
-      <div class="course-thumb">📝</div>
-      <div class="course-body">
-        <span class="course-tag">Ofimática</span>
-        <div class="course-name">Microsoft Word — Nivel básico</div>
-        <div class="course-meta"><span>⏱ 12 horas</span><span>📄 Documentos</span><span>🎓 Certificado</span></div>
-        <button class="course-cta" onclick="location.href='login.html'">Ver en el aula →</button>
-      </div>
-    </div>
-    <div class="course-card">
-      <div class="course-thumb">📊</div>
-      <div class="course-body">
-        <span class="course-tag">Ofimática</span>
-        <div class="course-name">Microsoft Excel — Hojas de cálculo</div>
-        <div class="course-meta"><span>⏱ 16 horas</span><span>📈 Fórmulas</span><span>🎓 Certificado</span></div>
-        <button class="course-cta" onclick="location.href='login.html'">Ver en el aula →</button>
-      </div>
-    </div>
-    <div class="course-card">
-      <div class="course-thumb">✅</div>
-      <div class="course-body">
-        <span class="course-tag">Calidad</span>
-        <div class="course-name">Control de Calidad</div>
-        <div class="course-meta"><span>⏱ Programa F.P</span><span>📋 Malla</span><span>🎓 Certificado</span></div>
-        <button class="course-cta" onclick="location.href='control-calidad.html'">Ver programa →</button>
-      </div>
-    </div>
-    <div class="course-card">
-      <div class="course-thumb">🦺</div>
-      <div class="course-body">
-        <span class="course-tag">Técnico</span>
-        <div class="course-name">Seguridad Industrial</div>
-        <div class="course-meta"><span>⏱ 24 horas</span><span>⚠️ Prevención</span><span>🎓 Certificado</span></div>
-        <button class="course-cta">Próximamente</button>
-      </div>
-    </div>
-    <div class="course-card">
-      <div class="course-thumb">⚡</div>
-      <div class="course-body">
-        <span class="course-tag">Técnico</span>
-        <div class="course-name">Electricidad — Fundamentos</div>
-        <div class="course-meta"><span>⏱ 30 horas</span><span>🔌 Práctico</span><span>🎓 Certificado</span></div>
-        <button class="course-cta">Próximamente</button>
-      </div>
-    </div>
-  </div>
-</section>
 
 <!-- PRUEBAS DE ACCESO -->
-<section class="section" id="pruebas" style="background:var(--teal-50);">
-  <div class="section-label">Evaluación diagnóstica</div>
-  <h2 class="section-title">Pruebas de acceso a la teleformación</h2>
-  <p style="color:var(--text-mid);max-width:560px;margin:-32px 0 40px;font-weight:300;">Antes de empezar, evalúa tu punto de partida. Son pruebas cortas de Verdadero/Falso y el resultado se envía por correo al equipo del curso.</p>
-  <div class="courses-grid">
-    <div class="course-card">
-      <div class="course-thumb">🎓</div>
-      <div class="course-body">
-        <span class="course-tag">Alumnos</span>
-        <div class="course-name">Competencias digitales — Alumno</div>
-        <div class="course-meta"><span>📋 15 preguntas</span><span>⏱ 10 min</span></div>
-        <button class="course-cta" onclick="location.href='pruebas/acceso-alumno.html'">Comenzar prueba →</button>
-      </div>
-    </div>
-    <div class="course-card">
-      <div class="course-thumb">👩‍🏫</div>
-      <div class="course-body">
-        <span class="course-tag">Docentes</span>
-        <div class="course-name">Conocimientos básicos — Docente</div>
-        <div class="course-meta"><span>📋 Verdadero/Falso</span><span>⏱ 10 min</span></div>
-        <button class="course-cta" onclick="location.href='pruebas/acceso-docente.html'">Comenzar prueba →</button>
-      </div>
-    </div>
-  </div>
-</section>
+
 
 <!-- INSTRUCTORES -->
 <section class="instructors" id="instructores">
@@ -791,33 +752,18 @@ footer {
 <!-- NOSOTROS -->
 <section class="section" id="nosotros" style="background:var(--teal-50);">
   <div class="section-label">Quiénes somos</div>
-  <h2 class="section-title">Reseña histórica de FUNCECAIND</h2>
-  <div style="max-width:700px;color:var(--text-mid);font-weight:300;line-height:1.85;font-size:1.05rem;">
-    <p><strong style="color:var(--text-dark);">FUNCECAIND</strong> inició sus actividades en Charallave el <strong>20 de mayo de 1986</strong>, bajo el auspicio de las Damas de Fedecámaras. Desde instalaciones provisionales y con dos aulas, consolidó las bases de la capacitación industrial en los Valles del Tuy.</p>
-    <p style="margin-top:18px;">La fundación forma profesionalmente mano de obra calificada y desarrolla programas acordes con las necesidades reales de la industria, combinando formación técnica, cursos, talleres y actualización profesional.</p>
-    <p style="margin-top:22px;"><button class="btn-secondary" onclick="location.href='resena-historica.html'">Leer reseña histórica</button></p>
-  </div>
-
-  <!-- TESTIMONIOS -->
-  <div style="margin-top:56px;">
-    <div class="section-label">Testimonios</div>
-    <h3 style="font-family:'Fraunces',serif;font-size:1.6rem;font-weight:600;color:var(--text-dark);margin-bottom:28px;">Lo que dicen quienes se han formado con nosotros</h3>
-    <div class="courses-grid">
-      <div class="course-card" style="padding:24px;">
-        <p style="color:var(--text-mid);font-style:italic;line-height:1.7;">"El curso de Excel me abrió las puertas a un mejor empleo. Las clases en vivo y el certificado marcaron la diferencia."</p>
-        <div style="margin-top:16px;font-weight:600;color:var(--teal-700);font-size:.9rem;">Egresada — Ofimática</div>
-      </div>
-      <div class="course-card" style="padding:24px;">
-        <p style="color:var(--text-mid);font-style:italic;line-height:1.7;">"Capacitamos a nuestro personal en seguridad industrial con FUNCECAIND. Formación seria y adaptada a la realidad de la industria."</p>
-        <div style="margin-top:16px;font-weight:600;color:var(--teal-700);font-size:.9rem;">Empresa del sector industrial — Valles del Tuy</div>
-      </div>
-      <div class="course-card" style="padding:24px;">
-        <p style="color:var(--text-mid);font-style:italic;line-height:1.7;">"Más de 40 años formando talento en Charallave, con instructores de experiencia real en cada área."</p>
-        <div style="margin-top:16px;font-weight:600;color:var(--teal-700);font-size:.9rem;">Aliado institucional</div>
-      </div>
-    </div>
-    <p style="margin-top:14px;color:var(--text-light);font-size:.82rem;">¿Te formaste con nosotros o eres una empresa aliada? Comparte tu testimonio en <a href="#contacto" style="color:var(--teal-700);font-weight:600;">Contacto</a>.</p>
-  </div>
+  <h2 class="section-title">40 años formando talento técnico en los Valles del Tuy</h2>
+  <p style="color:var(--text-mid);max-width:640px;margin:-24px 0 26px;font-weight:300;">
+    <strong style="font-weight:600;">FUNCECAIND</strong> inició sus actividades en Charallave el
+    <strong style="font-weight:600;">20 de mayo de 1986</strong>, bajo el auspicio de las Damas de
+    Fedecámaras. Desde entonces forma mano de obra calificada con programas ajustados a lo que la
+    industria de la zona necesita de verdad.
+  </p>
+  <!-- La historia completa, la misión, la visión, los testimonios y las
+       empresas atendidas viven en UNA sola página. Antes estaban repartidos
+       entre esta sección y resena-historica.html, contados dos veces y
+       distinto, y el menú ofrecía las dos como si fueran cosas diferentes. -->
+  <button class="btn-primary" onclick="location.href='resena-historica.html'">Conócenos →</button>
 </section>
 
 <!-- CTA FINAL -->
@@ -828,18 +774,7 @@ footer {
 </section>
 
 <!-- CONTACTO -->
-<section class="section" id="contacto" style="background:var(--teal-50);">
-  <div class="section-label">Contacto</div>
-  <h2 class="section-title">¿Necesitas información?</h2>
-  <p style="color:var(--text-mid);max-width:560px;margin:-32px 0 32px;font-weight:300;">Déjanos tus datos y te enviaremos la información que solicitas sobre cursos, inscripciones o formación para tu empresa.</p>
-  <form onsubmit="return enviarContacto(event)" style="max-width:540px;display:flex;flex-direction:column;gap:14px;">
-    <input id="c-nombre" placeholder="Nombre y apellido" required style="padding:13px 16px;border:1.5px solid var(--teal-100);border-radius:12px;font-family:'DM Sans',sans-serif;font-size:1rem;background:#fff;">
-    <input id="c-correo" type="email" placeholder="Correo electrónico" required style="padding:13px 16px;border:1.5px solid var(--teal-100);border-radius:12px;font-family:'DM Sans',sans-serif;font-size:1rem;background:#fff;">
-    <input id="c-movil" placeholder="Móvil (opcional)" style="padding:13px 16px;border:1.5px solid var(--teal-100);border-radius:12px;font-family:'DM Sans',sans-serif;font-size:1rem;background:#fff;">
-    <textarea id="c-msg" rows="3" placeholder="¿Qué información necesitas?" style="padding:13px 16px;border:1.5px solid var(--teal-100);border-radius:12px;font-family:'DM Sans',sans-serif;font-size:1rem;background:#fff;resize:vertical;"></textarea>
-    <button class="btn-primary" type="submit" style="align-self:flex-start;">Enviar solicitud →</button>
-  </form>
-</section>
+
 <script>
 function enviarContacto(e){
   e.preventDefault();
@@ -857,7 +792,7 @@ function enviarContacto(e){
 <footer id="pie">
   <div style="max-width:300px;">
     <div class="footer-logo">Funce<span style="color:var(--teal-300);font-style:italic;">Caind</span></div>
-    <div style="font-size:.8rem;margin-top:8px;line-height:1.6;color:rgba(255,255,255,.5);">Fundación para la Planificación y Desarrollo de Centros de Capacitación Industrial · 42 años formando en Venezuela.</div>
+    <div style="font-size:.8rem;margin-top:8px;line-height:1.6;color:rgba(255,255,255,.5);">Fundación para la Planificación y Desarrollo de Centros de Capacitación Industrial · 40 años formando en Venezuela.</div>
   </div>
   <div class="footer-links" style="flex-direction:column;align-items:flex-start;gap:10px;font-size:.85rem;">
     <span>📍 Urb. Industrial Río Tuy, Av. G, Charallave, Miranda</span>

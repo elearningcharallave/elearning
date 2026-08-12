@@ -31,13 +31,7 @@
     <!-- REGISTRO ALUMNO -->
     <form id="form-reg" style="display:none" onsubmit="return doReg(event)">
       <div class="field"><label>Nombre completo</label><input type="text" id="r-nombre" placeholder="Ej. María González" required></div>
-      <div class="field"><label>Cédula</label><input type="text" id="r-cedula" placeholder="V-12345678" required></div>
-      <div class="field"><label>Fecha de nacimiento</label><input type="date" id="r-fnac" required></div>
-      <div class="field"><label>Teléfono móvil</label><input type="tel" id="r-tel" placeholder="0414-1234567" required></div>
-      <div class="field"><label>Dirección</label><input type="text" id="r-dir" placeholder="Sector, calle, casa…" required></div>
       <div class="field"><label>Ciudad</label><input type="text" id="r-ciudad" placeholder="Charallave" required></div>
-      <div class="field"><label>Especialidad / Área de interés <span style="color:var(--text-light);font-weight:400">(opcional)</span></label><input type="text" id="r-esp" placeholder="Ej. Ofimática, Electricidad…"></div>
-      <div class="field"><label>Foto de perfil (identificación)</label><input type="file" id="r-foto" accept="image/*" required></div>
       <div class="field"><label>Correo</label><input type="email" id="r-email" placeholder="tucorreo@correo.com" required></div>
       <div class="field"><label>Contraseña (mín. 6)</label><input type="password" id="r-pass" placeholder="••••••••" minlength="6" required></div>
       <label style="display:flex;gap:8px;align-items:flex-start;font-size:.85rem;color:var(--text-mid,#475569);margin:4px 0 12px;cursor:pointer">
@@ -107,11 +101,14 @@ async function doReg(ev){
   }
   var b=document.getElementById('r-btn'); b.disabled=true; b.textContent='Creando…';
   try{
-    var foto=document.getElementById('r-foto').files[0]||null;
     var rol = await FV.registrarAlumno({
       nombre: v('r-nombre'), email: v('r-email'), pass: document.getElementById('r-pass').value,
-      cedula: v('r-cedula'), fecha_nac: v('r-fnac'), telefono: v('r-tel'), direccion: v('r-dir'),
-      ciudad: v('r-ciudad'), especialidad: v('r-esp'), foto: foto, consentimiento: true
+      // Se piden solo cuatro datos (modificaciones del 10/08/2026). Los demas
+      // se mandan vacios en vez de quitarlos: el registro los espera, y
+      // sacarlos de aqui haria que nadie pudiera crear su cuenta. Se
+      // completan luego desde el perfil del alumno.
+      cedula: '', fecha_nac: '', telefono: '', direccion: '',
+      ciudad: v('r-ciudad'), especialidad: '', foto: null, consentimiento: true
     });
     location.href = FV.panelDe(rol);
   }catch(e){ show('r-msg',traduce(e),false); b.disabled=false; b.textContent='Crear mi cuenta de alumno'; }
