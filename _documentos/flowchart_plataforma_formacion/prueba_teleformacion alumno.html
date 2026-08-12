@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prueba de Competencias Digitales Básicas para Teleformación</title>
+    <style>
+        :root {
+            --primary-color: #2b6cb0;
+            --secondary-color: #4a5568;
+            --bg-color: #f7fafc;
+            --card-bg: #ffffff;
+            --border-color: #e2e8f0;
+            --text-color: #2d3748;
+            --accent-color: #3182ce;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05), 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 20px;
+        }
+
+        header h1 {
+            color: var(--primary-color);
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            color: var(--secondary-color);
+            font-size: 14px;
+        }
+
+        .personal-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 40px;
+            background: #edf2f7;
+            padding: 20px;
+            border-radius: 6px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group.full-width {
+            grid-column: span 2;
+        }
+
+        label {
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: var(--secondary-color);
+        }
+
+        input[type="text"],
+        input[type="date"],
+        select {
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-size: 15px;
+            background-color: #fff;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.2);
+        }
+
+        .instructions {
+            margin-bottom: 30px;
+            padding: 15px;
+            background-color: #ebf8ff;
+            border-left: 4px solid var(--accent-color);
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .question-card {
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .question-text {
+            font-size: 16px;
+            font-weight: 500;
+            margin-bottom: 12px;
+            color: var(--text-color);
+        }
+
+        .options-group {
+            display: flex;
+            gap: 20px;
+        }
+
+        .option-label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            font-size: 15px;
+            background: #f8fafc;
+            padding: 8px 16px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            transition: all 0.2s ease;
+        }
+
+        .option-label:hover {
+            background: #edf2f7;
+        }
+
+        .option-label input {
+            margin-right: 8px;
+        }
+
+        .submit-btn {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+            margin-top: 40px;
+        }
+
+        .submit-btn:hover {
+            background-color: #2b6cb0;
+        }
+
+        @media (max-width: 600px) {
+            .personal-info {
+                grid-template-columns: 1fr;
+            }
+            .form-group.full-width {
+                grid-column: span 1;
+            }
+            body {
+                padding: 10px;
+            }
+            .container {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Evaluación de Conocimientos Mínimos de Acceso</h1>
+        <p>Curso de Teleformación (E-learning) - Nivel Alumno</p>
+    </header>
+
+    <form id="quizForm" onsubmit="enviarResultados(event)">
+        <!-- Información Personal -->
+        <div class="personal-info">
+            <div class="form-group full-width">
+                <label for="nombre">Nombre Completo:</label>
+                <input type="text" id="nombre" name="nombre" required placeholder="Ej. Juan Pérez Gómez">
+            </div>
+            <div class="form-group">
+                <label for="fecha">Fecha de Evaluación:</label>
+                <input type="date" id="fecha" name="fecha" required>
+            </div>
+            <div class="form-group">
+                <label for="genero">Género:</label>
+                <select id="genero" name="genero" required>
+                    <option value="" disabled selected>Seleccione una opción</option>
+                    <option value="Masculino">Masculino</option>
+                    <option value="Femenino">Femenino</option>
+                    <option value="Otro">Otro / No especificar</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="instructions">
+            <strong>Instrucciones:</strong> Responda a las siguientes 15 preguntas seleccionando si la afirmación es <strong>Verdadero</strong> o <strong>Falsos</strong>. Al finalizar, haga clic en el botón de envío para generar el correo electrónico con sus respuestas.
+        </div>
+
+        <!-- Cuestionario -->
+        <div id="questionsContainer"></div>
+
+        <button type="submit" class="submit-btn">Finalizar y Enviar Respuestas</button>
+    </form>
+</div>
+
+<script>
+    const preguntas = [
+        "Para ingresar a una plataforma de teleformación, siempre es obligatorio instalar un programa o software de pago en el ordenador.",
+        "El correo electrónico es una herramienta de comunicación asíncrona, lo que significa que el emisor y el receptor no necesitan estar conectados al mismo tiempo.",
+        "En una videoconferencia, si desactivas tu micrófono (silenciar), los demás participantes aún pueden escucharte hablar.",
+        "Un foro de discusión en una plataforma educativa sirve para debatir temas de forma abierta y dejar comentarios que otros alumnos y tutores pueden ver más tarde.",
+        "La 'barra de direcciones' de un navegador web es el lugar donde se escribe la URL o enlace directo de la página a la que se desea acceder.",
+        "Para adjuntar un archivo (documento, foto, tarea) en un correo electrónico, se suele utilizar un icono con forma de clip para papel.",
+        "Los mensajes enviados a través de un chat en vivo dentro de la plataforma son un ejemplo de comunicación síncrona en tiempo real.",
+        "El 'Nombre de usuario' (Username) y la 'Contraseña' (Password) de acceso son datos públicos que se pueden compartir libremente con cualquier compañero.",
+        "Si un enlace (link) web cambia el cursor del ratón a una mano con un dedo apuntando, significa que se puede hacer clic en él para navegar a otra página.",
+        "La carpeta de 'Spam' o 'Correo no deseado' en tu email es donde se reciben de forma exclusiva los mensajes urgentes e importantes enviados por el tutor.",
+        "En la mayoría de las plataformas de videoconferencia (como Zoom o Teams), la función 'Levantar la mano' sirve para pedir el turno de palabra de forma ordenada.",
+        "Una vez que publicas una respuesta en un foro común del curso, ningún otro alumno puede leerla, ya que solo es visible para el profesor.",
+        "Para actualizar o recargar una página web que no carga correctamente, se puede pulsar la tecla F5 o el icono de la flecha circular en el navegador.",
+        "El término 'Moodle' hace referencia a un tipo de virus informático que suele borrar las bases de datos de las plataformas de teleformación.",
+        "Descargar un archivo (como un manual en formato PDF) significa transferir ese documento desde internet y guardarlo en el almacenamiento de tu ordenador."
+    ];
+
+    const container = document.getElementById('questionsContainer');
+
+    preguntas.forEach((pregunta, index) => {
+        const qNum = index + 1;
+        const card = document.createElement('div');
+        card.className = 'question-card';
+        card.innerHTML = `
+            <div class="question-text">${qNum}. ${pregunta}</div>
+            <div class="options-group">
+                <label class="option-label">
+                    <input type="radio" name="q${qNum}" value="Verdadero" required> Verdadero
+                </label>
+                <label class="option-label">
+                    <input type="radio" name="q${qNum}" value="Falso" required> Falso
+                </label>
+            </div>
+        `;
+        container.appendChild(card);
+    });
+
+    // Establecer fecha de hoy de forma automática
+    document.getElementById('fecha').valueToDate = new Date();
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('fecha').value = today;
+
+    function enviarResultados(event) {
+        event.preventDefault();
+        
+        const nombre = document.getElementById('nombre').value;
+        const fecha = document.getElementById('fecha').value;
+        const genero = document.getElementById('genero').value;
+        
+        let cuerpoEmail = `EVALUACIÓN DE CONOCIMIENTOS MÍNIMOS PARA TELEFORMACIÓN\n`;
+        cuerpoEmail += `===============================================\n`;
+        cuerpoEmail += `Nombre Completo: ${nombre}\n`;
+        cuerpoEmail += `Fecha de Evaluación: ${fecha}\n`;
+        cuerpoEmail += `Género: ${genero}\n`;
+        cuerpoEmail += `===============================================\n\n`;
+        cuerpoEmail += `RESPUESTAS DEL CUESTIONARIO:\n`;
+        
+        preguntas.forEach((pregunta, index) => {
+            const qNum = index + 1;
+            const respuesta = document.querySelector(`input[name="q${qNum}"]:checked`).value;
+            cuerpoEmail += `Pregunta ${qNum}: ${respuesta}\n`;
+        });
+        
+        const emailDestino = "jahulin@gmail.com";
+        const asunto = `Resultados Evaluacion Teleformacion - ${nombre}`;
+        
+        // Crear enlace mailto y ejecutar
+        const mailtoUrl = `mailto:${emailDestino}?subject=${encodeURIComponent(asunto)}&body=${encodeURIComponent(cuerpoEmail)}`;
+        window.location.href = mailtoUrl;
+    }
+</script>
+
+</body>
+</html>
