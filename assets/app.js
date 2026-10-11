@@ -399,6 +399,27 @@
     });
   }
 
+  // Presencia agregada del aula: solo cuentas autenticadas, sin querystrings ni datos del perfil.
+  // Se registra la ultima pagina activa; una cuenta con varias pestanas cuenta una sola vez.
+  if (sb) {
+    var presenciaEnCurso = false;
+    async function presenciaDashboard() {
+      if (document.hidden || !navigator.onLine || presenciaEnCurso) return;
+      presenciaEnCurso = true;
+      try {
+        var res = await sb.auth.getSession();
+        if (!res.data.session) return;
+        var pagina = location.pathname.split('/').pop() || (document.getElementById('vista-dashboard') ? 'cambios.html' : 'index.html');
+        await sb.rpc('dashboard_latido', { p_pagina: pagina });
+      } catch (e) { /* El monitoreo nunca interrumpe una tarea academica. */ }
+      finally { presenciaEnCurso = false; }
+    }
+    presenciaDashboard();
+    setInterval(presenciaDashboard, 30000);
+    document.addEventListener('visibilitychange', presenciaDashboard);
+    window.addEventListener('online', presenciaDashboard);
+  }
+
   window.FV = {
     configOk: configOk, panelDe: panelDe, esc: esc, requireRole: requireRole, redirigirSiSesion: redirigirSiSesion,
     login: login, registrarAlumno: registrarAlumno, crearProfesor: crearProfesor, logout: logout,

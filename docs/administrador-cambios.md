@@ -1,5 +1,44 @@
 # Administrador de cambios de FUNCECAIND
 
+## Dashboard operacional
+
+El panel abre en Dashboard y conserva Solicitudes, Historial y Areas. Aplicar
+`supabase/dashboard.sql` antes de publicar los recursos. El resumen incluye
+conteos globales de todas las tablas del aula: cuentas, cursos, modulos, lecciones,
+matriculas, clases, asistencia, materiales, tareas, entregas, evaluaciones,
+preguntas, intentos, resultados, certificados, foro y eventos de aprendizaje,
+ademas de las solicitudes y sus archivos. Las alertas muestran entregas sin nota,
+solicitudes prioritarias o sin responsable, cursos en borrador, tareas con fecha
+limite pasada y cuentas inactivas. Tarea vencida no significa entrega faltante.
+
+`dashboard_resumen()` exige pertenencia activa al equipo. Devuelve agregados y
+eventos sin nombres, correos, cedulas, respuestas ni notas individuales. No cambia
+los permisos academicos de las cuentas. Solo `dashboard_eventos` se incorpora a
+la publicacion realtime; los triggers guardan tabla, operacion y fecha, sin copiar
+filas originales. Los latidos de asistencia no generan eventos repetitivos.
+El historial nuevo empieza en la activacion del monitor; los totales incluyen
+tambien los registros anteriores.
+
+`dashboard_latido()` registra la ultima pagina visible de cada cuenta autenticada
+activa, cada 30 segundos. No guarda querystrings ni visitantes anonimos. La
+presencia cuenta cuentas unicas en los ultimos 90 segundos, no conexiones o
+pestanas. La informacion individual de presencia no tiene acceso REST directo.
+Los archivos HTML versionan app.js para cargar este seguimiento al volver al aula.
+
+La suscripcion a INSERT saneados invalida el resumen con debounce de 500 ms.
+Hay recuperacion al reconectar o volver a la pestana y sondeo de respaldo cada
+30 segundos mientras se muestra el dashboard. La pantalla distingue conexion
+en vivo, reconexion y datos desactualizados por error. No monitoriza infraestructura,
+errores del navegador, visitas anonimas ni servicios externos al aula.
+Pruebas de datos, triggers y permisos: `scripts/verificar-dashboard.sql` (rollback).
+
+Validacion en produccion: totales comparados contra la base, permisos anonimos y
+fuera del equipo rechazados, notificacion WebSocket confirmada y cambio de estado
+visible sin recargar. Presencia de cuenta autenticada comprobada. Diseno de 390 px
+sin desbordamiento horizontal. Desconexion simulada mostro aviso de datos antiguos
+y se recupero al restaurar la red. Se retiro solo la solicitud temporal del monitor;
+las solicitudes y adjuntos de uso real se conservaron.
+
 `cambios.html` es el taller del equipo: solicitudes por area y prioridad, responsables,
 tres estados (Por hacer, Haciendo, Hecha), comentarios, archivos privados, historial,
 propuestas de secciones, paginas y funciones nuevas con filtro por tipo,

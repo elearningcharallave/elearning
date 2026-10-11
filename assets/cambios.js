@@ -17,7 +17,7 @@
   const PROPUESTAS = { mejora:'Cambio o mejora', parte_nueva:'Parte nueva' };
   const { validarArchivo, claveArchivo, tamanoLegible, formatoArchivo } = window.FCArchivos;
   const sb = FV.sb;
-  let usuario, equipo = [], solicitudes = [], eventos = [], actual = null, vista = 'trabajo';
+  let usuario, equipo = [], solicitudes = [], eventos = [], actual = null, vista = 'dashboard';
   let cargando = false, versionHilo = 0;
   let modo = 'tablero', colaArchivos = [], subiendoArchivos = false, fotoFormulario = '';
   let operacionesActivas = 0, refrescoPendiente = false;
@@ -68,15 +68,17 @@
     equipo = await consulta(sb.rpc('cambios_equipo'));
     opciones(); $('nombre-usuario').textContent = perfil.nombre || 'Administrador';
     $('entrada').hidden = true; $('panel').hidden = false;
+    FCDashboard.iniciar(sb);
     await refrescar();
   }
   async function refrescar() {
     if (cargando) {refrescoPendiente=true;return;}
-    cargando = true; $('actualizar').disabled = true; aviso('Actualizando solicitudes…');
+    const informar=vista!=='dashboard'||!$('editor').hidden;
+    cargando = true; $('actualizar').disabled = true; if(informar)aviso('Actualizando solicitudes…');
     $('vista-trabajo').setAttribute('aria-busy','true');
     try {
       [solicitudes,eventos] = await Promise.all([todas('cambios_solicitudes','creada_en'), todas('cambios_eventos','creado_en')]);
-      pintar(); aviso('Actualizado a las ' + new Date().toLocaleTimeString('es-VE',{hour:'2-digit',minute:'2-digit'}));
+      pintar(); if(informar)aviso('Actualizado a las ' + new Date().toLocaleTimeString('es-VE',{hour:'2-digit',minute:'2-digit'}));
     } catch (e) { fallo(e); } finally {
       cargando = false; $('actualizar').disabled = false; $('vista-trabajo').removeAttribute('aria-busy');
       if(refrescoPendiente){refrescoPendiente=false;await refrescar();}
@@ -240,9 +242,9 @@
   }
   function volverVista() {
     $('contenido').classList.remove('en-edicion'); $('editor').hidden=true; actual=null; ++versionHilo;
-    $('exportar').hidden=false; colaArchivos=[];
-    $('titulo-vista').textContent={trabajo:'Solicitudes de cambios',historial:'Historial de cambios',mapa:'Áreas de la plataforma'}[vista];
-    $('subtitulo-vista').textContent={trabajo:'Lo que hace falta, lo que está en marcha y lo que ya quedó listo.',historial:'Cada cambio conserva quién lo hizo y cuándo.',mapa:'Organiza las mejoras según la parte del aula a la que pertenecen.'}[vista];
+    $('exportar').hidden=vista==='dashboard'; colaArchivos=[];
+    $('titulo-vista').textContent={dashboard:'Dashboard',trabajo:'Solicitudes de cambios',historial:'Historial de cambios',mapa:'Áreas de la plataforma'}[vista];
+    $('subtitulo-vista').textContent={dashboard:'Una vista general de lo que ocurre en FUNCECAIND.',trabajo:'Lo que hace falta, lo que está en marcha y lo que ya quedó listo.',historial:'Cada cambio conserva quién lo hizo y cuándo.',mapa:'Organiza las mejoras según la parte del aula a la que pertenecen.'}[vista];
   }
   function agregarArchivos(archivos) {
     if(subiendoArchivos) return;
@@ -339,17 +341,19 @@
     const nav=e.target.closest('[data-vista]'); if(nav) {
       if(!confirmarSalida())return;
       vista=nav.dataset.vista; document.querySelectorAll('[data-vista]').forEach((b)=>b.setAttribute('aria-current',b===nav?'page':'false'));
-      for(const v of ['trabajo','historial','mapa']) $('vista-'+v).hidden=v!==vista;
+      for(const v of ['dashboard','trabajo','historial','mapa']) $('vista-'+v).hidden=v!==vista;
       volverVista();
+      if(vista==='dashboard'){aviso('');FCDashboard.actualizar();}
+      else if(vista==='trabajo'||vista==='historial')refrescar();
     }
   });
   $('nueva').addEventListener('click',()=>abrir());
   $('cerrar-editor').addEventListener('click',()=>{if(confirmarSalida()){volverVista();$('nueva').focus();}});
   for(const id of ['modo-tablero','modo-lista']) $(id).addEventListener('click',()=>{modo=id==='modo-lista'?'lista':'tablero';$('modo-tablero').setAttribute('aria-pressed',String(modo==='tablero'));$('modo-lista').setAttribute('aria-pressed',String(modo==='lista'));pintar();});
   $('limpiar-filtros').addEventListener('click',()=>{for(const id of ['buscar','filtro-area','filtro-tipo','filtro-prioridad','filtro-responsable'])$(id).value='';$('archivadas').checked=false;pintar();});
-  $('actualizar').addEventListener('click',refrescar);
+  $('actualizar').addEventListener('click',()=>vista==='dashboard'&&$('editor').hidden?FCDashboard.actualizar():refrescar());
   for(const id of ['buscar','filtro-area','filtro-tipo','filtro-prioridad','filtro-responsable','archivadas']) $(id).addEventListener(id==='buscar'?'input':'change',pintar);
-  $('salir').addEventListener('click',async()=>{if(confirmarSalida()){await sb.auth.signOut({scope:'local'});location.reload();}});
+  $('salir').addEventListener('click',async()=>{if(confirmarSalida()){FCDashboard.detener();await sb.auth.signOut({scope:'local'});location.reload();}});
   window.addEventListener('beforeunload',(e)=>{if(operacionesActivas||subiendoArchivos||hayCambios()){e.preventDefault();e.returnValue='';}});
   $('exportar').addEventListener('click',()=>{
     const contenido=JSON.stringify({plataforma:'FUNCECAIND',exportado_en:new Date().toISOString(),solicitudes:filtradas(),historial:eventos.filter((e)=>filtradas().some((s)=>s.id===e.solicitud_id))},null,2);

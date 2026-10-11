@@ -5,15 +5,15 @@
   <meta name="robots" content="noindex,nofollow">
   <title>Cambios · FUNCECAIND</title>
   <link rel="icon" href="assets/favicon.svg">
-  <link rel="stylesheet" href="assets/cambios.css?v=adjuntos-nueva-20261012">
+  <link rel="stylesheet" href="assets/cambios.css?v=dashboard-20261012">
 </head>
 <body>
   <a class="saltar-contenido" href="#contenido">Ir al contenido</a>
   <div id="entrada" class="entrada">
     <section class="acceso">
       <img src="assets/funcecaind/logo-funcecaind.png" alt="FUNCECAIND" width="210">
-      <h1>Administrador de cambios</h1>
-      <p>Un lugar para pedir mejoras, proponer partes nuevas y seguir el trabajo.</p>
+      <h1>Administración de FUNCECAIND</h1>
+      <p>Supervisa el aula, su actividad y las mejoras de la plataforma.</p>
       <form id="form-entrada">
         <label>Correo<input id="correo" type="email" autocomplete="username" required></label>
         <label>Contraseña<input id="clave" type="password" autocomplete="current-password" required></label>
@@ -27,9 +27,10 @@
   <div id="panel" class="panel" hidden>
     <aside class="lateral">
       <img src="assets/funcecaind/logo-funcecaind.png" alt="FUNCECAIND" width="170">
-      <p class="lateral-titulo">Cambios y mejoras</p>
+      <p class="lateral-titulo">Administración</p>
       <nav aria-label="Secciones del panel">
-        <button data-vista="trabajo" aria-current="page">Solicitudes</button>
+        <button data-vista="dashboard" aria-current="page">Dashboard</button>
+        <button data-vista="trabajo">Solicitudes</button>
         <button data-vista="historial">Historial de cambios</button>
         <button data-vista="mapa">Áreas de la plataforma</button>
       </nav>
@@ -41,11 +42,22 @@
     </aside>
     <main id="contenido">
       <header class="cabecera">
-        <div><h1 id="titulo-vista">Solicitudes de cambios</h1><p id="subtitulo-vista">Lo que hace falta, lo que está en marcha y lo que ya quedó listo.</p></div>
-        <div class="acciones"><button id="actualizar">Actualizar</button><button id="exportar">Exportar</button><button id="nueva" class="primario">Nueva solicitud</button></div>
+        <div><h1 id="titulo-vista">Dashboard</h1><p id="subtitulo-vista">Una vista general de lo que ocurre en FUNCECAIND.</p></div>
+        <div class="acciones"><button id="actualizar">Actualizar</button><button id="exportar" hidden>Exportar</button><button id="nueva" class="primario">Nueva solicitud</button></div>
       </header>
       <p id="aviso" class="aviso" role="status" aria-live="polite"></p>
-      <section id="vista-trabajo">
+      <section id="vista-dashboard" aria-label="Dashboard de la plataforma">
+        <div class="dashboard-conexion"><p id="dashboard-conexion" role="status">Conectando actividad…</p><p id="dashboard-fecha" class="nota">Cargando resumen…</p></div>
+        <p id="dashboard-error" class="error" role="alert" hidden></p>
+        <dl id="dashboard-principales" class="dashboard-metricas" aria-label="Indicadores principales"></dl>
+        <div class="dashboard-columnas">
+          <section class="dashboard-bloque"><h2>Necesita atención</h2><ul id="dashboard-alertas" class="dashboard-alertas"><li>Cargando pendientes…</li></ul></section>
+          <section class="dashboard-bloque"><h2>Actividad reciente</h2><p class="nota">Cambios registrados desde la activación de este dashboard.</p><ol id="dashboard-actividad" class="dashboard-actividad"><li>Cargando actividad…</li></ol></section>
+        </div>
+        <section class="dashboard-bloque"><h2>Resumen de la plataforma</h2><p class="nota">Totales globales. Las matrículas y los intentos cuentan registros, no personas únicas.</p><dl id="dashboard-totales" class="dashboard-totales"></dl></section>
+        <section class="dashboard-bloque"><h2>Cuentas activas por página</h2><p class="nota">Cuentas autenticadas con actividad en los últimos 90 segundos. Se muestra la última página de cada cuenta, sin contar visitantes anónimos.</p><ul id="dashboard-presencia" class="dashboard-presencia"></ul></section>
+      </section>
+      <section id="vista-trabajo" hidden>
         <div id="resumen" class="resumen" aria-live="polite"></div>
         <div class="filtros">
           <label class="buscar">Buscar<input id="buscar" type="search" placeholder="Título o descripción…"></label>
@@ -110,8 +122,9 @@
     </main>
   </div>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="assets/supabase-config.js"></script><script src="assets/app.js"></script>
-  <script src="assets/archivos-cambios.js?v=adjuntos-nueva-20261012"></script>
-  <script src="assets/cambios.js?v=adjuntos-nueva-20261012"></script>
+  <script src="assets/supabase-config.js"></script><script src="assets/app.js?v=dashboard-20261012"></script>
+  <script src="assets/archivos-cambios.js?v=dashboard-20261012"></script>
+  <script src="assets/dashboard.js?v=dashboard-20261012"></script>
+  <script src="assets/cambios.js?v=dashboard-20261012"></script>
 </body>
 </html>
