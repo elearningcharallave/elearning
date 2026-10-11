@@ -148,7 +148,11 @@
     $('solicitud-prioridad').value = actual?.prioridad || 'normal'; $('solicitud-responsable').value = actual?.asignada_a || '';
     $('solicitud-estado').value = actual?.estado || 'pendiente'; $('campo-estado').hidden = !actual;
     $('archivar').hidden = !actual; $('archivar').textContent = actual?.archivada ? 'Restaurar solicitud' : 'Archivar solicitud';
-    $('seguimiento').hidden = !actual; $('comentario').value = ''; $('archivo').value = '';
+    $('seguimiento').hidden = false;
+    $('seccion-comentarios').hidden = !actual; $('seccion-historial').hidden = !actual;
+    $('ayuda-nueva-adjunto').hidden = !!actual; $('adjuntos').hidden = !actual;
+    $('seguimiento').classList.toggle('solicitud-nueva', !actual);
+    $('comentario').value = ''; $('archivo').value = '';
     colaArchivos=[]; pintarCola(); $('progreso-archivos').hidden=true;
     fotoFormulario = leerFormulario();
     $('editor').scrollIntoView({block:'start'}); $('solicitud-titulo').focus({preventScroll:true});
@@ -194,9 +198,16 @@
       } else guardada=await consulta(sb.from('cambios_solicitudes').insert(datos).select().single());
       const nueva = !actual;
       fotoFormulario=leerFormulario(); await refrescar();
-      if(nueva) await abrir(guardada.id,true);
+      if(nueva) {
+        const seleccionados=colaArchivos;
+        // Usar el registro confirmado aunque un refresco simultaneo tenga datos anteriores.
+        if(!solicitudes.some((s)=>s.id===guardada.id)) solicitudes.push(guardada);
+        await abrir(guardada.id,true);
+        colaArchivos=seleccionados; pintarCola();
+      }
       else {actual=guardada;$('subtitulo-vista').textContent=actual.titulo;await hilo(actual.id);}
-      aviso('Solicitud guardada.');
+      if(nueva && colaArchivos.some((a)=>a.estado==='pendiente'||a.estado==='error')) await subirPendientes();
+      else aviso(colaArchivos.some((a)=>a.estado==='no_valido') ? 'Solicitud guardada. Revisa los archivos no válidos.' : 'Solicitud guardada.');
     });
   });
   $('archivar').addEventListener('click',()=>ocupada($('form-solicitud'),async()=>{
@@ -250,6 +261,7 @@
     const pendientes=colaArchivos.filter((a)=>a.estado==='pendiente'||a.estado==='error'), invalidos=colaArchivos.filter((a)=>a.estado==='no_valido').length;
     const bytes=pendientes.reduce((n,a)=>n+a.archivo.size,0);
     $('resumen-archivos').textContent=colaArchivos.length ? `${pendientes.length} ${pendientes.length===1?'archivo pendiente':'archivos pendientes'} · ${tamanoLegible(bytes)}${invalidos ? ` · ${invalidos} no válidos` : ''}` : '';
+    $('subir-archivos').hidden=!actual;
     $('subir-archivos').disabled=subiendoArchivos||!pendientes.length;
     $('subir-archivos').textContent=subiendoArchivos?'Subiendo archivos…':pendientes.some((a)=>a.estado==='error')?'Reintentar pendientes':`Subir ${pendientes.length||''} ${pendientes.length===1?'archivo':'archivos'}`;
     $('limpiar-cola').hidden=!colaArchivos.length; $('limpiar-cola').disabled=subiendoArchivos;
@@ -291,7 +303,10 @@
   $('zona-archivos').addEventListener('drop',(e)=>{e.preventDefault();$('zona-archivos').classList.remove('arrastrando');agregarArchivos(e.dataTransfer.files);});
   $('limpiar-cola').addEventListener('click',()=>{if(!subiendoArchivos){colaArchivos=[];pintarCola();$('progreso-archivos').hidden=true;}});
   $('form-adjunto').addEventListener('submit',async(e)=>{
-    e.preventDefault(); if(subiendoArchivos||!actual)return;
+    e.preventDefault(); if(operacionesActivas)return; await subirPendientes();
+  });
+  async function subirPendientes() {
+    if(subiendoArchivos||!actual)return;
     const id=actual.id, pendientes=colaArchivos.filter((a)=>a.estado==='pendiente'||a.estado==='error'); if(!pendientes.length)return;
     subiendoArchivos=true; $('progreso-archivos').hidden=false; $('avance-archivos').max=pendientes.length; $('avance-archivos').value=0;
     let subidos=0;
@@ -308,7 +323,7 @@
       $('estado-subida').textContent=`${subidos} de ${pendientes.length} archivos guardados${faltan ? `; ${faltan} pendientes de reintento.` : '.'}`;
       aviso(faltan?'Algunos archivos no se subieron. Reintenta los pendientes; los guardados no se duplicarán.':'Archivos guardados y disponibles para el equipo.',!!faltan);
     } finally {subiendoArchivos=false;pintarCola();}
-  });
+  }
   document.addEventListener('click',async(e)=>{
     const quitar=e.target.closest('[data-quitar]');if(quitar&&!subiendoArchivos){colaArchivos=colaArchivos.filter((a)=>a.id!==quitar.dataset.quitar);pintarCola();return;}
     const abrirBoton=e.target.closest('[data-abrir]'); if(abrirBoton) { await abrir(abrirBoton.dataset.abrir); return; }

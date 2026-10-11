@@ -73,6 +73,9 @@ archivos tengan eventos de autoria en el historial. El texto de los comentarios
 no se duplica en esa tabla. Pruebas de archivos: `node --test scripts/archivos-cambios.test.mjs`.
 
 Verificacion del panel profesional en produccion (12 de octubre de 2026):
+El selector de archivos tambien aparece en Nueva solicitud. La seleccion se
+conserva al crearla y los archivos validos se suben automaticamente despues de
+confirmar el registro; si una subida falla, queda disponible para reintentar.
 seleccion multiple de ZIP y formato desconocido, rechazo previo de un archivo de
 16 MiB y prevencion de duplicados. Una desconexion simulada conservo ambos archivos;
 el reintento guardo exactamente dos adjuntos. Las descargas autenticadas coincidieron

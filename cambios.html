@@ -5,7 +5,7 @@
   <meta name="robots" content="noindex,nofollow">
   <title>Cambios · FUNCECAIND</title>
   <link rel="icon" href="assets/favicon.svg">
-  <link rel="stylesheet" href="assets/cambios.css?v=profesional-20261012">
+  <link rel="stylesheet" href="assets/cambios.css?v=adjuntos-nueva-20261012">
 </head>
 <body>
   <a class="saltar-contenido" href="#contenido">Ir al contenido</a>
@@ -84,10 +84,11 @@
         </form>
         <div id="seguimiento" hidden>
           <div class="detalle-columnas">
-            <section><h3>Comentarios</h3><div id="comentarios" class="hilo"></div>
+            <section id="seccion-comentarios"><h3>Comentarios</h3><div id="comentarios" class="hilo"></div>
               <form id="form-comentario"><label>Nuevo comentario<textarea id="comentario" maxlength="4000" rows="3" required placeholder="Deja una respuesta, una duda o el resultado del cambio."></textarea></label><button type="submit">Publicar comentario</button></form>
             </section>
             <section><div class="titulo-seccion"><h3>Archivos adjuntos</h3><span class="etiqueta">Privados</span></div><p class="nota">Cualquier formato. Hasta 15 MB por archivo.</p>
+              <p id="ayuda-nueva-adjunto" class="nota" hidden>Selecciona los archivos ahora. Se subirán al guardar la solicitud.</p>
               <div id="adjuntos" class="hilo"></div>
               <form id="form-adjunto">
                 <div id="zona-archivos" class="zona-archivos" tabindex="0" role="group" aria-label="Añadir archivos" aria-describedby="ayuda-archivos">
@@ -101,7 +102,7 @@
                 <div id="progreso-archivos" hidden><progress id="avance-archivos" max="1" value="0" aria-label="Archivos subidos"></progress><p id="estado-subida" class="nota" role="status"></p></div>
                 <div class="acciones"><button type="submit" id="subir-archivos" class="primario" disabled>Subir archivos</button><button type="button" id="limpiar-cola" hidden>Limpiar selección</button></div>
               </form>
-              <h3 class="titulo-historial">Historial de esta solicitud</h3><div id="historial-solicitud" class="hilo"></div>
+              <div id="seccion-historial"><h3 class="titulo-historial">Historial de esta solicitud</h3><div id="historial-solicitud" class="hilo"></div></div>
             </section>
           </div>
         </div>
@@ -110,7 +111,7 @@
   </div>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="assets/supabase-config.js"></script><script src="assets/app.js"></script>
-  <script src="assets/archivos-cambios.js?v=profesional-20261012"></script>
-  <script src="assets/cambios.js?v=profesional-20261012"></script>
+  <script src="assets/archivos-cambios.js?v=adjuntos-nueva-20261012"></script>
+  <script src="assets/cambios.js?v=adjuntos-nueva-20261012"></script>
 </body>
 </html>
