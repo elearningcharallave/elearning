@@ -50,10 +50,12 @@
   async function abrirPanel(sesion) {
     if (!sesion) return;
     const perfil = await consulta(sb.from('perfiles').select('id,nombre,rol,activo').eq('id',sesion.user.id).single());
-    if (perfil.rol !== 'admin' || perfil.activo === false) {
+    const permitido = await consulta(sb.rpc('cambios_es_admin'));
+    if (!permitido || perfil.activo === false) {
       await sb.auth.signOut(); throw new Error('no-admin');
     }
     usuario = perfil;
+    $('volver-aula').href = 'https://elearningcharallave.github.io/elearning/' + FV.panelDe(perfil.rol);
     equipo = await consulta(sb.rpc('cambios_equipo'));
     opciones(); $('nombre-usuario').textContent = perfil.nombre || 'Administrador';
     $('entrada').hidden = true; $('panel').hidden = false;

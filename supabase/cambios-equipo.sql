@@ -1,10 +1,20 @@
 -- Administrador de cambios de FUNCECAIND. Migracion aditiva e idempotente.
 begin;
 
+-- El equipo del taller no necesita administrar alumnos ni calificaciones.
+create table if not exists public.cambios_equipo_accesos (
+  usuario_id uuid primary key references public.perfiles(id),
+  activo boolean not null default true,
+  habilitado_en timestamptz not null default clock_timestamp()
+);
+alter table public.cambios_equipo_accesos enable row level security;
+revoke all on public.cambios_equipo_accesos from anon, authenticated;
+
 create or replace function public.cambios_es_admin()
 returns boolean language sql stable security definer set search_path = public as $$
-  select exists (select 1 from public.perfiles where id = auth.uid()
-    and rol = 'admin' and coalesce(activo, true));
+  select exists (select 1 from public.perfiles p
+    join public.cambios_equipo_accesos e on e.usuario_id = p.id
+    where p.id = auth.uid() and e.activo and coalesce(p.activo, true));
 $$;
 revoke all on function public.cambios_es_admin() from public;
 grant execute on function public.cambios_es_admin() to authenticated;
@@ -61,8 +71,8 @@ create or replace function public.cambios_sellar_solicitud()
 returns trigger language plpgsql security invoker set search_path = public as $$
 begin
   if not public.cambios_es_admin() then raise exception 'Solo administradores activos'; end if;
-  if new.asignada_a is not null and not exists (select 1 from public.perfiles
-    where id = new.asignada_a and rol = 'admin' and coalesce(activo, true)) then
+  if new.asignada_a is not null and not exists (select 1 from public.cambios_equipo()
+    where id = new.asignada_a) then
     raise exception 'El responsable debe ser administrador activo';
   end if;
   if tg_op = 'INSERT' then
@@ -157,8 +167,9 @@ create policy cambios_adjuntos_crear on public.cambios_adjuntos for insert to au
 -- Lista limitada del equipo: evita entregar las fichas personales completas.
 create or replace function public.cambios_equipo()
 returns table(id uuid, nombre text) language sql stable security definer set search_path = public as $$
-  select p.id, p.nombre from public.perfiles p where public.cambios_es_admin()
-    and p.rol='admin' and coalesce(p.activo,true) order by p.nombre;
+  select p.id, p.nombre from public.perfiles p
+    join public.cambios_equipo_accesos e on e.usuario_id=p.id
+    where public.cambios_es_admin() and e.activo and coalesce(p.activo,true) order by p.nombre;
 $$;
 revoke all on function public.cambios_equipo() from public;
 grant execute on function public.cambios_equipo() to authenticated;

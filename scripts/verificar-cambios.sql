@@ -1,7 +1,8 @@
 -- Pruebas de integridad y permisos. Todo se revierte al finalizar.
 begin;
-select set_config('request.jwt.claim.sub', (select id::text from public.perfiles
-  where rol='admin' and coalesce(activo,true) order by creado_en limit 1), true);
+select set_config('request.jwt.claim.sub', (select p.id::text from public.perfiles p
+  join public.cambios_equipo_accesos e on e.usuario_id=p.id
+  where e.activo and coalesce(p.activo,true) order by p.creado_en limit 1), true);
 set local role authenticated;
 do $$
 declare solicitud uuid; autor uuid := auth.uid(); sello timestamptz; contador int;
@@ -61,6 +62,15 @@ begin
   exception when insufficient_privilege then null; when raise_exception then
     if sqlerrm <> 'Solo administradores activos' then raise; end if;
   end;
+end $$;
+reset role;
+select set_config('request.jwt.claim.sub',coalesce((select id::text from public.perfiles
+  where rol='admin' and not exists(select 1 from public.cambios_equipo_accesos e where e.usuario_id=perfiles.id)
+  limit 1),gen_random_uuid()::text),true);
+set local role authenticated;
+do $$ begin
+  if public.cambios_es_admin() then raise exception 'Fallo: cuenta externa al equipo habilitada'; end if;
+  if exists(select 1 from public.cambios_solicitudes) then raise exception 'Fallo: cuenta externa lee taller'; end if;
 end $$;
 reset role;
 set local role anon;

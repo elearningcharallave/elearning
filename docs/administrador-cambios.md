@@ -2,8 +2,11 @@
 
 `cambios.html` es el taller del equipo: solicitudes por area y prioridad, responsables,
 tres estados (Por hacer, Haciendo, Hecha), comentarios, archivos privados, historial,
-archivado reversible y exportacion JSON. Se abre desde **Cambios y mejoras** en `admin.html`.
-Usa las cuentas administrativas existentes de FUNCECAIND; no crea cuentas ni cambia roles.
+archivado reversible y exportacion JSON. Se abre desde **Cambios y mejoras** en
+`admin.html` o en el menu de `profesor.html` de las cuentas habilitadas.
+Usa las cuentas de FUNCECAIND habilitadas en `cambios_equipo_accesos`. El permiso del
+taller es independiente del rol academico: un profesor puede administrar cambios
+sin obtener permisos sobre alumnos, cuentas o calificaciones de otras personas.
 
 Panel publicado: https://admin-funcecaind.carlos-linares-es.workers.dev/
 
@@ -45,5 +48,9 @@ Cloudflare para subir toda la raiz del repositorio.
 - Registros y archivo temporales retirados; solicitudes, comentarios, eventos y
   adjuntos quedan vacios. No se modificaron cuentas ni permisos existentes.
 
-Pendiente de Carlos: identificar los correos reales del equipo. La base actual
-solo tiene una cuenta administrativa de prueba; no se otorgaron nuevos accesos.
+## Equipo habilitado el 12 de octubre de 2026
+
+Carlos autorizo `carlos.linares.es@gmail.com` y `jahulin@gmail.com`.
+Se reutilizan ambas cuentas, conservando su rol profesor y habilitando unicamente
+el taller de cambios. Aplicar primero `supabase/cambios-equipo.sql` y luego
+`supabase/cambios-accesos.sql`. Las claves no se guardan en el repositorio.
