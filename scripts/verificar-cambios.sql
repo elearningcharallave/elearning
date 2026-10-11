@@ -25,7 +25,9 @@ begin
   if not exists(select 1 from public.cambios_comentarios where solicitud_id=solicitud
     and autor_id=autor and creado_en>'2026-01-01') then raise exception 'Fallo: autor del comentario'; end if;
   select count(*) into contador from public.cambios_eventos where solicitud_id=solicitud;
-  if contador<>4 then raise exception 'Fallo: historial, eventos=%', contador; end if;
+  if contador<>5 then raise exception 'Fallo: historial, eventos=%', contador; end if;
+  if not exists(select 1 from public.cambios_eventos where solicitud_id=solicitud and tipo='comentario' and autor_id=autor)
+    then raise exception 'Fallo: comentario sin trazabilidad'; end if;
   begin
     insert into public.cambios_eventos(solicitud_id,tipo) values(solicitud,'falso');
     raise exception 'Fallo: historial escribible';

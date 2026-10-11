@@ -57,3 +57,26 @@ Carlos autorizo `carlos.linares.es@gmail.com` y `jahulin@gmail.com`.
 Se reutilizan ambas cuentas, conservando su rol profesor y habilitando unicamente
 el taller de cambios. Aplicar primero `supabase/cambios-equipo.sql` y luego
 `supabase/cambios-accesos.sql`. Las claves no se guardan en el repositorio.
+
+## Mejoras operativas del panel
+
+Tablero y lista con filtros y limpieza de seleccion; vista propia para el detalle
+de cada solicitud, con proteccion de formularios sin guardar. Los archivos se pueden
+seleccionar en grupo o arrastrar. La cola valida el tamaño antes de enviar, evita
+duplicados de seleccion y muestra el estado de cada subida. Los errores conservan
+los archivos para reintentar, sin repetir los ya guardados. El progreso cuenta archivos
+terminados; no inventa porcentajes de transferencia. Cada descarga conserva el nombre
+original y ofrece un indicador de carga.
+
+Aplicar tambien `supabase/cambios-historial-aportes.sql` para que los comentarios y
+archivos tengan eventos de autoria en el historial. El texto de los comentarios
+no se duplica en esa tabla. Pruebas de archivos: `node --test scripts/archivos-cambios.test.mjs`.
+
+Verificacion del panel profesional en produccion (12 de octubre de 2026):
+seleccion multiple de ZIP y formato desconocido, rechazo previo de un archivo de
+16 MiB y prevencion de duplicados. Una desconexion simulada conservo ambos archivos;
+el reintento guardo exactamente dos adjuntos. Las descargas autenticadas coincidieron
+byte a byte con los originales y el acceso publico fue rechazado. Se comprobo un
+comentario y cinco eventos de historial. Escritorio y movil de 390 px revisados,
+sin desbordamiento horizontal. Se retiraron solamente la solicitud temporal y sus
+archivos, comentarios y eventos; la sesion del navegador se conservo.
