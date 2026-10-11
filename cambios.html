@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Cambios · FUNCECAIND</title>
+  <link rel="icon" href="assets/favicon.svg">
+  <link rel="stylesheet" href="assets/cambios.css">
+</head>
+<body>
+  <div id="entrada" class="entrada">
+    <section class="acceso">
+      <img src="assets/funcecaind/logo-funcecaind.png" alt="FUNCECAIND" width="210">
+      <h1>Administrador de cambios</h1>
+      <p>Un lugar para pedir mejoras, seguir el trabajo y revisar lo que ya se hizo.</p>
+      <form id="form-entrada">
+        <label>Correo<input id="correo" type="email" autocomplete="username" required></label>
+        <label>Contraseña<input id="clave" type="password" autocomplete="current-password" required></label>
+        <button type="submit" class="primario">Entrar al panel</button>
+      </form>
+      <p id="entrada-error" class="error" role="alert"></p>
+      <p class="nota">Usa tu cuenta de administrador de FUNCECAIND.</p>
+      <a href="https://elearningcharallave.github.io/elearning/">Volver a la plataforma</a>
+    </section>
+  </div>
+  <div id="panel" class="panel" hidden>
+    <aside class="lateral">
+      <img src="assets/funcecaind/logo-funcecaind.png" alt="FUNCECAIND" width="170">
+      <p class="lateral-titulo">Cambios y mejoras</p>
+      <nav aria-label="Secciones del panel">
+        <button data-vista="trabajo" aria-current="page">Solicitudes</button>
+        <button data-vista="historial">Historial de cambios</button>
+        <button data-vista="mapa">Áreas de la plataforma</button>
+      </nav>
+      <div class="pie-lateral">
+        <a href="https://elearningcharallave.github.io/elearning/admin.html">Administración del aula ↗</a>
+        <span id="nombre-usuario"></span>
+        <button id="salir">Cerrar sesión</button>
+      </div>
+    </aside>
+    <main>
+      <header class="cabecera">
+        <div><h1 id="titulo-vista">Solicitudes de cambios</h1><p id="subtitulo-vista">Lo que hace falta, lo que está en marcha y lo que ya quedó listo.</p></div>
+        <div class="acciones"><button id="actualizar">Actualizar</button><button id="exportar">Exportar</button><button id="nueva" class="primario">Nueva solicitud</button></div>
+      </header>
+      <p id="aviso" class="aviso" role="status" aria-live="polite"></p>
+      <section id="vista-trabajo">
+        <div id="resumen" class="resumen" aria-live="polite"></div>
+        <div class="filtros">
+          <label class="buscar">Buscar<input id="buscar" type="search" placeholder="Título o descripción…"></label>
+          <label>Área<select id="filtro-area"><option value="">Todas las áreas</option></select></label>
+          <label>Prioridad<select id="filtro-prioridad"><option value="">Todas</option><option value="alta">Alta</option><option value="normal">Normal</option></select></label>
+          <label>Responsable<select id="filtro-responsable"><option value="">Todos</option><option value="sin">Sin asignar</option></select></label>
+          <label class="casilla"><input id="archivadas" type="checkbox"> Ver archivadas</label>
+        </div>
+        <div id="tablero" class="tablero" aria-label="Tablero de solicitudes"></div>
+      </section>
+      <section id="vista-historial" hidden><div id="historial-general" class="historial"></div></section>
+      <section id="vista-mapa" hidden><div id="mapa" class="mapa"></div></section>
+      <section id="editor" class="editor" hidden aria-labelledby="titulo-editor">
+        <header class="editor-cabecera"><h2 id="titulo-editor">Nueva solicitud</h2><button id="cerrar-editor">Cerrar</button></header>
+        <form id="form-solicitud">
+          <input type="hidden" id="solicitud-id">
+          <label>Título<input id="solicitud-titulo" maxlength="200" required placeholder="¿Qué hay que cambiar?"></label>
+          <label>Descripción<textarea id="solicitud-detalle" rows="5" maxlength="12000" placeholder="Explica cómo está ahora y cómo debería quedar."></textarea></label>
+          <div class="fila-form">
+            <label>Área<select id="solicitud-area"></select></label>
+            <label>Prioridad<select id="solicitud-prioridad"><option value="normal">Normal</option><option value="alta">Alta</option></select></label>
+            <label>Responsable<select id="solicitud-responsable"><option value="">Sin asignar</option></select></label>
+            <label id="campo-estado">Estado<select id="solicitud-estado"><option value="pendiente">Por hacer</option><option value="haciendo">Haciendo</option><option value="hecha">Hecha</option></select></label>
+          </div>
+          <div class="acciones"><button class="primario" type="submit" id="guardar">Guardar solicitud</button><button type="button" id="archivar">Archivar solicitud</button></div>
+        </form>
+        <div id="seguimiento" hidden>
+          <div class="detalle-columnas">
+            <section><h3>Comentarios</h3><div id="comentarios" class="hilo"></div>
+              <form id="form-comentario"><label>Nuevo comentario<textarea id="comentario" maxlength="4000" rows="3" required placeholder="Deja una respuesta, una duda o el resultado del cambio."></textarea></label><button type="submit">Publicar comentario</button></form>
+            </section>
+            <section><h3>Archivos</h3><p class="nota">PDF, Word, Excel, texto o imágenes. Hasta 15 MB por archivo.</p>
+              <div id="adjuntos" class="hilo"></div>
+              <form id="form-adjunto"><label>Adjuntar archivo<input id="archivo" type="file" accept=".pdf,.docx,.xlsx,.txt,.png,.jpg,.jpeg,.webp" required></label><button type="submit">Subir archivo</button></form>
+              <h3 class="titulo-historial">Historial de esta solicitud</h3><div id="historial-solicitud" class="hilo"></div>
+            </section>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="assets/supabase-config.js"></script><script src="assets/app.js"></script>
+  <script src="assets/cambios.js"></script>
+</body>
+</html>

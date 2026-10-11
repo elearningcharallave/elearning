@@ -1,6 +1,8 @@
 # Dependencias / build (por si luego se agrega tooling)
 node_modules/
 dist/
+dist-cambios/
+graphify-out/
 .cache/
 
 # Sistema

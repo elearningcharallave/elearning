@@ -1,0 +1,10 @@
+{
+  "name": "admin-funcecaind",
+  "account_id": "97daa1add9c0c3b4a47be1da0f52ad54",
+  "compatibility_date": "2026-10-11",
+  "workers_dev": true,
+  "assets": {
+    "directory": "./dist-cambios",
+    "html_handling": "auto-trailing-slash"
+  }
+}

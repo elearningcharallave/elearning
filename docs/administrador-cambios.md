@@ -1,0 +1,49 @@
+# Administrador de cambios de FUNCECAIND
+
+`cambios.html` es el taller del equipo: solicitudes por area y prioridad, responsables,
+tres estados (Por hacer, Haciendo, Hecha), comentarios, archivos privados, historial,
+archivado reversible y exportacion JSON. Se abre desde **Cambios y mejoras** en `admin.html`.
+Usa las cuentas administrativas existentes de FUNCECAIND; no crea cuentas ni cambia roles.
+
+Panel publicado: https://admin-funcecaind.carlos-linares-es.workers.dev/
+
+## Datos y permisos
+
+Aplicar `supabase/cambios-equipo.sql` en el proyecto FUNCECAIND. Crea cuatro tablas
+`cambios_*`, funciones y un bucket privado `cambios-funcecaind`. Solo administradores
+activos pueden leer/escribir; autoria y fechas se sellan en servidor. El historial
+no se puede editar desde el navegador. El estado Hecha conserva quien y cuando;
+reabrirlo limpia ese sello y deja un evento. Las fichas de alumnos y los cursos
+existentes no se modifican. El taller comienza sin solicitudes.
+
+Los archivos son PDF, Word DOCX, Excel XLSX, TXT, PNG, JPEG o WebP de hasta 15 MB.
+Se descargan con la sesion administrativa y no tienen enlaces publicos.
+No adjuntar credenciales ni datos personales innecesarios.
+
+## Publicar
+
+El sitio GitHub Pages sirve `cambios.html` sin compilacion, igual que los demas HTML.
+El panel separado usa Static Assets de Cloudflare Workers:
+
+```powershell
+node scripts/preparar-cambios.mjs
+node C:/Users/carlo/Documents/admin-alcaldia/node_modules/wrangler/bin/wrangler.js deploy --config wrangler.cambios.jsonc
+```
+
+El script prepara una lista cerrada de recursos en `dist-cambios/`. Nunca configurar
+Cloudflare para subir toda la raiz del repositorio.
+
+## Verificacion del 11 de octubre de 2026
+
+- SQL aplicado al proyecto FUNCECAIND y probado con `node scripts/verificar-cambios.mjs`.
+- Pruebas transaccionales: estados, autoria sellada, cierre y reapertura, historial
+  inmutable, archivo reversible, concurrencia y aislamiento de alumnos/visitantes.
+- Chrome en produccion: ingreso con cuenta de prueba existente, crear solicitud,
+  comentar, pasar por los tres estados, subir archivo, archivar y restaurar.
+- Descarga autenticada HTTP 200 con contenido binario identico; URL publica rechazada.
+- Revision visual en escritorio y telefono de 390 px, sin desbordamiento horizontal.
+- Registros y archivo temporales retirados; solicitudes, comentarios, eventos y
+  adjuntos quedan vacios. No se modificaron cuentas ni permisos existentes.
+
+Pendiente de Carlos: identificar los correos reales del equipo. La base actual
+solo tiene una cuenta administrativa de prueba; no se otorgaron nuevos accesos.
