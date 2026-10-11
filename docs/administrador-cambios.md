@@ -2,6 +2,7 @@
 
 `cambios.html` es el taller del equipo: solicitudes por area y prioridad, responsables,
 tres estados (Por hacer, Haciendo, Hecha), comentarios, archivos privados, historial,
+propuestas de secciones, paginas y funciones nuevas con filtro por tipo,
 archivado reversible y exportacion JSON. Se abre desde **Cambios y mejoras** en
 `admin.html` o en el menu de `profesor.html` de las cuentas habilitadas.
 Usa las cuentas de FUNCECAIND habilitadas en `cambios_equipo_accesos`. El permiso del
@@ -19,7 +20,9 @@ no se puede editar desde el navegador. El estado Hecha conserva quien y cuando;
 reabrirlo limpia ese sello y deja un evento. Las fichas de alumnos y los cursos
 existentes no se modifican. El taller comienza sin solicitudes.
 
-Los archivos son PDF, Word DOCX, Excel XLSX, TXT, PNG, JPEG o WebP de hasta 15 MB.
+Se admite cualquier tipo de archivo no vacio de hasta 15 MB, incluidos ZIP, RAR,
+audios, videos y formatos especializados. La ampliacion del bucket existente
+se aplica con `supabase/cambios-archivos-todos.sql`.
 Se descargan con la sesion administrativa y no tienen enlaces publicos.
 No adjuntar credenciales ni datos personales innecesarios.
 

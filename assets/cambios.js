@@ -14,8 +14,7 @@
     comunicacion: ['Comunicación', 'Foros y mensajes de la plataforma.', 'foro.html']
   };
   const ESTADOS = { pendiente: 'Por hacer', haciendo: 'Haciendo', hecha: 'Hecha' };
-  const TIPOS = { pdf:'application/pdf', png:'image/png', jpg:'image/jpeg', jpeg:'image/jpeg', webp:'image/webp', txt:'text/plain',
-    docx:'application/vnd.openxmlformats-officedocument.wordprocessingml.document', xlsx:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' };
+  const PROPUESTAS = { mejora:'Cambio o mejora', parte_nueva:'Parte nueva' };
   const sb = FV.sb;
   let usuario, equipo = [], solicitudes = [], eventos = [], actual = null, vista = 'trabajo';
   let cargando = false, versionHilo = 0;
@@ -74,6 +73,7 @@
     const responsable = $('filtro-responsable').value;
     return solicitudes.filter((s) => s.archivada === $('archivadas').checked
       && (!$('filtro-area').value || s.area === $('filtro-area').value)
+      && (!$('filtro-tipo').value || (s.tipo || 'mejora') === $('filtro-tipo').value)
       && (!$('filtro-prioridad').value || s.prioridad === $('filtro-prioridad').value)
       && (!responsable || (responsable === 'sin' ? !s.asignada_a : s.asignada_a === responsable))
       && (!texto || (s.titulo + ' ' + s.detalle).toLocaleLowerCase('es').includes(texto)));
@@ -88,7 +88,7 @@
         ? String(b.hecha_en).localeCompare(String(a.hecha_en))
         : (b.prioridad==='alta')-(a.prioridad==='alta') || a.creada_en.localeCompare(b.creada_en));
       return `<section class="columna"><h2>${nombre}<span>${grupo.length}</span></h2>` + (grupo.length ? grupo.map((s) =>
-        `<button class="solicitud" data-abrir="${s.id}"><div class="meta"><span>${esc(AREAS[s.area]?.[0] || s.area)}</span>${s.prioridad==='alta'?'<span class="etiqueta alta">Alta prioridad</span>':''}</div><strong>${esc(s.titulo)}</strong><p>${esc(s.detalle.slice(0,170))}${s.detalle.length>170?'…':''}</p><div class="meta"><span>${esc(persona(s.asignada_a))}</span><span>${fecha(id==='hecha'?s.hecha_en:s.creada_en)}</span></div>${s.archivada?'<span class="etiqueta">Archivada</span>':''}</button>`).join('')
+        `<button class="solicitud" data-abrir="${s.id}"><div class="meta"><span>${esc(AREAS[s.area]?.[0] || s.area)}</span>${s.prioridad==='alta'?'<span class="etiqueta alta">Alta prioridad</span>':''}</div><strong>${esc(s.titulo)}</strong><p><span class="etiqueta">${PROPUESTAS[s.tipo || 'mejora']}</span></p><p>${esc(s.detalle.slice(0,170))}${s.detalle.length>170?'…':''}</p><div class="meta"><span>${esc(persona(s.asignada_a))}</span><span>${fecha(id==='hecha'?s.hecha_en:s.creada_en)}</span></div>${s.archivada?'<span class="etiqueta">Archivada</span>':''}</button>`).join('')
         : `<p class="vacio">${lista.length ? 'Sin solicitudes en este estado.' : (solicitudes.length ? 'No hay solicitudes que coincidan con estos filtros.' : 'Aún no hay solicitudes. Crea la primera con «Nueva solicitud».')}</p>`) + '</section>';
     }).join('');
     $('historial-general').innerHTML = eventos.length ? eventos.map((e) => eventoHtml(e,true)).join('') : '<p class="vacio">Aquí aparecerá el historial cuando se registre la primera solicitud.</p>';
@@ -102,7 +102,7 @@
       if (e.antes.estado !== e.despues.estado) cambios.push(`${ESTADOS[e.antes.estado]} → ${ESTADOS[e.despues.estado]}`);
       if (e.antes.archivada !== e.despues.archivada) cambios.push(e.despues.archivada ? 'Archivó la solicitud' : 'Restauró la solicitud');
       if (e.antes.asignada_a !== e.despues.asignada_a) cambios.push('Responsable: ' + persona(e.despues.asignada_a));
-      for (const [clave,nombre] of [['titulo','Título'],['detalle','Descripción'],['area','Área'],['prioridad','Prioridad']]) {
+      for (const [clave,nombre] of [['titulo','Título'],['tipo','Tipo de propuesta'],['detalle','Descripción'],['area','Área'],['prioridad','Prioridad']]) {
         if (e.antes[clave] !== e.despues[clave]) cambios.push(nombre + ' actualizado');
       }
       texto = cambios.join(' · ') || 'Actualizó la solicitud';
@@ -115,6 +115,7 @@
     ++versionHilo;
     $('editor').hidden = false; $('titulo-editor').textContent = actual ? 'Seguimiento de la solicitud' : 'Nueva solicitud';
     $('solicitud-id').value = actual?.id || ''; $('solicitud-titulo').value = actual?.titulo || '';
+    $('solicitud-tipo').value = actual?.tipo || 'mejora';
     $('solicitud-detalle').value = actual?.detalle || ''; $('solicitud-area').value = actual?.area || 'general';
     $('solicitud-prioridad').value = actual?.prioridad || 'normal'; $('solicitud-responsable').value = actual?.asignada_a || '';
     $('solicitud-estado').value = actual?.estado || 'pendiente'; $('campo-estado').hidden = !actual;
@@ -151,7 +152,7 @@
   $('form-solicitud').addEventListener('submit',(e)=>{
     e.preventDefault(); ocupada(e.currentTarget,async()=>{
       const titulo=$('solicitud-titulo').value.trim(); if(!titulo) { aviso('Escribe un título para la solicitud.',true); return; }
-      const datos={titulo,detalle:$('solicitud-detalle').value.trim(),area:$('solicitud-area').value,prioridad:$('solicitud-prioridad').value,asignada_a:$('solicitud-responsable').value||null};
+      const datos={titulo,tipo:$('solicitud-tipo').value,detalle:$('solicitud-detalle').value.trim(),area:$('solicitud-area').value,prioridad:$('solicitud-prioridad').value,asignada_a:$('solicitud-responsable').value||null};
       let guardada;
       if(actual) {
         datos.estado=$('solicitud-estado').value;
@@ -178,10 +179,10 @@
   $('form-adjunto').addEventListener('submit',(e)=>{
     e.preventDefault(); ocupada(e.currentTarget,async()=>{
       if(!actual) return; const id=actual.id,file=$('archivo').files[0]; if(!file) return;
-      const extension=file.name.split('.').pop().toLowerCase(),tipo=TIPOS[extension];
-      if(!tipo||!file.size||file.size>15728640) { aviso('Elige un archivo permitido de hasta 15 MB.',true); return; }
-      const ruta=id+'/'+crypto.randomUUID()+'.'+extension;
-      await consulta(sb.storage.from('cambios-funcecaind').upload(ruta,file,{contentType:tipo,upsert:false}));
+      if(!file.size||file.size>15728640) { aviso('Elige un archivo no vacío de hasta 15 MB.',true); return; }
+      const ruta=id+'/'+crypto.randomUUID();
+      // Se descargan con el nombre original; ningun formato se ejecuta dentro del panel.
+      await consulta(sb.storage.from('cambios-funcecaind').upload(ruta,file,{contentType:'application/octet-stream',upsert:false}));
       try { await consulta(sb.from('cambios_adjuntos').insert({solicitud_id:id,nombre:file.name.slice(0,250),ruta,tamano:file.size,autor_id:usuario.id})); }
       catch(error) { await sb.storage.from('cambios-funcecaind').remove([ruta]); throw error; }
       $('archivo').value=''; await hilo(id); aviso('Archivo adjuntado. Solo el equipo administrador puede abrirlo.');
@@ -208,7 +209,7 @@
   $('nueva').addEventListener('click',()=>abrir());
   $('cerrar-editor').addEventListener('click',()=>{ $('editor').hidden=true; actual=null; ++versionHilo; $('nueva').focus(); });
   $('actualizar').addEventListener('click',refrescar);
-  for(const id of ['buscar','filtro-area','filtro-prioridad','filtro-responsable','archivadas']) $(id).addEventListener(id==='buscar'?'input':'change',pintar);
+  for(const id of ['buscar','filtro-area','filtro-tipo','filtro-prioridad','filtro-responsable','archivadas']) $(id).addEventListener(id==='buscar'?'input':'change',pintar);
   $('salir').addEventListener('click',async()=>{ await sb.auth.signOut(); location.reload(); });
   $('exportar').addEventListener('click',()=>{
     const contenido=JSON.stringify({plataforma:'FUNCECAIND',exportado_en:new Date().toISOString(),solicitudes:filtradas(),historial:eventos.filter((e)=>filtradas().some((s)=>s.id===e.solicitud_id))},null,2);

@@ -22,6 +22,7 @@ grant execute on function public.cambios_es_admin() to authenticated;
 create table if not exists public.cambios_solicitudes (
   id uuid primary key default gen_random_uuid(),
   titulo text not null check (length(btrim(titulo)) between 1 and 200),
+  tipo text not null default 'mejora' check (tipo in ('mejora','parte_nueva')),
   detalle text not null default '' check (length(detalle) <= 12000),
   area text not null default 'general' check (area in
     ('general','web','cuentas','cursos','clases','evaluaciones','certificados','comunicacion')),
@@ -35,6 +36,8 @@ create table if not exists public.cambios_solicitudes (
   actualizada_en timestamptz not null default clock_timestamp(),
   hecha_en timestamptz
 );
+alter table public.cambios_solicitudes add column if not exists tipo text not null
+  default 'mejora' check (tipo in ('mejora','parte_nueva'));
 create table if not exists public.cambios_comentarios (
   id uuid primary key default gen_random_uuid(),
   solicitud_id uuid not null references public.cambios_solicitudes(id),
@@ -98,10 +101,10 @@ returns trigger language plpgsql security definer set search_path = public as $$
 declare antes jsonb; despues jsonb;
 begin
   if tg_op = 'UPDATE' then
-    antes := jsonb_build_object('titulo',old.titulo,'detalle',old.detalle,'area',old.area,
+    antes := jsonb_build_object('titulo',old.titulo,'tipo',old.tipo,'detalle',old.detalle,'area',old.area,
       'estado',old.estado,'prioridad',old.prioridad,'asignada_a',old.asignada_a,'archivada',old.archivada);
   end if;
-  despues := jsonb_build_object('titulo',new.titulo,'detalle',new.detalle,'area',new.area,
+  despues := jsonb_build_object('titulo',new.titulo,'tipo',new.tipo,'detalle',new.detalle,'area',new.area,
     'estado',new.estado,'prioridad',new.prioridad,'asignada_a',new.asignada_a,'archivada',new.archivada);
   if antes is distinct from despues then
     insert into public.cambios_eventos(solicitud_id, autor_id, tipo, antes, despues)
@@ -144,7 +147,7 @@ alter table public.cambios_adjuntos enable row level security;
 revoke all on public.cambios_solicitudes, public.cambios_comentarios,
   public.cambios_eventos, public.cambios_adjuntos from anon, authenticated;
 grant select, insert on public.cambios_solicitudes to authenticated;
-grant update(titulo,detalle,area,estado,prioridad,asignada_a,archivada) on public.cambios_solicitudes to authenticated;
+grant update(titulo,tipo,detalle,area,estado,prioridad,asignada_a,archivada) on public.cambios_solicitudes to authenticated;
 grant select, insert on public.cambios_comentarios, public.cambios_adjuntos to authenticated;
 grant select on public.cambios_eventos to authenticated;
 drop policy if exists cambios_solicitudes_leer on public.cambios_solicitudes;
@@ -175,10 +178,7 @@ revoke all on function public.cambios_equipo() from public;
 grant execute on function public.cambios_equipo() to authenticated;
 
 insert into storage.buckets(id,name,public,file_size_limit,allowed_mime_types)
-values('cambios-funcecaind','cambios-funcecaind',false,15728640,array[
-  'application/pdf','image/png','image/jpeg','image/webp','text/plain',
-  'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'])
+values('cambios-funcecaind','cambios-funcecaind',false,15728640,null)
 on conflict(id) do nothing;
 drop policy if exists cambios_archivos_leer on storage.objects;
 create policy cambios_archivos_leer on storage.objects for select to authenticated

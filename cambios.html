@@ -12,7 +12,7 @@
     <section class="acceso">
       <img src="assets/funcecaind/logo-funcecaind.png" alt="FUNCECAIND" width="210">
       <h1>Administrador de cambios</h1>
-      <p>Un lugar para pedir mejoras, seguir el trabajo y revisar lo que ya se hizo.</p>
+      <p>Un lugar para pedir mejoras, proponer partes nuevas y seguir el trabajo.</p>
       <form id="form-entrada">
         <label>Correo<input id="correo" type="email" autocomplete="username" required></label>
         <label>Contraseña<input id="clave" type="password" autocomplete="current-password" required></label>
@@ -49,6 +49,7 @@
         <div class="filtros">
           <label class="buscar">Buscar<input id="buscar" type="search" placeholder="Título o descripción…"></label>
           <label>Área<select id="filtro-area"><option value="">Todas las áreas</option></select></label>
+          <label>Tipo de propuesta<select id="filtro-tipo"><option value="">Todas</option><option value="mejora">Cambio o mejora</option><option value="parte_nueva">Parte nueva</option></select></label>
           <label>Prioridad<select id="filtro-prioridad"><option value="">Todas</option><option value="alta">Alta</option><option value="normal">Normal</option></select></label>
           <label>Responsable<select id="filtro-responsable"><option value="">Todos</option><option value="sin">Sin asignar</option></select></label>
           <label class="casilla"><input id="archivadas" type="checkbox"> Ver archivadas</label>
@@ -61,8 +62,9 @@
         <header class="editor-cabecera"><h2 id="titulo-editor">Nueva solicitud</h2><button id="cerrar-editor">Cerrar</button></header>
         <form id="form-solicitud">
           <input type="hidden" id="solicitud-id">
+          <label>¿Qué quieres proponer?<select id="solicitud-tipo"><option value="mejora">Cambiar o mejorar algo existente</option><option value="parte_nueva">Crear una sección, página o función nueva</option></select></label>
           <label>Título<input id="solicitud-titulo" maxlength="200" required placeholder="¿Qué hay que cambiar?"></label>
-          <label>Descripción<textarea id="solicitud-detalle" rows="5" maxlength="12000" placeholder="Explica cómo está ahora y cómo debería quedar."></textarea></label>
+          <label>Descripción<textarea id="solicitud-detalle" rows="5" maxlength="12000" placeholder="Explica qué propones, para quién sirve y cómo debería funcionar."></textarea></label>
           <div class="fila-form">
             <label>Área<select id="solicitud-area"></select></label>
             <label>Prioridad<select id="solicitud-prioridad"><option value="normal">Normal</option><option value="alta">Alta</option></select></label>
@@ -76,9 +78,9 @@
             <section><h3>Comentarios</h3><div id="comentarios" class="hilo"></div>
               <form id="form-comentario"><label>Nuevo comentario<textarea id="comentario" maxlength="4000" rows="3" required placeholder="Deja una respuesta, una duda o el resultado del cambio."></textarea></label><button type="submit">Publicar comentario</button></form>
             </section>
-            <section><h3>Archivos</h3><p class="nota">PDF, Word, Excel, texto o imágenes. Hasta 15 MB por archivo.</p>
+            <section><h3>Archivos</h3><p class="nota">Cualquier tipo de archivo. Hasta 15 MB por archivo.</p>
               <div id="adjuntos" class="hilo"></div>
-              <form id="form-adjunto"><label>Adjuntar archivo<input id="archivo" type="file" accept=".pdf,.docx,.xlsx,.txt,.png,.jpg,.jpeg,.webp" required></label><button type="submit">Subir archivo</button></form>
+              <form id="form-adjunto"><label>Adjuntar archivo<input id="archivo" type="file" required></label><button type="submit">Subir archivo</button></form>
               <h3 class="titulo-historial">Historial de esta solicitud</h3><div id="historial-solicitud" class="hilo"></div>
             </section>
           </div>
@@ -88,6 +90,6 @@
   </div>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="assets/supabase-config.js"></script><script src="assets/app.js"></script>
-  <script src="assets/cambios.js?v=equipo-20261012"></script>
+  <script src="assets/cambios.js?v=propuestas-20261012"></script>
 </body>
 </html>
