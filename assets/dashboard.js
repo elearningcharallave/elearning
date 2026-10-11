@@ -28,18 +28,25 @@
     finally{cargando=false;$('vista-dashboard').removeAttribute('aria-busy');if(repetir&&activo){repetir=false;actualizar();}}
   }
   function programar(){if(!visible())return;clearTimeout(pendiente);pendiente=setTimeout(actualizar,500);}
-  function iniciar(cliente){
-    if(activo)return;sb=cliente;activo=true;
+  function conectar(){
     canal=sb.channel('dashboard-funcecaind').on('postgres_changes',{event:'INSERT',schema:'public',table:'dashboard_eventos'},()=>{programar();}).subscribe((estado)=>{
       if(!activo)return;enLinea=estado==='SUBSCRIBED';
       conexion(enLinea?'En tiempo real · conexión activa':'Reconectando · respaldo cada 30 s');
       if(enLinea&&visible())actualizar();
     });
+  }
+  function iniciar(cliente){
+    if(activo)return;sb=cliente;activo=true;conectar();
     intervalo=setInterval(()=>{if(visible())actualizar();},30000);actualizar();
   }
   function detener(){activo=false;enLinea=false;clearTimeout(pendiente);clearInterval(intervalo);if(canal)sb.removeChannel(canal);}
   document.addEventListener('visibilitychange',()=>{if(visible())actualizar();});
-  window.addEventListener('online',()=>{if(visible())actualizar();});
+  window.addEventListener('online',async()=>{
+    if(!activo)return;
+    enLinea=false;conexion('Reconectando · respaldo cada 30 s');
+    if(canal)await sb.removeChannel(canal);
+    if(activo){conectar();if(visible())actualizar();}
+  });
   window.addEventListener('offline',()=>{enLinea=false;conexion('Sin conexión · datos sin actualizar');});
   window.FCDashboard={iniciar,actualizar,detener};
 })();
