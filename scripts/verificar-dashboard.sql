@@ -5,7 +5,7 @@ do $$ declare d jsonb; begin
   d:=public.dashboard_resumen();
   if (d#>>'{usuarios,total}')::bigint<>(select count(*) from public.perfiles)
     or (d#>>'{academico,matriculas}')::bigint<>(select count(*) from public.matriculas)
-    or (d#>>'{academico,sin_calificar}')::bigint<>(select count(*) from public.entregas where nota is null)
+    or (d#>>'{academico,sin_calificar}')::bigint<>(select count(*) from public.entregas e join public.tareas t on t.id=e.tarea_id join public.cursos c on c.id=t.curso_id where e.nota is null and not c.archivado)
     or (d#>>'{academico,certificados}')::bigint<>(select count(*) from public.certificados)
     or (d#>>'{cambios,total}')::bigint<>(select count(*) from public.cambios_solicitudes)
     then raise exception 'Totales incorrectos'; end if;

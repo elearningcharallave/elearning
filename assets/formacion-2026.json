@@ -1,0 +1,1785 @@
+{
+  "cursos": [
+    {
+      "tipo": "curso",
+      "codigo": "Adm. 001",
+      "area": "Administración",
+      "nombre": "LOGÍSTICA DE ALMACÉN Y CONTROL DE STOCK",
+      "duracion": "21 HORAS",
+      "modalidad": null,
+      "fuente": "Modulos funce.html"
+    },
+    {
+      "tipo": "curso",
+      "codigo": "Adm. 002",
+      "area": "Administración",
+      "nombre": "CONTABILIDAD BÁSICA",
+      "duracion": "28 HORAS",
+      "modalidad": null,
+      "fuente": "Modulos funce.html"
+    },
+    {
+      "tipo": "curso",
+      "codigo": "Adm. 003",
+      "area": "Administración",
+      "nombre": "CONTABILIDAD COMPLEMENTARIA",
+      "duracion": "28 HORAS",
+      "modalidad": null,
+      "fuente": "Modulos funce.html"
+    },
+    {
+      "tipo": "curso",
+      "codigo": "Adm. 004",
+      "area": "Administración",
+      "nombre": "CONTABILIDAD SUPERIOR",
+      "duracion": "28 HORAS",
+      "modalidad": null,
+      "fuente": "Modulos funce.html"
+    },
+    {
+      "tipo": "curso",
+      "codigo": "Adm. 005",
+      "area": "Administración",
+      "nombre": "ARITMETICA APLICADA",
+      "duracion": "20 HORAS",
+      "modalidad": null,
+      "fuente": "Modulos funce.html"
+    },
+    {
+      "tipo": "curso",
+      "codigo": "Adm. 006",
+      "area": "Administración",
+      "nombre": "ABASTECIMIENTOS Y COMPRAS",
+      "duracion": "16 HORAS",
+      "modalidad": null,
+      "fuente": "Modulos funce.html"
+    },
+    {
+      "tipo": "curso",
+      "codigo": "Adm. 007",
+      "area": "Administración",
+      "nombre": "TALLER PRACTICOS DE ESTRUCTURAS DE COSTO",
+      "duracion": "16 HORAS",
+      "modalidad": null,
+      "fuente": "Modulos funce.html"
+    },
+    {
+      "tipo": "curso",
+      "codigo": "Adm. 008",
+      "area": "Administración",
+      "nombre": "DOCUMENTOS MERCANTILES",
+      "duracion": "16 HORAS",
+      "modalidad": null,
+      "fuente": "Modulos funce.html"
+    },
+    {
+      "tipo": "curso",
+      "codigo": "Adm. 009",
+      "area": "Administración",
+      "nombre": "ANALISIS DE ESTADOS FINANCIEROS",
+      "duracion": "16 HORAS",
+      "modalidad": null,
+      "fuente": "Modulos funce.html"
+    },
+    {
+      "tipo": "curso",
+      "codigo": "Cc. 001",
+      "area": "Calidad",
+      "nombre": "TECNICAS BASICAS DE LA CALIDAD I",
+      "duracion": "16 HORAS",
+      "modalidad": null,
+      "fuente": "Modulos funce.html"
+    },
+    {
+      "tipo": "curso",
+      "codigo": "Cc. 002",
+      "area": "Calidad",
+      "nombre": "TECNICAS BASICAS DE LA CALIDAD II",
+      "duracion": "16 HORAS",
+      "modalidad": null,
+      "fuente": "Modulos funce.html"
+    },
+    {
+      "tipo": "curso",
+      "codigo": "Cc. 003",
+      "area": "Calidad",
+      "nombre": "INSTRUMENTO DE MEDICION",
+      "duracion": "21 HORAS",
+      "modalidad": null,
+      "fuente": "Modulos funce.html"
+    },
+    {
+      "tipo": "curso",
+      "codigo": "Cc. 004",
+      "area": "Calidad",
+      "nombre": "TECNICAS DE MUESTREO",
+      "duracion": "16 HORAS",
+      "modalidad": null,
+      "fuente": "Modulos funce.html"
+    },
+    {
+      "tipo": "curso",
+      "codigo": "Cc. 005",
+      "area": "Calidad",
+      "nombre": "ELABORACION DE MANUALES DE LA CALIDAD",
+      "duracion": "16 HORAS",
+      "modalidad": null,
+      "fuente": "Modulos funce.html"
+    },
+    {
+      "tipo": "curso",
+      "codigo": "Cc. 006",
+      "area": "Calidad",
+      "nombre": "CONTROL ESTADISTICOS DE PROCESO",
+      "duracion": "16 HORAS",
+      "modalidad": null,
+      "fuente": "Modulos funce.html"
+    },
+    {
+      "tipo": "curso",
+      "codigo": "Cc. 007",
+      "area": "Calidad",
+      "nombre": "REDACCION DE INFORMES TECNICOS",
+      "duracion": "16 HORAS",
+      "modalidad": null,
+      "fuente": "Modulos funce.html"
+    },
+    {
+      "tipo": "curso",
+      "codigo": "Cc. 008",
+      "area": "Calidad",
+      "nombre": "ANALISIS QUIMICOS",
+      "duracion": "28 HORAS",
+      "modalidad": null,
+      "fuente": "Modulos funce.html"
+    },
+    {
+      "tipo": "curso",
+      "codigo": "Cc. 009",
+      "area": "Calidad",
+      "nombre": "AUDITORIAS DE SISTEMAS DE CALIDAD",
+      "duracion": "16 HORAS",
+      "modalidad": null,
+      "fuente": "Modulos funce.html"
+    },
+    {
+      "tipo": "curso",
+      "codigo": "Cc. 010",
+      "area": "Calidad",
+      "nombre": "NORMAS ISO 9000",
+      "duracion": "16 HORAS",
+      "modalidad": null,
+      "fuente": "Modulos funce.html"
+    },
+    {
+      "tipo": "curso",
+      "codigo": "Cc. 011",
+      "area": "Calidad",
+      "nombre": "CALIDAD DE TRABAJO",
+      "duracion": "16 HORAS",
+      "modalidad": null,
+      "fuente": "Modulos funce.html"
+    },
+    {
+      "tipo": "curso",
+      "codigo": "Cc. 014",
+      "area": "Calidad",
+      "nombre": "CONDUCCION DE REUNIONES Y PRESENTACIONES ORALES",
+      "duracion": "16 HORAS",
+      "modalidad": null,
+      "fuente": "Modulos funce.html"
+    },
+    {
+      "tipo": "curso",
+      "codigo": "Co. 001",
+      "area": "Computación",
+      "nombre": "PROGRAMA PRACTICO DE COMPUTACION",
+      "duracion": "28 HORAS",
+      "modalidad": null,
+      "fuente": "Modulos funce.html"
+    },
+    {
+      "tipo": "curso",
+      "codigo": "Co. 005",
+      "area": "Computación",
+      "nombre": "PROGRAMA PRACTICO DE WORD Y EXCELL",
+      "duracion": "28 HORAS",
+      "modalidad": null,
+      "fuente": "Modulos funce.html"
+    },
+    {
+      "tipo": "curso",
+      "codigo": "Co. 006",
+      "area": "Computación",
+      "nombre": "EXCEL BASICO",
+      "duracion": "16 HORAS",
+      "modalidad": null,
+      "fuente": "Modulos funce.html"
+    },
+    {
+      "tipo": "curso",
+      "codigo": "Co. 007",
+      "area": "Computación",
+      "nombre": "EXCEL INTERMEDIO",
+      "duracion": "16 HORAS",
+      "modalidad": null,
+      "fuente": "Modulos funce.html"
+    },
+    {
+      "tipo": "curso",
+      "codigo": "Co. 008",
+      "area": "Computación",
+      "nombre": "EXCEL AVANZADO",
+      "duracion": "16 HORAS",
+      "modalidad": null,
+      "fuente": "Modulos funce.html"
+    },
+    {
+      "tipo": "curso",
+      "codigo": "El. 001",
+      "area": "Electricidad",
+      "nombre": "FUNDAMENTOS DE TECNOLOGÍA ELÉCTRICA",
+      "duracion": "16 HORAS",
+      "modalidad": null,
+      "fuente": "Modulos funce.html"
+    },
+    {
+      "tipo": "curso",
+      "codigo": "El. 002",
+      "area": "Electricidad",
+      "nombre": "MEDICIONES ELÉCTRICAS",
+      "duracion": "16 HORAS",
+      "modalidad": null,
+      "fuente": "Modulos funce.html"
+    },
+    {
+      "tipo": "curso",
+      "codigo": "El. 003",
+      "area": "Electricidad",
+      "nombre": "INSTALACIONES ELÉCTRICAS",
+      "duracion": "21 HORAS",
+      "modalidad": null,
+      "fuente": "Modulos funce.html"
+    },
+    {
+      "tipo": "curso",
+      "codigo": "El. 004",
+      "area": "Electricidad",
+      "nombre": "LECTURA E INTERPRETACIÓN DE PLANOS ELÉCTRICOS",
+      "duracion": "16 HORAS",
+      "modalidad": null,
+      "fuente": "Modulos funce.html"
+    },
+    {
+      "tipo": "curso",
+      "codigo": "El. 005",
+      "area": "Electricidad",
+      "nombre": "LOCALIZACIONES DE FALLAS ELECTRICAS",
+      "duracion": "16 HORAS",
+      "modalidad": null,
+      "fuente": "Modulos funce.html"
+    },
+    {
+      "tipo": "curso",
+      "codigo": "El. 006",
+      "area": "Electricidad",
+      "nombre": "ELECTRICIDAD DE MANTENIMIENTO",
+      "duracion": "21 HORAS",
+      "modalidad": null,
+      "fuente": "Modulos funce.html"
+    },
+    {
+      "tipo": "curso",
+      "codigo": "El. 007",
+      "area": "Electricidad",
+      "nombre": "MOTORES Y TRANSFORMADORES",
+      "duracion": "21 HORAS",
+      "modalidad": null,
+      "fuente": "Modulos funce.html"
+    },
+    {
+      "tipo": "curso",
+      "codigo": "El. 008",
+      "area": "Electricidad",
+      "nombre": "MANTENIMIENTO Y ANÁLISIS DE FALLAS",
+      "duracion": "21 HORAS",
+      "modalidad": null,
+      "fuente": "Modulos funce.html"
+    },
+    {
+      "tipo": "curso",
+      "codigo": "El. 009",
+      "area": "Electricidad",
+      "nombre": "CONTROL DE MOTORES ELECTRICOS INDUSTRIALES",
+      "duracion": "21 HORAS",
+      "modalidad": null,
+      "fuente": "Modulos funce.html"
+    },
+    {
+      "tipo": "curso",
+      "codigo": "El. 010",
+      "area": "Electricidad",
+      "nombre": "INTRODUCCIÓN A LOS PLC (SISTEMA SIEMENS - LOGO)",
+      "duracion": "21 HORAS",
+      "modalidad": null,
+      "fuente": "Modulos funce.html"
+    },
+    {
+      "tipo": "curso",
+      "codigo": "Elt. 001",
+      "area": "Electrónica",
+      "nombre": "FUNDAMENTOS DE TECNOLOGIA ELECTRONICAS",
+      "duracion": "16 HORAS",
+      "modalidad": null,
+      "fuente": "Modulos funce.html"
+    },
+    {
+      "tipo": "curso",
+      "codigo": "Elt. 009",
+      "area": "Electrónica",
+      "nombre": "LOCALIZACIÓN DE FALLAS EN CIRCUITOS ELECTRONICOS",
+      "duracion": "16 HORAS",
+      "modalidad": null,
+      "fuente": "Modulos funce.html"
+    },
+    {
+      "tipo": "curso",
+      "codigo": "Gg. 001",
+      "area": "Gerencia",
+      "nombre": "DESARROLLO GERENCIAL",
+      "duracion": "21 HORAS",
+      "modalidad": null,
+      "fuente": "Modulos funce.html"
+    },
+    {
+      "tipo": "curso",
+      "codigo": "Gg. 002",
+      "area": "Gerencia",
+      "nombre": "GERENCIA POR OBJETIVOS",
+      "duracion": "21 HORAS",
+      "modalidad": null,
+      "fuente": "Modulos funce.html"
+    },
+    {
+      "tipo": "curso",
+      "codigo": "Gg. 003",
+      "area": "Gerencia",
+      "nombre": "ANÁLISIS SISTEMÁTICO DE PROBLEMAS Y DECISIONES",
+      "duracion": "21 HORAS",
+      "modalidad": null,
+      "fuente": "Modulos funce.html"
+    },
+    {
+      "tipo": "curso",
+      "codigo": "Gg. 004",
+      "area": "Gerencia",
+      "nombre": "LECTURA, ANÁLISIS E INTERPRETACIÓN DE ESTADOS FINANCIEROS",
+      "duracion": "21 HORAS",
+      "modalidad": null,
+      "fuente": "Modulos funce.html"
+    },
+    {
+      "tipo": "curso",
+      "codigo": "Gg. 005",
+      "area": "Gerencia",
+      "nombre": "DINAMICA GERENCIAL DE VENTAS",
+      "duracion": "16 HORAS",
+      "modalidad": null,
+      "fuente": "Modulos funce.html"
+    },
+    {
+      "tipo": "curso",
+      "codigo": "Me. 001",
+      "area": "Mecánica",
+      "nombre": "LECTURA E INTERPRETACIÓN DE PLANOS MECÁNICOS",
+      "duracion": "16 HORAS",
+      "modalidad": null,
+      "fuente": "Modulos funce.html"
+    },
+    {
+      "tipo": "curso",
+      "codigo": "Me. 002",
+      "area": "Mecánica",
+      "nombre": "LUBRICACIÓN INDUSTRIAL APLICADA",
+      "duracion": "16 HORAS",
+      "modalidad": null,
+      "fuente": "Modulos funce.html"
+    },
+    {
+      "tipo": "curso",
+      "codigo": "Me. 003",
+      "area": "Mecánica",
+      "nombre": "HIDRÁULICA Y NEUMÁTICA",
+      "duracion": "21 HORAS",
+      "modalidad": null,
+      "fuente": "Modulos funce.html"
+    },
+    {
+      "tipo": "curso",
+      "codigo": "Me. 004",
+      "area": "Mecánica",
+      "nombre": "MÁQUINAS Y EQUIPOS",
+      "duracion": "16 HORAS",
+      "modalidad": null,
+      "fuente": "Modulos funce.html"
+    },
+    {
+      "tipo": "curso",
+      "codigo": "Me. 005",
+      "area": "Mecánica",
+      "nombre": "ELEMENTOS DE MÁQUINAS",
+      "duracion": "21 HORAS",
+      "modalidad": null,
+      "fuente": "Modulos funce.html"
+    },
+    {
+      "tipo": "curso",
+      "codigo": "Me. 006",
+      "area": "Mecánica",
+      "nombre": "TRAZADO MECÁNICO",
+      "duracion": "16 HORAS",
+      "modalidad": null,
+      "fuente": "Modulos funce.html"
+    },
+    {
+      "tipo": "curso",
+      "codigo": "Me. 007",
+      "area": "Mecánica",
+      "nombre": "HERRAMIENTAS AUXILIARES",
+      "duracion": "16 HORAS",
+      "modalidad": null,
+      "fuente": "Modulos funce.html"
+    },
+    {
+      "tipo": "curso",
+      "codigo": "Me. 008",
+      "area": "Mecánica",
+      "nombre": "AJUSTE MECÁNICO",
+      "duracion": "21 HORAS",
+      "modalidad": null,
+      "fuente": "Modulos funce.html"
+    },
+    {
+      "tipo": "curso",
+      "codigo": "Me. 009",
+      "area": "Mecánica",
+      "nombre": "PROGRAMA PRÁCTICO DE SOLDADURA",
+      "duracion": "21 HORAS",
+      "modalidad": null,
+      "fuente": "Modulos funce.html"
+    },
+    {
+      "tipo": "curso",
+      "codigo": "Me. 011",
+      "area": "Mecánica",
+      "nombre": "MATERIALES FERROSOS Y NO FERROSOS",
+      "duracion": "08 HORAS",
+      "modalidad": null,
+      "fuente": "Modulos funce.html"
+    },
+    {
+      "tipo": "curso",
+      "codigo": "Me. 012",
+      "area": "Mecánica",
+      "nombre": "OPERADOR DE MONTACARGAS",
+      "duracion": "16 HORAS",
+      "modalidad": null,
+      "fuente": "Modulos funce.html"
+    },
+    {
+      "tipo": "curso",
+      "codigo": "Me. 013",
+      "area": "Mecánica",
+      "nombre": "MANTENIMIENTO PREVENTIVO",
+      "duracion": "21 HORAS",
+      "modalidad": null,
+      "fuente": "Modulos funce.html"
+    },
+    {
+      "tipo": "curso",
+      "codigo": "Me. 014",
+      "area": "Mecánica",
+      "nombre": "TALLER DE TRIGONOMETRIA NIVELACION",
+      "duracion": "28 HORAS",
+      "modalidad": null,
+      "fuente": "Modulos funce.html"
+    },
+    {
+      "tipo": "curso",
+      "codigo": "Pp. 001",
+      "area": "Producción",
+      "nombre": "PLANIFICACIÓN Y CONTROL DE LA PRODUCCIÓN",
+      "duracion": "21 HORAS",
+      "modalidad": null,
+      "fuente": "Modulos funce.html"
+    },
+    {
+      "tipo": "curso",
+      "codigo": "Pp. S/N",
+      "area": "Producción",
+      "nombre": "MEDICIÓN Y RENTABILIDAD DE LA PRODUCTIVIDAD",
+      "duracion": "16 HORAS",
+      "modalidad": null,
+      "fuente": "Modulos funce.html"
+    },
+    {
+      "tipo": "curso",
+      "codigo": "Pp. S/N",
+      "area": "Producción",
+      "nombre": "PLANIFICACIÓN Y PRODUCTIVIDAD",
+      "duracion": "16 HORAS",
+      "modalidad": null,
+      "fuente": "Modulos funce.html"
+    },
+    {
+      "tipo": "curso",
+      "codigo": "Ri. 001",
+      "area": "Relaciones Industriales",
+      "nombre": "ORGANIZACIÓN Y MÉTODO",
+      "duracion": "16 HORAS",
+      "modalidad": null,
+      "fuente": "Modulos funce.html"
+    },
+    {
+      "tipo": "curso",
+      "codigo": "Ri. 002",
+      "area": "Relaciones Industriales",
+      "nombre": "MOTIVACIÓN AL LOGRO",
+      "duracion": "16 HORAS",
+      "modalidad": null,
+      "fuente": "Modulos funce.html"
+    },
+    {
+      "tipo": "curso",
+      "codigo": "Ri. 003",
+      "area": "Relaciones Industriales",
+      "nombre": "COMPORTAMIENTO LABORAL",
+      "duracion": "08 HORAS",
+      "modalidad": null,
+      "fuente": "Modulos funce.html"
+    },
+    {
+      "tipo": "curso",
+      "codigo": "Ri. 004",
+      "area": "Relaciones Industriales",
+      "nombre": "AUTOESTIMA",
+      "duracion": "16 HORAS",
+      "modalidad": null,
+      "fuente": "Modulos funce.html"
+    },
+    {
+      "tipo": "curso",
+      "codigo": "Ri. 005",
+      "area": "Relaciones Industriales",
+      "nombre": "SERVICIOS AL CLIENTE",
+      "duracion": "16 HORAS",
+      "modalidad": null,
+      "fuente": "Modulos funce.html"
+    },
+    {
+      "tipo": "curso",
+      "codigo": "Ri. 006",
+      "area": "Relaciones Industriales",
+      "nombre": "PRINCIPIOS ADMINISTRATIVOS",
+      "duracion": "16 HORAS",
+      "modalidad": null,
+      "fuente": "Modulos funce.html"
+    },
+    {
+      "tipo": "curso",
+      "codigo": "Ri. 007",
+      "area": "Relaciones Industriales",
+      "nombre": "OBLIGACIONES LEGALES LABORALES Y CALCULOS LABORALES",
+      "duracion": "28 HORAS",
+      "modalidad": null,
+      "fuente": "Modulos funce.html"
+    },
+    {
+      "tipo": "curso",
+      "codigo": "Ri. 008",
+      "area": "Relaciones Industriales",
+      "nombre": "ADMINISTRACION DE SUELDO Y SALARIOS",
+      "duracion": "16 HORAS",
+      "modalidad": null,
+      "fuente": "Modulos funce.html"
+    },
+    {
+      "tipo": "curso",
+      "codigo": "Ri. 009",
+      "area": "Relaciones Industriales",
+      "nombre": "ADMINISTRACION DE PERSONAL",
+      "duracion": "08 HORAS",
+      "modalidad": null,
+      "fuente": "Modulos funce.html"
+    },
+    {
+      "tipo": "curso",
+      "codigo": "Ri. 010",
+      "area": "Relaciones Industriales",
+      "nombre": "ESTRUCTURA Y GERENCIA DE RECURSOS HUMANOS",
+      "duracion": "08 HORAS",
+      "modalidad": null,
+      "fuente": "Modulos funce.html"
+    },
+    {
+      "tipo": "curso",
+      "codigo": "Ri. 011",
+      "area": "Relaciones Industriales",
+      "nombre": "ANÁLISIS Y DESCRIPCIÓN DE CARGOS",
+      "duracion": "16 HORAS",
+      "modalidad": null,
+      "fuente": "Modulos funce.html"
+    },
+    {
+      "tipo": "curso",
+      "codigo": "Ri. 012",
+      "area": "Relaciones Industriales",
+      "nombre": "DISEÑO DE SISTEMAS DE EVALUACION DE PERSONAL",
+      "duracion": "16 HORAS",
+      "modalidad": null,
+      "fuente": "Modulos funce.html"
+    },
+    {
+      "tipo": "curso",
+      "codigo": "Ri. 013",
+      "area": "Relaciones Industriales",
+      "nombre": "TÉCNICAS DE RECLUTAMIENTO Y SELECCIÓN DE PERSONAL",
+      "duracion": "16 HORAS",
+      "modalidad": null,
+      "fuente": "Modulos funce.html"
+    },
+    {
+      "tipo": "curso",
+      "codigo": "Ri. 014",
+      "area": "Relaciones Industriales",
+      "nombre": "ELABORACIÓN DE PLANES DE ADIESTRAMIENTO",
+      "duracion": "16 HORAS",
+      "modalidad": null,
+      "fuente": "Modulos funce.html"
+    },
+    {
+      "tipo": "curso",
+      "codigo": "Ri. 015",
+      "area": "Relaciones Industriales",
+      "nombre": "BIENESTAR SOCIAL",
+      "duracion": "08 HORAS",
+      "modalidad": null,
+      "fuente": "Modulos funce.html"
+    },
+    {
+      "tipo": "curso",
+      "codigo": "Ri. 016",
+      "area": "Relaciones Industriales",
+      "nombre": "TALLER DE SEGURO SOCIAL SISTEMA SANE",
+      "duracion": "16 HORAS",
+      "modalidad": null,
+      "fuente": "Modulos funce.html"
+    },
+    {
+      "tipo": "curso",
+      "codigo": "Ri. 017",
+      "area": "Relaciones Industriales",
+      "nombre": "TECNICAS DE ESTUDIO",
+      "duracion": "08 HORAS",
+      "modalidad": null,
+      "fuente": "Modulos funce.html"
+    },
+    {
+      "tipo": "curso",
+      "codigo": "Ri. 018",
+      "area": "Relaciones Industriales",
+      "nombre": "TECNICAS DE INVESTIGACIÓN Y DOCUMENTACIÓN",
+      "duracion": "16 HORAS",
+      "modalidad": null,
+      "fuente": "Modulos funce.html"
+    },
+    {
+      "tipo": "curso",
+      "codigo": "Ri. 019",
+      "area": "Relaciones Industriales",
+      "nombre": "ADMINISTRACIÓN EFECTIVA DEL TIEMPO",
+      "duracion": "16 HORAS",
+      "modalidad": null,
+      "fuente": "Modulos funce.html"
+    },
+    {
+      "tipo": "curso",
+      "codigo": "Ri. 020",
+      "area": "Relaciones Industriales",
+      "nombre": "TECNICAS DE VENTA",
+      "duracion": "16 HORAS",
+      "modalidad": null,
+      "fuente": "Modulos funce.html"
+    },
+    {
+      "tipo": "curso",
+      "codigo": "Ri. S/N",
+      "area": "Relaciones Industriales",
+      "nombre": "ATENCIÓN AL PÚBLICO",
+      "duracion": "16 HORAS",
+      "modalidad": null,
+      "fuente": "Modulos funce.html"
+    },
+    {
+      "tipo": "curso",
+      "codigo": "Ri. 007",
+      "area": "Relaciones Industriales",
+      "nombre": "TECNICAS DE EVALUACIÓN DE DESEMPEÑO",
+      "duracion": "16 HORAS",
+      "modalidad": null,
+      "fuente": "Modulos funce.html"
+    },
+    {
+      "tipo": "curso",
+      "codigo": "Ri. 021",
+      "area": "Relaciones Industriales",
+      "nombre": "PROCESOS ADMINISTRATIVOS (INCES, SSO, ISLR)",
+      "duracion": "16 HORAS",
+      "modalidad": null,
+      "fuente": "Modulos funce.html"
+    },
+    {
+      "tipo": "curso",
+      "codigo": "Ri. 023",
+      "area": "Relaciones Industriales",
+      "nombre": "EL ACOSO SEXUAL Y LABORAL",
+      "duracion": "08 HORAS",
+      "modalidad": null,
+      "fuente": "Modulos funce.html"
+    },
+    {
+      "tipo": "curso",
+      "codigo": "Ri. 024",
+      "area": "Relaciones Industriales",
+      "nombre": "LIDERASGO TECNICO",
+      "duracion": "16 HORAS",
+      "modalidad": null,
+      "fuente": "Modulos funce.html"
+    },
+    {
+      "tipo": "curso",
+      "codigo": "Se. 001",
+      "area": "Secretarial",
+      "nombre": "TECNICAS MODERNAS DE ARCHIVOS Y KARDEX",
+      "duracion": "16 HORAS",
+      "modalidad": null,
+      "fuente": "Modulos funce.html"
+    },
+    {
+      "tipo": "curso",
+      "codigo": "Se. 002",
+      "area": "Secretarial",
+      "nombre": "NIVELACIÓN ORTOGRÁFICA APLICADA",
+      "duracion": "20 HORAS",
+      "modalidad": null,
+      "fuente": "Modulos funce.html"
+    },
+    {
+      "tipo": "curso",
+      "codigo": "Se. 003",
+      "area": "Secretarial",
+      "nombre": "ATENCION AL PUBLICO E IMAGEN DE LA EMPRESA",
+      "duracion": "16 HORAS",
+      "modalidad": null,
+      "fuente": "Modulos funce.html"
+    },
+    {
+      "tipo": "curso",
+      "codigo": "Se. 004",
+      "area": "Secretarial",
+      "nombre": "PLANIFICACIÓN ESTRATEGICA DEL TIEMPO",
+      "duracion": "14 HORAS",
+      "modalidad": null,
+      "fuente": "Modulos funce.html"
+    },
+    {
+      "tipo": "curso",
+      "codigo": "Se. S/N",
+      "area": "Secretarial",
+      "nombre": "TÉCNICAS MODERNAS DE ARCHIVO",
+      "duracion": "14 HORAS",
+      "modalidad": null,
+      "fuente": "Modulos funce.html"
+    },
+    {
+      "tipo": "curso",
+      "codigo": "Se. S/N",
+      "area": "Secretarial",
+      "nombre": "PRESENTACIÓN DE COMUNICACIONES ESCRITAS",
+      "duracion": "14 HORAS",
+      "modalidad": null,
+      "fuente": "Modulos funce.html"
+    },
+    {
+      "tipo": "curso",
+      "codigo": "S/N",
+      "area": "Seguridad Industrial",
+      "nombre": "BASICO DE REFRIGERACIÓN",
+      "duracion": "21 HORAS",
+      "modalidad": null,
+      "fuente": "Modulos funce.html"
+    },
+    {
+      "tipo": "curso",
+      "codigo": "Si. 001",
+      "area": "Seguridad Industrial",
+      "nombre": "HIGIENE Y SEGURIDAD INDUSTRIAL",
+      "duracion": "16 HORAS",
+      "modalidad": null,
+      "fuente": "Modulos funce.html"
+    },
+    {
+      "tipo": "curso",
+      "codigo": "Si. 002",
+      "area": "Seguridad Industrial",
+      "nombre": "FORMACIÓN DE DELEGADOS DE PREVENCIÓN",
+      "duracion": "21 HORAS",
+      "modalidad": null,
+      "fuente": "Modulos funce.html"
+    },
+    {
+      "tipo": "curso",
+      "codigo": "Si. 003",
+      "area": "Seguridad Industrial",
+      "nombre": "PREVENCIÓN Y EXTINCIÓN DE INCENDIO",
+      "duracion": "21 HORAS",
+      "modalidad": null,
+      "fuente": "Modulos funce.html"
+    },
+    {
+      "tipo": "curso",
+      "codigo": "Si. 004",
+      "area": "Seguridad Industrial",
+      "nombre": "ORDEN, LIMPIEZA Y ERGONOMIA",
+      "duracion": "16 HORAS",
+      "modalidad": null,
+      "fuente": "Modulos funce.html"
+    },
+    {
+      "tipo": "curso",
+      "codigo": "Si. 005",
+      "area": "Seguridad Industrial",
+      "nombre": "PRIMEROS AUXILIOS",
+      "duracion": "21 HORAS",
+      "modalidad": null,
+      "fuente": "Modulos funce.html"
+    },
+    {
+      "tipo": "curso",
+      "codigo": "Si. 006",
+      "area": "Seguridad Industrial",
+      "nombre": "ANALISIS DE TRABAJOS SEGUROS (ATS)",
+      "duracion": "21 HORAS",
+      "modalidad": null,
+      "fuente": "Modulos funce.html"
+    },
+    {
+      "tipo": "curso",
+      "codigo": "Si. 007",
+      "area": "Seguridad Industrial",
+      "nombre": "OPERACIÓN SEGURA DE CALDERAS DE VAPOR. Nivel I",
+      "duracion": "08 HORAS",
+      "modalidad": null,
+      "fuente": "Modulos funce.html"
+    },
+    {
+      "tipo": "curso",
+      "codigo": "Si. 008",
+      "area": "Seguridad Industrial",
+      "nombre": "MANEJO DE MATERIALES PELIGROSOS",
+      "duracion": "08 HORAS",
+      "modalidad": null,
+      "fuente": "Modulos funce.html"
+    },
+    {
+      "tipo": "curso",
+      "codigo": "Su. 001",
+      "area": "Supervisión",
+      "nombre": "EL SUPERVISOR COMO GERENTE DE SU PERSONAL",
+      "duracion": "16 HORAS",
+      "modalidad": null,
+      "fuente": "Modulos funce.html"
+    },
+    {
+      "tipo": "curso",
+      "codigo": "Su. 002",
+      "area": "Supervisión",
+      "nombre": "MÉTODO DE TRABAJO",
+      "duracion": "08 HORAS",
+      "modalidad": null,
+      "fuente": "Modulos funce.html"
+    },
+    {
+      "tipo": "curso",
+      "codigo": "Su. 003",
+      "area": "Supervisión",
+      "nombre": "TOMA DE DECISIONES",
+      "duracion": "08 HORAS",
+      "modalidad": null,
+      "fuente": "Modulos funce.html"
+    },
+    {
+      "tipo": "curso",
+      "codigo": "Su. 004",
+      "area": "Supervisión",
+      "nombre": "TÉCNICAS DE DELEGACIÓN",
+      "duracion": "16 HORAS",
+      "modalidad": null,
+      "fuente": "Modulos funce.html"
+    },
+    {
+      "tipo": "curso",
+      "codigo": "Su. 005",
+      "area": "Supervisión",
+      "nombre": "FUNCIONES SUPERVISORIAS",
+      "duracion": "08 HORAS",
+      "modalidad": null,
+      "fuente": "Modulos funce.html"
+    },
+    {
+      "tipo": "curso",
+      "codigo": "Su. 006",
+      "area": "Supervisión",
+      "nombre": "CALIDAD Y PRODUCTIVIDAD",
+      "duracion": "08 HORAS",
+      "modalidad": null,
+      "fuente": "Modulos funce.html"
+    },
+    {
+      "tipo": "curso",
+      "codigo": "Su. 007",
+      "area": "Supervisión",
+      "nombre": "FORMACIÓN DE SUPERVISORES EN SERVICIO",
+      "duracion": "40 HORAS",
+      "modalidad": null,
+      "fuente": "Modulos funce.html"
+    },
+    {
+      "tipo": "curso",
+      "codigo": "Su. 008",
+      "area": "Supervisión",
+      "nombre": "EL SUPERVISOR EN LA ORGANIZACIÓN",
+      "duracion": "08 HORAS",
+      "modalidad": null,
+      "fuente": "Modulos funce.html"
+    },
+    {
+      "tipo": "curso",
+      "codigo": "Su. 009",
+      "area": "Supervisión",
+      "nombre": "CONTROL DE LA CALIDAD Y PLAN DE PRODUCCIÓN",
+      "duracion": "08 HORAS",
+      "modalidad": null,
+      "fuente": "Modulos funce.html"
+    }
+  ],
+  "programas": [
+    {
+      "tipo": "fp",
+      "codigo": "F.P. El.001",
+      "area": "Electricidad",
+      "nombre": "ELECTRO-MECÁNICA INDUSTRIAL",
+      "duracion": "1 AÑO",
+      "modalidad": "Presencial",
+      "fuente": "Contenidos de F.P Funce.ppt",
+      "modulos": [
+        {
+          "titulo": "Módulo I",
+          "temas": [
+            "Autoestima",
+            "Nivelación aritmética.",
+            "Nivelación ortográfica.",
+            "Comportamiento laboral.",
+            "Técnicas de Estudio.",
+            "Técnicas de documentación e investigación.",
+            "Toma de decisiones.",
+            "Higiene y seguridad industrial."
+          ]
+        },
+        {
+          "titulo": "Módulo II",
+          "temas": [
+            "Instrumentos de Medición.",
+            "Fundamentos de tecnología eléctrica.",
+            "Mediciones eléctricas.",
+            "Instalaciones eléctricas.",
+            "Electricidad de mantenimiento.",
+            "Motores y transformadores.",
+            "Lectura e interpretación de planos eléctricos."
+          ]
+        },
+        {
+          "titulo": "Módulo III",
+          "temas": [
+            "Localización de fallas eléctricas.",
+            "Máquinas y equipos.",
+            "Elementos de máquinas.",
+            "Lubricación aplicada.",
+            "Hidráulica y neumática.",
+            "Lectura e interpretación de planos mecánicos.",
+            "Redacción de Informes Técnicos",
+            "Presentación de informe final."
+          ]
+        }
+      ],
+      "informacion": [
+        "ELECTRICIDAD                           F.P.  El.001",
+        "OBJETIVO: A partir de las estrategias metodológicas utilizadas por el\n\t\t  Instructor, el participante estará en capacidad de:",
+        "ESTRATEGIAS: \n\nConducción docente.\nActividades individuales y grupales en aula y extra – aula.\nPrestación de Informe de Aprendizaje.",
+        "Utilizar las bases teóricas y tecnológicas para operar, mantener y dirigir máquinas industriales según el área laboral, atendiendo normas de higiene y seguridad."
+      ],
+      "catalogo_original": [
+        {
+          "tipo": "fp",
+          "codigo": "F.P. El. 001",
+          "area": "Electricidad",
+          "nombre": "ELECTRO-MECÁNICA INDUSTRIAL",
+          "duracion": "1 AÑO",
+          "modalidad": "Presencial",
+          "fuente": "Modulos funce.html"
+        }
+      ]
+    },
+    {
+      "tipo": "fp",
+      "codigo": "F.P. Cc.002",
+      "area": "Calidad",
+      "nombre": "ANALISTA DE CONTROL DE CALIDAD",
+      "duracion": "1 AÑO",
+      "modalidad": "Presencial",
+      "fuente": "Contenidos de F.P Funce.ppt",
+      "modulos": [
+        {
+          "titulo": "Módulo I",
+          "temas": [
+            "Autoestima.",
+            "Nivelación Aritmética.",
+            "Nivelación Ortográfica.",
+            "Comportamiento Laboral.",
+            "Técnicas de Estudio",
+            "Técnicas de Estudio e Investigación.",
+            "Toma de Decisiones.",
+            "Higiene y Seguridad Industrial."
+          ]
+        },
+        {
+          "titulo": "Módulo II",
+          "temas": [
+            "Instrumentos de Medición",
+            "Técnicas Básicas de Calidad I.",
+            "Técnicas Básicas de Calidad II.",
+            "Técnicas de Muestreo.",
+            "Control Estadístico del Proceso.",
+            "Análisis Químico.",
+            "Redacción de Informes Técnicos."
+          ]
+        },
+        {
+          "titulo": "Módulo III",
+          "temas": [
+            "Norma ISO 9000.",
+            "Elaboración de Manuales de Calidad.",
+            "Auditoria de Sistemas de Calidad.",
+            "Logística de Almacén y Control de Stock.",
+            "Planificación y Control de la Producción.",
+            "Método de Trabajo.",
+            "Programa Práctico de Computación.",
+            "Presentación de Informe Final."
+          ]
+        }
+      ],
+      "informacion": [
+        "CONTROL DE CALIDAD         F.P. Cc. 002.",
+        "OBJETIVO:  A partir de las estrategias metodológicas utilizadas por el \t      Instructor, el participante estará en capacidad de:\n\nAplicar técnicas necesarias en el Control de Calidad de los Procesos Industriales dentro de las especificaciones del producto y tolerancia establecida.",
+        "ESTRATEGIAS: \n\nConducción docente.\nActividades individuales y grupales en aula y extra – aula.\nAsignación en función del área laboral.\nInformes final de Aprendizaje."
+      ],
+      "catalogo_original": [
+        {
+          "tipo": "fp",
+          "codigo": "F.P. Cc. 002",
+          "area": "Calidad",
+          "nombre": "ANALISTA DE CONTROL DE CALIDAD",
+          "duracion": "1 AÑO",
+          "modalidad": "Presencial",
+          "fuente": "Modulos funce.html"
+        }
+      ]
+    },
+    {
+      "tipo": "fp",
+      "codigo": "F.P. Elt.003",
+      "area": "Electrónica",
+      "nombre": "ELECTRONICA INDUSTRIAL",
+      "duracion": "1 AÑO",
+      "modalidad": "Presencial",
+      "fuente": "Contenidos de F.P Funce.ppt",
+      "modulos": [
+        {
+          "titulo": "Módulo II",
+          "temas": [
+            "Fundamentos de Tecnología Electrónica.",
+            "Mediciones Electrónicas.",
+            "Rectificación y Fuentes.",
+            "Circuitos Transistorizados.",
+            "Circuitos Lineales..",
+            "Microcontroladores.",
+            "Método de Trabajo"
+          ]
+        },
+        {
+          "titulo": "Módulo III",
+          "temas": [
+            "Tiristores y Triack.",
+            "Lógica Digital.",
+            "Lectura e Interpretación Planos Electrónicos",
+            "Localización de fallas en circuitos electrónicos",
+            "Elaboración de Proyectos Locales",
+            "Programa Practico de Computación",
+            "Presentación de Informa Final"
+          ]
+        },
+        {
+          "titulo": "Módulo I",
+          "temas": [
+            "Autoestima",
+            "Nivelación Aritmética.",
+            "Nivelación Ortográfica.",
+            "Comportamiento Laboral.",
+            "Técnicas de Estudio.",
+            "Técnicas de Documentación e Investigación.",
+            "Toma de Decisiones",
+            "Higiene y Seguridad Industrial."
+          ]
+        }
+      ],
+      "informacion": [
+        "OBJETIVO: A partir de las estrategias metodológicas utilizadas por el\n\t\t  Instructor, el participante estará en capacidad de:\n\nRealizar efectivamente actividades de mantenimiento preventivo y correctivo en equipos electrónicos en calidad de ayudante técnico.",
+        "ESTRATEGIAS: \n\nConducción docente.\nActividades individuales y grupales en aula y extra – aula.\nInformes final de Aprendizaje.",
+        "ELECTRONICA                       F.P Elt.003"
+      ],
+      "catalogo_original": []
+    },
+    {
+      "tipo": "fp",
+      "codigo": "F.P. Pp.004",
+      "area": "Producción",
+      "nombre": "ASISTENTE DE PRODUCCIÓN",
+      "duracion": "1 AÑO",
+      "modalidad": "Presencial",
+      "fuente": "Contenidos de F.P Funce.ppt",
+      "modulos": [
+        {
+          "titulo": "Módulo II",
+          "temas": [
+            "Instrumentos de Medición",
+            "Fundamentos de Tecnología Eléctrica.",
+            "Elementos de Maquinas.",
+            "Logística de Almacén y Control de Stock.",
+            "Técnicas Modernas de Archivo y Kardex.",
+            "Técnicas Básicas de la Calidad I.",
+            "Técnicas Básicas de la Calidad II",
+            "Redacción de Informes Técnicos."
+          ]
+        },
+        {
+          "titulo": "Módulo III",
+          "temas": [
+            "Técnicas de Muestreo.",
+            "Control Estadístico del Proceso.",
+            "Planificación y Control de la Producción.",
+            "Funciones Supervisoras",
+            "Calidad y Productividad",
+            "Método de Trabajo",
+            "Programa Practico de Computación.",
+            "Presentación de Informe Final"
+          ]
+        },
+        {
+          "titulo": "Módulo I",
+          "temas": [
+            "Autoestima",
+            "Nivelación Aritmética.",
+            "Nivelación Ortográfica.",
+            "Comportamiento Laboral.",
+            "Técnicas de Estudio.",
+            "Técnicas de Investigación y Documentación.",
+            "Higiene y Seguridad Industrial.",
+            "Toma de Decisiones"
+          ]
+        }
+      ],
+      "informacion": [
+        "PRODUCCIÓN – PRODUCTIVIDAD   F.P Pp.004",
+        "OBJETIVO: A partir de las estrategias metodológicas utilizadas por el\n                           Instructor, el participante estará en capacidad de:\n\nAplicar técncias necesarias para preparar planes de trabajo en base a producción\nUtilizar tecnicas teoricas y practicas para a analizar los procesos industriales dentro de las especificaciones del producto y tolerancia establecida.",
+        "ESTRATEGIAS: \n\nConducción docente.\nActividad individual y grupal en aula y extra-aula.\nInforme final de aprendizaje."
+      ],
+      "catalogo_original": [
+        {
+          "tipo": "fp",
+          "codigo": "F.P. Pp. 004",
+          "area": "Producción",
+          "nombre": "ASISTENTE DE PRODUCCIÓN",
+          "duracion": "1 AÑO",
+          "modalidad": "Presencial",
+          "fuente": "Modulos funce.html"
+        }
+      ]
+    },
+    {
+      "tipo": "fp",
+      "codigo": "F.P. Ri.005",
+      "area": "Relaciones Industriales",
+      "nombre": "ASISTENTE ADMINISTRATIVO DE RECURSOS HUMANOS",
+      "duracion": "1 AÑO",
+      "modalidad": "Presencial",
+      "fuente": "Contenidos de F.P Funce.ppt",
+      "modulos": [
+        {
+          "titulo": "Módulo II",
+          "temas": [
+            "Redacción de Informes Técnicos.",
+            "Principios Administrativos.",
+            "Documentos Mercantiles.",
+            "Contabilidad Básica.",
+            "Estructura y Gerencia de Recursos Humanos.",
+            "Método de Trabajo.",
+            "Programa Practico de Computación.",
+            "Bienestar Social"
+          ]
+        },
+        {
+          "titulo": "Módulo III",
+          "temas": [
+            "Administración de Personal.",
+            "Técnicas de Reclutamiento y  Selección.",
+            "Elaboración de Planes de Adiestramiento.",
+            "Diseño de Sistemas de Evaluación de Personal.",
+            "Administración de Sueldos y Salarios.",
+            "Análisis y Evaluación  de Cargos.",
+            "Taller de Seguro Social y Sistema Sane.",
+            "Obligaciones Legales y cálculos laborales",
+            "Presentación de Informe Final"
+          ]
+        },
+        {
+          "titulo": "Módulo I",
+          "temas": [
+            "Autoestima.",
+            "Nivelación Aritmética.",
+            "Nivelación Ortográfica.",
+            "Comportamiento Laboral.",
+            "Técnicas de Estudio.",
+            "Técnicas de Documentación e Investigación.",
+            "Toma de Decisiones.",
+            "Higiene y Seguridad Industrial.",
+            "Técnicas modernas de Archivo y Kardex."
+          ]
+        }
+      ],
+      "informacion": [
+        "RELACIONES INDUSTRIALES            F.P  Ri.005.",
+        "OBJETIVO: A partir de las estrategias metodológicas utilizadas\n\t\t por el Instructor, el participante estará en capacidad de:\n\nAplicar adecuadamente técnicas y criterios de asistencia a los       Subsistemas de Relaciones Industriales.",
+        "ESTRATEGIAS: \n\nConducción docente.\nActividades individuales y grupales.\nInformes Final de Aprendizaje."
+      ],
+      "catalogo_original": [
+        {
+          "tipo": "fp",
+          "codigo": "F.P. Ri. 005",
+          "area": "Relaciones Industriales",
+          "nombre": "ASISTENTE ADMINISTRATIVO DE RECURSOS HUMANOS",
+          "duracion": "1 AÑO",
+          "modalidad": "Presencial",
+          "fuente": "Modulos funce.html"
+        }
+      ]
+    },
+    {
+      "tipo": "fp",
+      "codigo": "F.P. Pl.006",
+      "area": "Plástico",
+      "nombre": "ESPECIALISTA DEL PLÁSTICO",
+      "duracion": "1 AÑO",
+      "modalidad": "Presencial",
+      "fuente": "Contenidos de F.P Funce.ppt",
+      "modulos": [
+        {
+          "titulo": "Módulo I",
+          "temas": [
+            "Autoestima",
+            "Comportamiento  Laboral.",
+            "Nivelación Aritmética.",
+            "Nivelación Ortográfica.",
+            "Técnicas de Estudio.",
+            "Técnicas de Documentación e Investigación.",
+            "Higiene y Seguridad Industrial",
+            "Redacción de Informes Técnicos."
+          ]
+        },
+        {
+          "titulo": "Módulo II",
+          "temas": [
+            "Instrumentos de Medición",
+            "Fundamentos de Tecnología Eléctrica.",
+            "Elementos de Máquinas.",
+            "Técnicas de Muestreo.",
+            "Control Estadístico del Proceso.",
+            "Análisis Químico.",
+            "Método de Trabajo",
+            "Planificación y Control de la Producción"
+          ]
+        },
+        {
+          "titulo": "Módulo III",
+          "temas": [
+            "Calidad y Productividad",
+            "Básico de Polímeros",
+            "Impresión Flexográfica.",
+            "Técnicas para Colorista.",
+            "Taller de Extrusión de Polímeros.",
+            "Inyección de Plástico.",
+            "Programa Practico de Computación",
+            "Presentación de Informe Final"
+          ]
+        }
+      ],
+      "informacion": [
+        "PLÁSTICO                                      F.P Pl.006.",
+        "OBJETIVO: A partir de las estrategias metodológicas utilizadas\n\t\tpor el  Instructor, el participante estará en capacidad de:\n\nIdentificar y clasificar los diferentes tipos de Polímeros.\nConocer las diversas técnicas existentes para el tratamiento del Polímero como; Impresión Flexográfica, Inyección, Extrusión, y Técnicas del Color,  entre otros.\nOperar las diferentes maquinarias del áreas",
+        "ESTRATEGIAS: \n\nConducción Docente.\nActividades individuales y grupales en aula y extra – aula.\nInforme de Aprendizaje."
+      ],
+      "catalogo_original": []
+    },
+    {
+      "tipo": "fp",
+      "codigo": "F.P. Me.007",
+      "area": "Mecánica",
+      "nombre": "MECÁNICO DE MANTENIMIENTO",
+      "duracion": "1 AÑO",
+      "modalidad": "Presencial",
+      "fuente": "Contenidos de F.P Funce.ppt",
+      "modulos": [
+        {
+          "titulo": "Módulo II",
+          "temas": [
+            "Fundamentos de Tecnología Mecánica.",
+            "Instrumentos de Medición.",
+            "Ajuste Mecánico.",
+            "Trazado Mecánico.",
+            "Maquinas y Equipos.",
+            "Elementos de Máquinas.",
+            "Herramientas Auxiliares",
+            "Lubricación Industrial Aplicada."
+          ]
+        },
+        {
+          "titulo": "Módulo III",
+          "temas": [
+            "Hidráulica y Neumática.",
+            "Lectura e Interpretación de Mecánicos.",
+            "Localización de fallas Mecánicas.",
+            "Mantenimiento Preventivo",
+            "Programa practico de Computación",
+            "Autocad 2D (Básico)",
+            "Autocad 3D (Avanzado)",
+            "Presentación de Informe Final"
+          ]
+        },
+        {
+          "titulo": "Módulo I",
+          "temas": [
+            "Autoestima.",
+            "Nivelación Aritmética.",
+            "Nivelación Ortográfica.",
+            "Comportamiento Laboral.",
+            "Técnicas de Estudio",
+            "Técnicas de Documentación e Investigación.",
+            "Higiene y Seguridad Industrial."
+          ]
+        }
+      ],
+      "informacion": [
+        "OBJETIVO: A partir de las estrategias metodológicas utilizadas por el\n\t\t   Instructor, el participante estará en capacidad de:\n\nUtilizar eficientemente términos e instrumentos asociados a la mecánica.\nManejar diferentes elementos necesarios a aplicar en tecnología mecánica.",
+        "ESTRATEGIAS: \n\nConducción docente.\nActividades individuales y grupales en aula y extra – aula.\nPráctica en talleres de mecánicas.\nPrestación de Informes de Aprendizaje.",
+        "MECÁNICA                                 F.P. Me.007."
+      ],
+      "catalogo_original": []
+    },
+    {
+      "tipo": "fp",
+      "codigo": "F.P. El.008",
+      "area": "Electricidad",
+      "nombre": "ELECTRICIDAD DE MANTENIMIENTO",
+      "duracion": "1 AÑO",
+      "modalidad": "Presencial",
+      "fuente": "Contenidos de F.P Funce.ppt",
+      "modulos": [
+        {
+          "titulo": "Módulo III",
+          "temas": [
+            "Mantenimiento y análisis de fallas.",
+            "Electricidad Industrial",
+            "Control de Motores Eléctricos Industrial",
+            "Introducción a los PLC (Sistema Simens Logo)",
+            "Electrónica para Electricistas",
+            "Redacción de informes técnicos",
+            "Informe final de Aprendizaje"
+          ]
+        },
+        {
+          "titulo": "Módulo II",
+          "temas": [
+            "Fundamentos de tecnología eléctrica.",
+            "Mediciones eléctricas.",
+            "Instalaciones eléctricas.",
+            "Electricidad de mantenimiento.",
+            "Lectura e interpretación de planos eléctricos.",
+            "Localización de fallas eléctricas.",
+            "Motores y transformadores."
+          ]
+        },
+        {
+          "titulo": "Módulo I",
+          "temas": [
+            "Autoestima",
+            "Comportamiento  Laboral.",
+            "Nivelación Aritmética.",
+            "Nivelación Ortográfica.",
+            "Técnicas de Estudio.",
+            "Técnicas de Documentación e Investigación.",
+            "Higiene y Seguridad Industrial"
+          ]
+        }
+      ],
+      "informacion": [
+        "ELECTRICIDAD                            F.P. El.008",
+        "OBJETIVO: A partir de las estrategias metodológicas utilizadas por el Instructor, el participante estará en capacidad de:",
+        "ESTRATEGIAS: \n\nConducción docente.\nActividades individuales y grupales en aula y extra – aula.\nInformes Final de Aprendizaje.",
+        "Utilizar eficientemente términos e instrumentos asociados a la electricidad.\nManejar diferentes elementos necesarios a aplicar en tecnología eléctrica."
+      ],
+      "catalogo_original": []
+    },
+    {
+      "tipo": "fp",
+      "codigo": "F.P. Me.009",
+      "area": "Mecánica",
+      "nombre": "OPERADOR DE MAQUINAS Y HERRAMIENTAS",
+      "duracion": "1 AÑO",
+      "modalidad": "Presencial",
+      "fuente": "Contenidos de F.P Funce.ppt",
+      "modulos": [
+        {
+          "titulo": "Módulo I",
+          "temas": [
+            "Taller de Trigonometría.",
+            "Instrumentos de Medición.",
+            "Lectura e Interpretación de Planos Mecánicos.",
+            "Trazado Mecánico.",
+            "Ajuste Mecánico",
+            "Programa Practico de Soldadura"
+          ]
+        },
+        {
+          "titulo": "Módulo III",
+          "temas": [
+            "Materiales Ferrosos y no Ferrosos",
+            "Torno  I, II y III",
+            "Fresa I, II y III",
+            "Ruedas Dentas",
+            "Tallado de Levas",
+            "Informe Final de Aprendizaje"
+          ]
+        },
+        {
+          "titulo": "Módulo I",
+          "temas": [
+            "Autoestima",
+            "Comportamiento  Laboral.",
+            "Nivelación Aritmética.",
+            "Nivelación Ortográfica.",
+            "Técnicas de Estudio.",
+            "Técnicas de Documentación e Investigación.",
+            "Higiene y Seguridad Industrial"
+          ]
+        }
+      ],
+      "informacion": [
+        "OBJETIVO: A partir de las estrategias metodológicas utilizadas por el\n\t\t   Instructor, el participante estará en capacidad de:\n\nManejar con mayor precisión diferentes herramientas manuales y máquinas – herramientas. Operador de tornos y fresadora atendiendo a la tecnología requerida.",
+        "ESTRATEGIAS: \n\nConducción docente.\nActividades individuales y grupales.\nPráctica dirigidas en laboratorios.\nPrestación de Informes de Aprendizaje.",
+        "MECÁNICA                                      F.P Me.009."
+      ],
+      "catalogo_original": []
+    },
+    {
+      "tipo": "fp",
+      "codigo": "F.P. Ge.010",
+      "area": "Gerencia",
+      "nombre": "DESARROLLO GERENCIAL",
+      "duracion": "1 AÑO",
+      "modalidad": "Presencial",
+      "fuente": "Contenidos de F.P Funce.ppt",
+      "modulos": [
+        {
+          "titulo": "Módulo I",
+          "temas": [
+            "Autoestima",
+            "Nivelación Aritmética.",
+            "Nivelación Ortográfica.",
+            "Comportamiento Laboral.",
+            "Técnicas de Estudio.",
+            "Técnicas de Documentación e Investigación.",
+            "Toma de Decisiones.",
+            "Higiene y Seguridad Industrial.",
+            "Redacción Comercial."
+          ]
+        },
+        {
+          "titulo": "Módulo II",
+          "temas": [
+            "Principios Administrativos",
+            "Contabilidad Superior",
+            "Logística de Almacén y Control de Stock",
+            "Abastecimiento y Compra.",
+            "Taller de Estructura de Costos",
+            "Análisis de Estados Financieros.",
+            "Formación de Supervisores en Servicio",
+            "Calidad en el Trabajo",
+            "Conducción de reuniones y presentaciones orales."
+          ]
+        },
+        {
+          "titulo": "Módulo III",
+          "temas": [
+            "Norma ISO Serie 9000 – Seminario Gerencial",
+            "Gerencia por Objetivos",
+            "Análisis Sistemático de Problema",
+            "Dinámica Gerencial de Ventas",
+            "Técnicas de Ventas.",
+            "Control de Calidad para Inspectores y Supervisores",
+            "El Supervisor como Gerente de Su personal",
+            "Avanzado de Word, Excel y Power Poind",
+            "Informe Final de Aprendizaje"
+          ]
+        }
+      ],
+      "informacion": [
+        "GERENCIA                                    F.P. Ge.010",
+        "OBJETIVO: A partir de las estrategias metodológicas utilizadas por el\n\t\t  Instructor, el participante estará en capacidad de:\n\nAportar una visión estratégica que de consistencia  a la planificación y que mantenga activa la incidencia de los objetivos generales.\nSer capaz de analizar un balance y tomar decisiones financiera con mayor efectiva",
+        "ESTRATEGIAS: \n\nConducción docente.\nActividades individuales y grupales en aula y extra – aula.\nAsignación dirigida.\nPresentación informe final."
+      ],
+      "catalogo_original": [
+        {
+          "tipo": "fp",
+          "codigo": "Gg. 010",
+          "area": "Gerencia",
+          "nombre": "DESARROLLO GERENCIAL",
+          "duracion": "1 AÑO",
+          "modalidad": "Presencial",
+          "fuente": "Modulos funce.html"
+        }
+      ]
+    },
+    {
+      "tipo": "fp",
+      "codigo": "Se.011",
+      "area": "Secretarial",
+      "nombre": "SECRETARIADO EJECUTIVO",
+      "duracion": "1 AÑO",
+      "modalidad": "Presencial",
+      "fuente": "Contenidos de F.P Funce.ppt",
+      "modulos": [
+        {
+          "titulo": "Módulo I",
+          "temas": [
+            "Autoestima",
+            "Nivelación Aritmética.",
+            "Nivelación Ortográfica.",
+            "Comportamiento Laboral.",
+            "Técnicas de Estudio.",
+            "Técnicas de Documentación e Investigación.",
+            "Toma de Decisiones.",
+            "Higiene y Seguridad Industrial.",
+            "Redacción Comercial."
+          ]
+        },
+        {
+          "titulo": "Módulo II",
+          "temas": [
+            "Principios Administrativos",
+            "Servicios al Cliente",
+            "Técnicas Moderna de Archivo y Kardex.",
+            "Contabilidad Básica.",
+            "Contabilidad Complementaria.",
+            "Documentos Mercantiles.",
+            "Calidad en el Trabajo",
+            "Conducción de reuniones y presentaciones orales."
+          ]
+        },
+        {
+          "titulo": "Módulo III",
+          "temas": [
+            "Atención al Público e Imagen de la Empresa.",
+            "Administración efectiva del Trabajo",
+            "Planificación del Trabajo.",
+            "Procesos Administrativo",
+            "Técnicas de Delegación",
+            "Toma de decisiones.",
+            "Motivación al Logro",
+            "Programa Practico de Computación"
+          ]
+        }
+      ],
+      "informacion": [
+        "SECRETARIAL                                  Se.011",
+        "OBJETIVO: A partir de las estrategias metodológicas utilizadas por el\n\t\t  Instructor, el participante estará en capacidad de:\n\nIncorporar conocimientos técnicos de oficina que le permitan el mejor desempeño de sus funciones.\nDesarrollar habilidades de ejecución y control de su trabajo secretarial.\nPlanificar y coordinar actividades en su área.",
+        "ESTRATEGIAS: \n\nConducción docente.\nActividades individuales y grupales en aula y extra – aula.\nAsignación dirigida.\nPresentación informe final."
+      ],
+      "catalogo_original": [
+        {
+          "tipo": "fp",
+          "codigo": "Se. 011",
+          "area": "Secretarial",
+          "nombre": "SECRETARIADO EJECUTIVO",
+          "duracion": "1 AÑO",
+          "modalidad": "Presencial",
+          "fuente": "Modulos funce.html"
+        }
+      ]
+    },
+    {
+      "tipo": "fp",
+      "codigo": "F.P. Pl.012",
+      "area": "Plástico",
+      "nombre": "IMPRESIÓN SOBRE PLÁSTICO",
+      "duracion": "1 AÑO",
+      "modalidad": "Presencial",
+      "fuente": "Contenidos de F.P Funce.ppt",
+      "modulos": [
+        {
+          "titulo": "Módulo I",
+          "temas": [
+            "Autoestima",
+            "Nivelación Aritmética.",
+            "Nivelación Ortográfica.",
+            "Técnicas de Estudio.",
+            "Técnicas de Documentación e Investigación.",
+            "Redacción de Informes Técnicos."
+          ]
+        },
+        {
+          "titulo": "Módulo II",
+          "temas": [
+            "Lectura e interpretación de Planos Mecánicos.",
+            "Control Estadístico del Proceso.",
+            "Técnicas de Muestreo.",
+            "Método de Trabajo."
+          ]
+        },
+        {
+          "titulo": "Módulo III",
+          "temas": [
+            "Planificación y  Control de la Producción.",
+            "Análisis Químico",
+            "Manejo de Tintas y Solventes.",
+            "Métodos de Impresión.",
+            "Técnicas de Muestreo.",
+            "Informe Final de Aprendizaje"
+          ]
+        }
+      ],
+      "informacion": [
+        "PLASTICO                                  F.P  Pl. 012.",
+        "OBJETIVO: A partir de las estrategias metodológicas utilizadas\n\t\t por el instructor, el participante estará en capacidad de:\n\nIdentificar y utilizar los materiales y equipos necesarios para realizar impresión flexográfica.\nUtilizar sistema de reproducción a color en flexografía",
+        "ESTRATEGIAS: \n\nConducción docente.\nPrácticas en empresas.\nAnálisis de casos reales."
+      ],
+      "catalogo_original": []
+    }
+  ],
+  "pna": [
+    {
+      "tipo": "pna",
+      "codigo": "OC0.0000.0070",
+      "area": "Administración",
+      "nombre": "Secretariado Administrativo",
+      "duracion": "1065 Horas",
+      "practica": "2485 Horas",
+      "modalidad": "Presencial",
+      "fuente": "PNA INCES.html"
+    },
+    {
+      "tipo": "pna",
+      "codigo": "OC0.0000.0100",
+      "area": "Contabilidad",
+      "nombre": "Analista Contable",
+      "duracion": "1149 Horas",
+      "practica": "2681 Horas",
+      "modalidad": "Presencial",
+      "fuente": "PNA INCES.html"
+    },
+    {
+      "tipo": "pna",
+      "codigo": "OC0.0000.0010",
+      "area": "Industrial",
+      "nombre": "Electromecanica Industrial",
+      "duracion": "1900 Horas",
+      "practica": "4433 Horas",
+      "modalidad": "Presencial",
+      "fuente": "PNA INCES.html"
+    }
+  ],
+  "programas_directorio": [
+    {
+      "tipo": "fp",
+      "codigo": "F.P. Cc. 002",
+      "area": "Calidad",
+      "nombre": "ANALISTA DE CONTROL DE CALIDAD",
+      "duracion": "1 AÑO",
+      "modalidad": "Presencial",
+      "fuente": "Modulos funce.html"
+    },
+    {
+      "tipo": "fp",
+      "codigo": "F.P. El. 001",
+      "area": "Electricidad",
+      "nombre": "ELECTRO-MECÁNICA INDUSTRIAL",
+      "duracion": "1 AÑO",
+      "modalidad": "Presencial",
+      "fuente": "Modulos funce.html"
+    },
+    {
+      "tipo": "fp",
+      "codigo": "Gg. 010",
+      "area": "Gerencia",
+      "nombre": "DESARROLLO GERENCIAL",
+      "duracion": "1 AÑO",
+      "modalidad": "Presencial",
+      "fuente": "Modulos funce.html"
+    },
+    {
+      "tipo": "fp",
+      "codigo": "F.P. Pp. 004",
+      "area": "Producción",
+      "nombre": "ASISTENTE DE PRODUCCIÓN",
+      "duracion": "1 AÑO",
+      "modalidad": "Presencial",
+      "fuente": "Modulos funce.html"
+    },
+    {
+      "tipo": "fp",
+      "codigo": "F.P. Ri. 005",
+      "area": "Relaciones Industriales",
+      "nombre": "ASISTENTE ADMINISTRATIVO DE RECURSOS HUMANOS",
+      "duracion": "1 AÑO",
+      "modalidad": "Presencial",
+      "fuente": "Modulos funce.html"
+    },
+    {
+      "tipo": "fp",
+      "codigo": "Se. 011",
+      "area": "Secretarial",
+      "nombre": "SECRETARIADO EJECUTIVO",
+      "duracion": "1 AÑO",
+      "modalidad": "Presencial",
+      "fuente": "Modulos funce.html"
+    }
+  ]
+}

@@ -288,11 +288,11 @@
   }
   async function actualizarCurso(id, d) { var r = await sb.from("cursos").update(d).eq("id", id); if (r.error) throw r.error; }
   async function eliminarCurso(id) { var r = await sb.from("cursos").delete().eq("id", id); if (r.error) throw r.error; }
-  async function todosCursos() { var r = await sb.from("cursos").select("*").order("creado_en", { ascending: false }); if (r.error) throw r.error; return r.data; }
-  async function cursosDeProfesor(uid) { var r = await sb.from("cursos").select("*").eq("profesor_id", uid).order("creado_en", { ascending: false }); if (r.error) throw r.error; return r.data; }
+  async function todosCursos() { var r = await sb.from("cursos").select("*").eq("archivado",false).order("creado_en", { ascending: false }); if (r.error) throw r.error; return r.data; }
+  async function cursosDeProfesor(uid) { var r = await sb.from("cursos").select("*").eq("archivado",false).eq("profesor_id", uid).order("creado_en", { ascending: false }); if (r.error) throw r.error; return r.data; }
   async function cursosMatriculado() {
     var r = await sb.from("matriculas").select("id, curso:cursos(*)").order("creado_en", { ascending: false });
-    if (r.error) throw r.error; return r.data.map(function (x) { return x.curso; }).filter(Boolean);
+    if (r.error) throw r.error; return r.data.map(function (x) { return x.curso; }).filter(function(c){return c&&!c.archivado;});
   }
 
   async function modulosDeCurso(cursoId) { var r = await sb.from("modulos").select("*").eq("curso_id", cursoId).order("orden", { ascending: true }); if (r.error) throw r.error; return r.data; }

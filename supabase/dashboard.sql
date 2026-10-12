@@ -1,5 +1,6 @@
 -- Monitor operacional: conteos globales, sin datos personales ni respuestas academicas.
 begin;
+alter table public.cursos add column if not exists archivado boolean not null default false;
 create table if not exists public.dashboard_eventos (
   id bigint generated always as identity primary key,
   tabla text not null,
@@ -71,11 +72,11 @@ begin
     'generado_en',now(),
     'usuarios',(select jsonb_build_object('total',count(*),'alumnos',count(*) filter(where rol='alumno'),'profesores',count(*) filter(where rol='profesor'),'administradores',count(*) filter(where rol='admin'),'inactivos',count(*) filter(where not activo),'nuevos_7d',count(*) filter(where creado_en>=now()-interval '7 days')) from perfiles),
     'academico',jsonb_build_object(
-      'cursos',(select count(*) from cursos),'publicados',(select count(*) from cursos where publicado),'borradores',(select count(*) from cursos where not publicado),
+      'cursos',(select count(*) from cursos where not archivado),'archivados',(select count(*) from cursos where archivado),'publicados',(select count(*) from cursos where publicado and not archivado),'borradores',(select count(*) from cursos where not publicado and not archivado),
       'matriculas',(select count(*) from matriculas),'modulos',(select count(*) from modulos),'lecciones',(select count(*) from lecciones),
       'clases',(select count(*) from clases),'materiales',(select count(*) from materiales),'tareas',(select count(*) from tareas),
-      'entregas',(select count(*) from entregas),'sin_calificar',(select count(*) from entregas where nota is null),
-      'tareas_vencidas',(select count(*) from tareas where fecha_limite < (now() at time zone 'America/Caracas')::date),
+      'entregas',(select count(*) from entregas),'sin_calificar',(select count(*) from entregas e join tareas t on t.id=e.tarea_id join cursos c on c.id=t.curso_id where e.nota is null and not c.archivado),
+      'tareas_vencidas',(select count(*) from tareas t join cursos c on c.id=t.curso_id where not c.archivado and t.fecha_limite < (now() at time zone 'America/Caracas')::date),
       'evaluaciones',(select count(*) from evaluaciones),'preguntas',(select count(*) from preguntas),'intentos',(select count(*) from intentos),
       'intentos_enviados',(select count(*) from intentos where enviado_en is not null),'resultados',(select count(*) from resultados),
       'certificados',(select count(*) from certificados),'mensajes',(select count(*) from foro_mensajes),'eventos_aprendizaje',(select count(*) from learning_events),
