@@ -20,6 +20,9 @@ update public.cursos set publicado=false,archivado=true where id in ('3449c26e-3
 insert into public.cursos(titulo,descripcion,publicado,especializacion,horas,clave_oferta,codigo_formacion,tipo_formacion,duracion_texto,modalidad_formacion)
 select o->>'nombre',concat('Código: ',o->>'codigo',E'\\nÁrea: ',o->>'area',E'\\nDuración: ',o->>'duracion',case when o ? 'practica' then concat(E'\\nPráctica: ',o->>'practica') else '' end,case when o->>'modalidad' is not null then concat(E'\\nModalidad: ',o->>'modalidad') else '' end,E'\\nFuente: ',o->>'fuente'),true,o->>'area',case when o->>'duracion' ~* 'HORAS' then (regexp_match(o->>'duracion','[0-9]+'))[1]::int else 0 end,o->>'clave',o->>'codigo',o->>'tipo',o->>'duracion',o->>'modalidad'
 from ofertas_importar on conflict(clave_oferta) do nothing;
+-- En PNA, las horas totales del curso son teoria mas practica; la ficha conserva ambas.
+update public.cursos c set horas=(regexp_match(i.o->>'duracion','[0-9]+'))[1]::int+(regexp_match(i.o->>'practica','[0-9]+'))[1]::int
+from ofertas_importar i where i.o->>'tipo'='pna' and c.clave_oferta=i.o->>'clave' and c.codigo_formacion=i.o->>'codigo';
 -- Claves deterministas para que reejecutar no duplique modulos ni fichas.
 do $$ declare x record; m jsonb; orden int; id_modulo uuid; ficha text; begin
   for x in select c.id,o from ofertas_importar i join public.cursos c on c.clave_oferta=i.o->>'clave' loop
