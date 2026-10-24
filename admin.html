@@ -6,6 +6,7 @@
 <title>Administración — FUNCECAIND</title>
 <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
 <link rel="stylesheet" href="assets/styles.css">
+<link rel="stylesheet" href="assets/publicacion.css?v=20261024">
 </head>
 <body>
 <div class="topbar">
@@ -77,14 +78,51 @@
   </div>
 </div>
 
+<dialog id="editor-perfil" class="editor-perfil" aria-labelledby="titulo-editor-perfil">
+  <form id="form-perfil" onsubmit="return guardarPerfil(event)">
+    <h2 id="titulo-editor-perfil">Editar usuario</h2>
+    <input type="hidden" id="e-id">
+    <div class="field"><label for="e-nombre">Nombre completo</label><input id="e-nombre" required maxlength="160"></div>
+    <div class="field"><label for="e-cargo">Cargo o especialidad</label><input id="e-cargo" maxlength="160"></div>
+    <div class="field"><label for="e-bio">Reseña pública</label><textarea id="e-bio" rows="5" maxlength="3000"></textarea></div>
+    <div class="field"><label for="e-foto">Enlace de foto</label><input id="e-foto" type="url" placeholder="https://…"></div>
+    <div class="field"><label for="e-archivo">O subir foto (JPG, PNG o WebP, hasta 5 MB)</label><input id="e-archivo" type="file" accept="image/jpeg,image/png,image/webp"></div>
+    <div class="field"><label for="e-orden">Orden en el equipo</label><input id="e-orden" type="number" step="1" value="0"></div>
+    <div class="field"><label><input id="e-publicar" type="checkbox"> Publicar en Quiénes somos (solo administradores y docentes activos)</label></div>
+    <p id="e-aviso" class="sub"></p><p id="e-msg" role="status" class="msg"></p>
+    <div class="acciones-perfil"><button type="submit" id="e-guardar" class="btn">Guardar perfil</button><button type="button" class="btn btn-ghost" onclick="document.getElementById('editor-perfil').close()">Cancelar</button></div>
+  </form>
+</dialog>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="assets/supabase-config.js"></script>
 <script src="assets/app.js?v=formacion-20261012"></script>
 <script>
-function show(id,txt,ok){ var m=document.getElementById(id); m.textContent=txt; m.className='msg '+(ok?'ok':'err'); }
+function show(id,txt,ok){ var m=document.getElementById(id); m.textContent=txt; m.className='msg'+(txt?' '+(ok?'ok':'err'):''); }
 function ini(n){ return (n||'?').trim().split(/\s+/).map(function(w){return w[0];}).slice(0,2).join('').toUpperCase(); }
 
 var USERS=[];
+function editarUsuario(id){
+  var u=USERS.find(function(x){return x.id===id;});if(!u)return;
+  document.getElementById('form-perfil').reset();
+  ['id','nombre','cargo','bio'].forEach(function(k){document.getElementById('e-'+k).value=u[k]||'';});
+  document.getElementById('e-foto').value=u.foto_url||'';
+  document.getElementById('e-orden').value=u.orden_equipo||0;
+  var staff=u.rol==='admin'||u.rol==='profesor';
+  document.getElementById('e-publicar').checked=staff&&!!u.en_equipo_web;
+  document.getElementById('e-publicar').disabled=!staff;
+  document.getElementById('e-aviso').textContent=u.activo===false?'Este usuario está inactivo: no aparecerá en la web aunque esté marcado para publicación.':'Solo se publican nombre, foto, cargo y reseña. Correo, teléfono y demás datos personales permanecen en administración.';
+  show('e-msg','',true);document.getElementById('editor-perfil').showModal();
+}
+async function guardarPerfil(ev){
+  ev.preventDefault();var b=document.getElementById('e-guardar');b.disabled=true;
+  try{
+    var foto=document.getElementById('e-foto').value.trim(),file=document.getElementById('e-archivo').files[0];
+    if(file){foto=await FV.subirFotoEquipo(file);document.getElementById('e-foto').value=foto;document.getElementById('e-archivo').value='';}
+    await FV.editarPerfil(document.getElementById('e-id').value,{nombre:document.getElementById('e-nombre').value,cargo:document.getElementById('e-cargo').value,bio:document.getElementById('e-bio').value,foto_url:foto,en_equipo_web:document.getElementById('e-publicar').checked,orden_equipo:document.getElementById('e-orden').value});
+    document.getElementById('editor-perfil').close();await cargar();
+  }catch(e){show('e-msg',e.message,false);}finally{b.disabled=false;}
+  return false;
+}
 async function toggleActivo(id, activar){
   var u=USERS.find(function(x){return x.id===id;});
   var quien=u?(u.nombre||u.email):'este usuario';
@@ -123,7 +161,7 @@ async function cargar(){
       return '<div class="item"'+(inactivo?' style="opacity:.6"':'')+'><div class="avatar">'+ini(u.nombre)+'</div>'+
         '<div class="info"><div class="name">'+FV.esc(u.nombre||'(sin nombre)')+'</div>'+
         '<div class="meta">'+FV.esc(u.email||'')+'</div></div>'+
-        '<span class="badge '+u.rol+'">'+u.rol+'</span>'+chip+toggle+del+'</div>';
+        '<span class="badge '+u.rol+'">'+u.rol+'</span>'+chip+'<button class="btn btn-ghost btn-sm" onclick="editarUsuario(\''+u.id+'\')">Editar</button>'+toggle+del+'</div>';
     }).join('');
     await cargarResultados();
   }catch(e){ document.getElementById('usuarios').innerHTML='<div class="empty">Error: '+e.message+'</div>'; }

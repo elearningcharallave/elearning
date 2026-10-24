@@ -1,0 +1,15 @@
+.publicacion-bloque { max-width:1100px; margin:32px auto; padding:24px; }
+.publicacion-lista { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr)); gap:24px; }
+.perfil-publico,.curso-publico { min-width:0; overflow-wrap:anywhere; padding:20px 0; border-top:1px solid var(--border,#cbd5d5); }
+.perfil-publico img { width:112px; height:112px; object-fit:cover; border-radius:50%; }
+.perfil-publico h3,.curso-publico h3 { margin:12px 0; }
+.perfil-publico p { white-space:pre-line; }
+.curso-publico p { margin:12px 0; }
+.editor-perfil { width:min(620px,calc(100% - 32px)); max-height:90dvh; overflow:auto; border:1px solid var(--border); border-radius:12px; padding:24px; color:var(--text-dark); background:var(--white,#fff); }
+.editor-perfil::backdrop { background:rgba(0,0,0,.5); }
+.editor-perfil .field input[type=checkbox] { width:auto; }
+.acciones-perfil { display:flex; gap:12px; flex-wrap:wrap; }
+.clave-control { display:flex; gap:8px; align-items:center; }
+.clave-control input { min-width:0; flex:1; }
+.clave-control button { flex-shrink:0; min-height:44px; }
+@media(max-width:600px) { #usuarios .item { flex-wrap:wrap; gap:8px; } #usuarios .info { min-width:150px; } }

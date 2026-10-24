@@ -141,6 +141,21 @@
     var r = await sb.from("perfiles").select("*").order("creado_en", { ascending: false });
     if (r.error) throw r.error; return r.data;
   }
+  async function editarPerfil(id, d) {
+    var foto = (d.foto_url || '').trim();
+    if (foto && !/^https?:\/\//i.test(foto)) throw new Error('La foto debe tener un enlace HTTP o HTTPS.');
+    var r = await sb.from('perfiles').update({nombre:d.nombre.trim(),cargo:d.cargo.trim(),bio:d.bio.trim(),foto_url:foto||null,en_equipo_web:!!d.en_equipo_web,orden_equipo:Number(d.orden_equipo)||0}).eq('id',id).select('id').single();
+    if (r.error) throw r.error;
+  }
+  async function subirFotoEquipo(file) {
+    if (!['image/jpeg','image/png','image/webp'].includes(file.type) || file.size > 5*1024*1024) throw new Error('Usa una imagen JPG, PNG o WebP de hasta 5 MB.');
+    var ses=await sesion(); if(!ses || ses.perfil.rol!=='admin') throw new Error('Solo administración puede publicar fotos del equipo.');
+    var ext={'image/jpeg':'jpg','image/png':'png','image/webp':'webp'}[file.type];
+    var ruta=ses.user.uid+'/equipo-'+crypto.randomUUID()+'.'+ext;
+    var r=await sb.storage.from('perfiles').upload(ruta,file,{contentType:file.type,upsert:false});
+    if(r.error) throw r.error;
+    return sb.storage.from('perfiles').getPublicUrl(ruta).data.publicUrl;
+  }
   function salaCodigo(titulo) {
     var base = (titulo || "clase").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9]/g, "").slice(0, 18);
     return "funcecaind-" + (base || "clase") + "-" + Math.random().toString(36).slice(2, 7);
@@ -423,7 +438,7 @@
   window.FV = {
     configOk: configOk, panelDe: panelDe, esc: esc, requireRole: requireRole, redirigirSiSesion: redirigirSiSesion,
     login: login, registrarAlumno: registrarAlumno, crearProfesor: crearProfesor, logout: logout,
-    listarUsuarios: listarUsuarios, setActivo: setActivo, crearClase: crearClase, salaCodigo: salaCodigo,
+    listarUsuarios: listarUsuarios, editarPerfil: editarPerfil, subirFotoEquipo: subirFotoEquipo, setActivo: setActivo, crearClase: crearClase, salaCodigo: salaCodigo,
     clasesDeProfesor: clasesDeProfesor, todasLasClases: todasLasClases, eliminarClase: eliminarClase,
     sesion: sesion, guardarResultado: guardarResultado, todosResultados: todosResultados, misResultados: misResultados,
     resetPassword: resetPassword, actualizarPassword: actualizarPassword,

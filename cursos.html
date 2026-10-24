@@ -186,6 +186,9 @@ async function cargarCursos(){
           '<button class="btn btn-ghost btn-sm" onclick="abrirMatriculas(\''+c.id+'\')">👥 Matrículas</button>'+
           '<button class="btn btn-ghost btn-sm" onclick="abrirEvaluaciones(\''+c.id+'\')">📝 Evaluaciones</button>'+
           '<button class="btn btn-ghost btn-sm" onclick="abrirTareas(\''+c.id+'\')">📋 Tareas</button>'+
+          '<a class="btn btn-ghost btn-sm" href="modelo-certificado.html?curso='+encodeURIComponent(c.id)+'">Modelo de certificado</a>'+
+          '<label><input type="checkbox" '+(c.mostrar_inicio!==false?'checked ':'')+'onchange="ubicarCurso(\''+c.id+'\',\'mostrar_inicio\',this)"> Inicio</label>'+
+          '<label><input type="checkbox" '+(c.mostrar_catalogo!==false?'checked ':'')+'onchange="ubicarCurso(\''+c.id+'\',\'mostrar_catalogo\',this)"> Catálogo</label>'+
           '<button class="btn btn-ghost btn-sm" onclick="togglePublicar(\''+c.id+'\','+(!c.publicado)+')">'+(c.publicado?'👁 Despublicar':'🚀 Publicar')+'</button>'+
           '<button class="btn-logout btn-sm" onclick="borrarCurso(\''+c.id+'\')">🗑</button>'+
         '</div></div>';
@@ -194,6 +197,7 @@ async function cargarCursos(){
 }
 function cursoPorId(id){ return CURSOS.find(function(c){return c.id===id;}); }
 async function togglePublicar(id,val){ try{ await FV.actualizarCurso(id,{publicado:val}); cargarCursos(); }catch(e){ alert(e.message); } }
+async function ubicarCurso(id,campo,input){input.disabled=true;try{var d={};d[campo]=input.checked;await FV.actualizarCurso(id,d);}catch(e){input.checked=!input.checked;alert(e.message);}finally{input.disabled=false;}}
 async function borrarCurso(id){ if(confirm('¿Eliminar el curso y todo su contenido y matrículas?')){ try{ await FV.eliminarCurso(id); if(ACTUAL===id){E('builder').style.display='none';E('matriculas').style.display='none';} cargarCursos(); }catch(e){ alert(e.message); } } }
 
 // ---- CONTENIDO ----
