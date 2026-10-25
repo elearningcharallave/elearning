@@ -56,3 +56,20 @@ img,video { max-inline-size: 100%; }
   html { scroll-behavior: auto; }
   *,*::before,*::after { animation-duration: .01ms!important; transition-duration: .01ms!important; }
 }
+
+/* El titulo y el profesor conservan su espacio aunque aumenten las acciones. */
+#cursos-list .curso-fila { display:grid; grid-template-columns:44px minmax(0,1fr); align-items:start; gap:14px; padding:20px; }
+#cursos-list .curso-identidad { min-width:0; align-self:center; }
+#cursos-list .curso-identidad .name { margin:0 0 6px; font-size:1.05rem; line-height:1.4; overflow-wrap:anywhere; }
+#cursos-list .curso-identidad .meta { line-height:1.6; overflow-wrap:anywhere; }
+#cursos-list .curso-acciones { grid-column:2; display:flex; flex-wrap:wrap; align-items:center; gap:8px; min-width:0; }
+#cursos-list .curso-acciones :is(.btn,.btn-logout,label) { min-height:44px; }
+#cursos-list .curso-acciones label { display:inline-flex; align-items:center; gap:8px; margin:0; padding:6px 8px; white-space:nowrap; cursor:pointer; }
+#cursos-list .curso-acciones input[type=checkbox] { flex-shrink:0; width:18px; height:18px; margin:0; }
+#cursos-list .curso-acciones .btn-logout { min-width:44px; }
+@media(max-width:600px) {
+ #cursos-list .curso-fila { padding:16px; gap:12px; }
+ #cursos-list .curso-acciones { grid-column:1 / -1; display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); }
+ #cursos-list .curso-acciones :is(.btn,.btn-logout) { width:100%; min-width:0; justify-content:center; text-align:center; white-space:normal; }
+ #cursos-list .curso-acciones a { grid-column:1 / -1; }
+}

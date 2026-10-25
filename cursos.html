@@ -14,7 +14,7 @@
   .lec .ico{font-size:1rem}
   .tag{font-size:.68rem;font-weight:600;padding:2px 8px;border-radius:100px;background:#fff;border:1px solid var(--border);color:var(--text-mid)}
 </style>
-<link rel="stylesheet" href="assets/legibilidad.css?v=20261025">
+<link rel="stylesheet" href="assets/legibilidad.css?v=20261025-cursos-1">
 <script src="assets/navegacion.js?v=20261025" defer></script>
 </head>
 <body>
@@ -180,10 +180,10 @@ async function cargarCursos(){
     CURSOS = MIDOC.rol==='admin' ? await FV.todosCursos() : await FV.cursosDeProfesor(ME.uid);
     if(!CURSOS.length){ cont.innerHTML='<div class="empty">Aún no has creado cursos.</div>'; return; }
     cont.innerHTML=CURSOS.map(function(c){
-      return '<div class="item"><div class="avatar">📚</div>'+
-        '<div class="info"><div class="name">'+FV.esc(c.titulo)+'</div>'+
+      return '<div class="item curso-fila"><div class="avatar">📚</div>'+
+        '<div class="info curso-identidad"><h3 class="name">'+FV.esc(c.titulo)+'</h3>'+
         '<div class="meta">'+(c.profesor_nombre?('👩‍🏫 '+FV.esc(c.profesor_nombre)+' · '):'')+(c.publicado?'🟢 publicado':'⚪ borrador')+'</div></div>'+
-        '<div style="display:flex;gap:6px;flex-wrap:wrap">'+
+        '<div class="curso-acciones">'+
           '<button class="btn btn-sm" onclick="abrirContenido(\''+c.id+'\')">📂 Contenido</button>'+
           '<button class="btn btn-ghost btn-sm" onclick="abrirMatriculas(\''+c.id+'\')">👥 Matrículas</button>'+
           '<button class="btn btn-ghost btn-sm" onclick="abrirEvaluaciones(\''+c.id+'\')">📝 Evaluaciones</button>'+
@@ -192,7 +192,7 @@ async function cargarCursos(){
           '<label><input type="checkbox" '+(c.mostrar_inicio!==false?'checked ':'')+'onchange="ubicarCurso(\''+c.id+'\',\'mostrar_inicio\',this)"> Inicio</label>'+
           '<label><input type="checkbox" '+(c.mostrar_catalogo!==false?'checked ':'')+'onchange="ubicarCurso(\''+c.id+'\',\'mostrar_catalogo\',this)"> Catálogo</label>'+
           '<button class="btn btn-ghost btn-sm" onclick="togglePublicar(\''+c.id+'\','+(!c.publicado)+')">'+(c.publicado?'👁 Despublicar':'🚀 Publicar')+'</button>'+
-          '<button class="btn-logout btn-sm" onclick="borrarCurso(\''+c.id+'\')">🗑</button>'+
+          '<button class="btn-logout btn-sm" aria-label="Eliminar curso" title="Eliminar curso" onclick="borrarCurso(\''+c.id+'\')">🗑</button>'+
         '</div></div>';
     }).join('');
   }catch(e){ cont.innerHTML='<div class="empty">Error: '+e.message+'</div>'; }
