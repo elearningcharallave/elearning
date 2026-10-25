@@ -26,6 +26,9 @@
   .cert .det b{display:block;color:var(--text-dark);font-size:.92rem}
   .cert #qr{display:inline-block;padding:5px;background:#fff;border:1px solid var(--border);border-radius:6px}
   .cert #qr img,.cert #qr canvas{display:block}
+  .cert .nombre,.cert .curso,.cert .det b{max-width:100%;box-sizing:border-box;overflow-wrap:anywhere;line-height:1.35}
+  .cert .pie>div{min-width:0;overflow-wrap:anywhere}
+  @media(max-width:600px){.cert{padding:28px 18px}.cert .nombre{font-size:1.65rem;padding-inline:4px}.cert .pie{flex-direction:column;align-items:center;gap:20px;text-align:center}.cert .pie>div:last-child{text-align:center!important}.cert .tipo{letter-spacing:1.5px;line-height:1.6}}
 </style>
 </head>
 <body>
@@ -42,7 +45,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="assets/supabase-config.js"></script>
 <script src="assets/app.js?v=formacion-20261012"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/4.2.1/jspdf.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
 <script>
 var CODIGO=new URLSearchParams(location.search).get('codigo'), CERT=null, VERIFY_URL='';
@@ -61,7 +64,7 @@ function E(id){return document.getElementById(id);}
     VERIFY_URL=location.origin+location.pathname.replace('certificado.html','verificar.html')+'?codigo='+encodeURIComponent(CODIGO);
     var det='';
     if(CERT.especializacion) det+='<div class="det"><span>Especialización</span><b>'+FV.esc(CERT.especializacion)+'</b></div>';
-    if(CERT.horas) det+='<div class="det"><span>Horas académicas</span><b>'+CERT.horas+' h</b></div>';
+    if(CERT.horas) det+='<div class="det"><span>Horas académicas</span><b>'+FV.esc(String(CERT.horas))+' h</b></div>';
     if(CERT.fecha_inicio||CERT.fecha_fin) det+='<div class="det"><span>Período de formación</span><b>'+(fmt(CERT.fecha_inicio)||'—')+' — '+(fmt(CERT.fecha_fin)||'—')+'</b></div>';
     E('cont').innerHTML='<div class="cert">'+
       '<div class="marca">Funce<span>Caind</span></div>'+
@@ -80,7 +83,7 @@ function E(id){return document.getElementById(id);}
       '<p style="text-align:center;font-size:.82rem;color:var(--text-light)">Verifica la autenticidad en<br><span style="color:var(--teal-700)">'+VERIFY_URL+'</span></p>';
     try{ new QRCode(document.getElementById('qr'), {text:VERIFY_URL, width:82, height:82, correctLevel:QRCode.CorrectLevel.M}); }catch(e){}
     E('acciones').innerHTML='<button class="btn" onclick="pdf()">⬇ Descargar PDF</button>';
-  }catch(e){ E('cont').innerHTML='<div class="empty">Error: '+e.message+'</div>'; }
+  }catch(e){ E('cont').innerHTML='<div class="empty">Error: '+FV.esc(e.message)+'</div>'; }
 })();
 
 function pdf(){
@@ -93,15 +96,20 @@ function pdf(){
   catch(e){ d.setFont('times','bold'); d.setTextColor(15,110,86); d.setFontSize(30); d.text('FUNCECAIND',W/2,38,{align:'center'}); }
   d.setFont('helvetica','normal'); d.setTextColor(120,120,120); d.setFontSize(11); d.text('CERTIFICADO DE FINALIZACIÓN',W/2,53,{align:'center'});
   d.setTextColor(80,80,80); d.setFontSize(13); d.text('Se otorga el presente certificado a',W/2,72,{align:'center'});
-  d.setFont('times','bold'); d.setTextColor(6,40,32); d.setFontSize(26); d.text(CERT.alumno_nombre,W/2,88,{align:'center'});
+  function textoAjustado(texto,y,tamano,alto){
+    var lineas,paso;
+    do{d.setFontSize(tamano);lineas=d.splitTextToSize(String(texto||''),W-58);paso=tamano*0.352778*1.15;if(lineas.length*paso<=alto)break;tamano-=0.5;}while(tamano>7);
+    d.text(lineas,W/2,y-(lineas.length-1)*paso/2,{align:'center',lineHeightFactor:1.15});
+  }
+  d.setFont('times','bold'); d.setTextColor(6,40,32); textoAjustado(CERT.alumno_nombre,87,26,20);
   d.setFont('helvetica','normal'); d.setTextColor(80,80,80); d.setFontSize(13); d.text('por haber completado satisfactoriamente',W/2,101,{align:'center'});
-  d.setFont('times','bold'); d.setTextColor(15,110,86); d.setFontSize(17); d.text(CERT.curso_titulo,W/2,113,{align:'center'});
+  d.setFont('times','bold'); d.setTextColor(15,110,86); textoAjustado(CERT.curso_titulo,117,17,19);
   var linea=[];
   if(CERT.especializacion) linea.push('Especialización: '+CERT.especializacion);
   if(CERT.horas) linea.push(CERT.horas+' horas académicas');
   if(CERT.fecha_inicio||CERT.fecha_fin) linea.push('Del '+fmt(CERT.fecha_inicio)+' al '+fmt(CERT.fecha_fin));
   d.setFont('helvetica','normal'); d.setTextColor(90,90,90); d.setFontSize(10.5);
-  if(linea.length) d.text(linea.join('     -     '),W/2,125,{align:'center'});
+  if(linea.length) textoAjustado(linea.join('     -     '),141,10.5,14);
   // Código QR de verificación (esquina inferior derecha)
   try{ var qc=document.querySelector('#qr canvas'); if(qc){ d.addImage(qc.toDataURL('image/png'),'PNG',W-50,152,26,26); d.setFontSize(7); d.setTextColor(120,120,120); d.text('Escanea para verificar',W-37,181,{align:'center'}); } }catch(e){}
   var fecha=new Date(CERT.emitido_en).toLocaleDateString('es-VE',{day:'2-digit',month:'long',year:'numeric'});
