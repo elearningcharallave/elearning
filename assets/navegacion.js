@@ -1,5 +1,14 @@
 /* Conserva las mismas rutas y ofrece el menu completo tambien en el movil. */
 (() => {
+  const script = document.currentScript;
+  const principal = location.hostname === 'admin-funcecaind.carlos-linares-es.workers.dev'
+    ? 'https://elearningcharallave.github.io/elearning/index.html'
+    : new URL('../index.html', script.src).href;
+  document.querySelectorAll('a.logo,a.footer-logo,a.brand,a.marca-inicio,a.volver-inicio').forEach(enlace => {
+    enlace.href = principal;
+    if (!enlace.classList.contains('volver-inicio')) enlace.setAttribute('aria-label', 'FUNCECAIND — Ir a la página principal');
+    enlace.title = 'Ir a la página principal de FUNCECAIND';
+  });
   const lista = document.querySelector('nav > .nav-links');
   const menu = lista || document.querySelector('.topbar > nav.nav');
   if (!menu) return;

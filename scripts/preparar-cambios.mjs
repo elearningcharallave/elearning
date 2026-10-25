@@ -4,7 +4,7 @@ const raiz = fileURLToPath(new URL('../', import.meta.url));
 const destino = new URL('../dist-cambios/', import.meta.url);
 await mkdir(new URL('assets/funcecaind/', destino), { recursive:true });
 // Lista cerrada: nunca publicar la raiz, que contiene credenciales locales.
-for (const archivo of ['assets/app.js','assets/supabase-config.js','assets/cambios.css','assets/cambios.js','assets/dashboard.js','assets/archivos-cambios.js','assets/legibilidad.css','assets/navegacion.js','assets/favicon.svg','assets/funcecaind/logo-funcecaind.png']) {
+for (const archivo of ['assets/app.js','assets/supabase-config.js','assets/cambios.css','assets/cambios.js','assets/dashboard.js','assets/archivos-cambios.js','assets/legibilidad.css','assets/inicio.css','assets/navegacion.js','assets/favicon.svg','assets/funcecaind/logo-funcecaind.png']) {
   await copyFile(raiz + archivo, new URL(archivo,destino));
 }
 await copyFile(raiz+'cambios.html',new URL('index.html',destino));

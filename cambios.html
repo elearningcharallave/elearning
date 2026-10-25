@@ -7,13 +7,14 @@
   <link rel="icon" href="assets/favicon.svg">
   <link rel="stylesheet" href="assets/cambios.css?v=dashboard-20261012">
 <link rel="stylesheet" href="assets/legibilidad.css?v=20261025">
-<script src="assets/navegacion.js?v=20261025" defer></script>
+<script src="assets/navegacion.js?v=20261025-inicio" defer></script>
+<link rel="stylesheet" href="assets/inicio.css?v=20261025-inicio">
 </head>
 <body>
   <a class="saltar-contenido" href="#contenido">Ir al contenido</a>
   <div id="entrada" class="entrada">
     <section class="acceso">
-      <img src="assets/funcecaind/logo-funcecaind.png" alt="FUNCECAIND" width="210">
+      <a class="marca-inicio" href="https://elearningcharallave.github.io/elearning/index.html" aria-label="FUNCECAIND — Ir a la página principal"><img src="assets/funcecaind/logo-funcecaind.png" alt="FUNCECAIND" width="210"></a>
       <h1>Administración de FUNCECAIND</h1>
       <p>Supervisa el aula, su actividad y las mejoras de la plataforma.</p>
       <form id="form-entrada">
@@ -23,12 +24,12 @@
       </form>
       <p id="entrada-error" class="error" role="alert"></p>
       <p class="nota">Usa tu cuenta de administrador de FUNCECAIND.</p>
-      <a href="https://elearningcharallave.github.io/elearning/">Volver a la plataforma</a>
+      <a href="https://elearningcharallave.github.io/elearning/">Volver al inicio</a>
     </section>
   </div>
   <div id="panel" class="panel" hidden>
     <aside class="lateral">
-      <img src="assets/funcecaind/logo-funcecaind.png" alt="FUNCECAIND" width="170">
+      <a class="marca-inicio" href="https://elearningcharallave.github.io/elearning/index.html" aria-label="FUNCECAIND — Ir a la página principal"><img src="assets/funcecaind/logo-funcecaind.png" alt="FUNCECAIND" width="170"></a>
       <p class="lateral-titulo">Administración</p>
       <nav aria-label="Secciones del panel">
         <button data-vista="dashboard" aria-current="page">Dashboard</button>
@@ -45,7 +46,7 @@
     <main id="contenido">
       <header class="cabecera">
         <div><h1 id="titulo-vista">Dashboard</h1><p id="subtitulo-vista">Una vista general de lo que ocurre en FUNCECAIND.</p></div>
-        <div class="acciones"><button id="actualizar">Actualizar</button><button id="exportar" hidden>Exportar</button><button id="nueva" class="primario">Nueva solicitud</button></div>
+        <div class="acciones"><a class="volver-inicio" href="https://elearningcharallave.github.io/elearning/index.html">Inicio</a><button id="actualizar">Actualizar</button><button id="exportar" hidden>Exportar</button><button id="nueva" class="primario">Nueva solicitud</button></div>
       </header>
       <p id="aviso" class="aviso" role="status" aria-live="polite"></p>
       <section id="vista-dashboard" aria-label="Dashboard de la plataforma">

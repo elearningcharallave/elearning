@@ -17,12 +17,13 @@
   .ai-answer.err{background:#fef2f2;border-color:#f3c9c9;color:var(--red)}
 </style>
 <link rel="stylesheet" href="assets/legibilidad.css?v=20261025">
-<script src="assets/navegacion.js?v=20261025" defer></script>
+<script src="assets/navegacion.js?v=20261025-inicio" defer></script>
+<link rel="stylesheet" href="assets/inicio.css?v=20261025-inicio">
 </head>
 <body>
 <div class="topbar">
-  <a href="index.html" class="brand">Funce<span>Caind</span></a>
-  <div class="topbar-right">
+  <a href="index.html" class="brand" aria-label="FUNCECAIND — Ir a la página principal">Funce<span>Caind</span></a>
+  <div class="topbar-right"><a class="volver-inicio" href="index.html">Inicio</a>
     <a class="btn-logout" id="back" href="alumno.html">← Mis cursos</a>
     <button class="btn-logout" onclick="FV.logout()">Salir</button>
   </div>

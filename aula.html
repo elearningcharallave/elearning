@@ -19,14 +19,16 @@
   .role-choice input:checked + span{border-color:var(--teal-500);background:var(--teal-50);color:var(--teal-700)}
 </style>
 <link rel="stylesheet" href="assets/legibilidad.css?v=20261025">
-<script src="assets/navegacion.js?v=20261025" defer></script>
+<script src="assets/navegacion.js?v=20261025-inicio" defer></script>
+<link rel="stylesheet" href="assets/inicio.css?v=20261025-inicio">
 </head>
 <body>
 
 <!-- PRE-JOIN -->
 <div class="auth-wrap" id="prejoin">
   <div class="auth-card">
-    <div class="logo">Funce<span>Caind</span></div>
+    <a class="logo" href="index.html" aria-label="FUNCECAIND — Ir a la página principal">Funce<span>Caind</span></a>
+    <a class="volver-inicio" href="index.html">Volver al inicio</a>
     <div class="tagline">Aula virtual · Clase en vivo</div>
     <form onsubmit="return entrar(event)">
       <div class="field"><label>Tu nombre y apellido</label><input type="text" id="name" placeholder="Ej. María González" required></div>
@@ -44,6 +46,7 @@
 </div>
 
 <!-- SALA -->
+<div id="retorno-clase" hidden><a class="marca-inicio" href="index.html" aria-label="FUNCECAIND — Ir a la página principal"><img src="assets/funcecaind/logo-funcecaind.png" alt="FUNCECAIND" width="150"></a><a class="volver-inicio" href="index.html">Inicio</a></div>
 <div id="meet"></div>
 
 <!-- FIN -->
@@ -98,6 +101,7 @@ async function arrancar(){
 
   document.getElementById('prejoin').style.display='none';
   document.getElementById('meet').style.display='block';
+  document.getElementById('retorno-clase').hidden=false;
 
   // JaaS (8x8) si está configurado: roomName = AppID/sala + token firmado (profesor = moderador).
   // Si no hay AppID, cae a meet.jit.si (con el corte de ~5 min).
@@ -146,6 +150,7 @@ async function arrancar(){
     salir();
     api.dispose();
     document.getElementById('meet').style.display='none';
+    document.getElementById('retorno-clase').hidden=true;
     document.getElementById('fin').style.display='block';
   });
   window.addEventListener('beforeunload', salir);

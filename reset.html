@@ -8,12 +8,14 @@
 <link rel="stylesheet" href="assets/styles.css">
 <link rel="stylesheet" href="assets/publicacion.css?v=20261024">
 <link rel="stylesheet" href="assets/legibilidad.css?v=20261025">
-<script src="assets/navegacion.js?v=20261025" defer></script>
+<script src="assets/navegacion.js?v=20261025-inicio" defer></script>
+<link rel="stylesheet" href="assets/inicio.css?v=20261025-inicio">
 </head>
 <body>
 <div class="auth-wrap">
   <div class="auth-card">
-    <div class="logo">Funce<span>Caind</span></div>
+    <a class="logo" href="index.html" aria-label="FUNCECAIND — Ir a la página principal">Funce<span>Caind</span></a>
+    <a class="volver-inicio" href="index.html">Volver al inicio</a>
     <div class="tagline">Restablecer contraseña</div>
     <form id="form" onsubmit="return doReset(event)">
       <div class="field"><label>Nueva contraseña (mín. 6)</label><input type="password" id="np" placeholder="••••••••" minlength="6" required></div>

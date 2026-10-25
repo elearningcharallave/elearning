@@ -15,12 +15,13 @@
   .tag{font-size:.68rem;font-weight:600;padding:2px 8px;border-radius:100px;background:#fff;border:1px solid var(--border);color:var(--text-mid)}
 </style>
 <link rel="stylesheet" href="assets/legibilidad.css?v=20261025-cursos-1">
-<script src="assets/navegacion.js?v=20261025" defer></script>
+<script src="assets/navegacion.js?v=20261025-inicio" defer></script>
+<link rel="stylesheet" href="assets/inicio.css?v=20261025-inicio">
 </head>
 <body>
 <div class="topbar">
-  <a href="index.html" class="brand">Funce<span>Caind</span></a>
-  <div class="topbar-right">
+  <a href="index.html" class="brand" aria-label="FUNCECAIND — Ir a la página principal">Funce<span>Caind</span></a>
+  <div class="topbar-right"><a class="volver-inicio" href="index.html">Inicio</a>
     <span class="role-pill" id="rol-pill"></span>
     <a class="btn-logout" id="back" href="#">← Mi panel</a>
     <button class="btn-logout" onclick="FV.logout()">Salir</button>
@@ -39,7 +40,7 @@
         <div class="field" style="flex:1"><label>Horas académicas</label><input id="c-horas" type="number" min="0" placeholder="Ej. 40"></div>
         <div class="field" style="flex:2"><label>Especialización</label><input id="c-esp" placeholder="Ej. Ofimática avanzada"></div>
       </div>
-      <div style="display:flex;gap:10px">
+      <div class="fechas-curso">
         <div class="field" style="flex:1"><label>Fecha inicio</label><input id="c-ini" type="date"></div>
         <div class="field" style="flex:1"><label>Fecha fin</label><input id="c-fin" type="date"></div>
       </div>

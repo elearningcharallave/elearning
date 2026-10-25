@@ -21,6 +21,8 @@ img,video { max-inline-size: 100%; }
 .topbar-right>span,.item .info { overflow-wrap: anywhere; }
 .topbar .brand { flex-shrink: 0; }
 .grid2 { grid-template-columns: repeat(2,minmax(0,1fr)); }
+.fechas-curso { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; }
+@media(max-width:600px) { .fechas-curso { grid-template-columns:minmax(0,1fr); } }
 .row>* { min-width: min(160px,100%); }
 .navegacion-cabecera { position: sticky; top: 0; gap: 16px; }
 .alternar-navegacion { display: none; }
